@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AIDOC UA | Медична Анкета</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #222222);
+            --hint-color: var(--tg-theme-hint-color, #8e8e93);
+            --button-color: var(--tg-theme-button-color, #007aff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f2f2f7);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --focus-shadow: rgba(0, 122, 255, 0.2);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --border-color: rgba(255, 255, 255, 0.1);
+                --focus-shadow: rgba(10, 132, 255, 0.3);
+            }
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 24px 16px;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            margin: 0;
+            font-weight: 800;
+            color: var(--button-color);
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 15px;
+            color: var(--hint-color);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .card {
+            background-color: var(--bg-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--hint-color);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px;
+            border: 2px solid var(--secondary-bg);
+            border-radius: 12px;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 1.5L6 6L10.5 1.5' stroke='%238e8e93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--button-color);
+            background-color: var(--bg-color);
+            box-shadow: 0 0 0 4px var(--focus-shadow);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--hint-color);
+            opacity: 0.7;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .row .form-group {
+            flex: 1;
+        }
+
+        /* Анімація появи */
+        .card {
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>AIDOC UA</h1>
+        <p>Ваш медичний профіль</p>
+    </div>
+
+    <div class="card">
+        <div class="form-group">
+            <label for="name">Як до вас звертатися?</label>
+            <input type="text" id="name" class="required-field" placeholder="Ваше ім'я та прізвище" autocomplete="name" required>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label for="gender">Стать</label>
+                <select id="gender" class="required-field" required>
+                    <option value="" disabled selected>Оберіть...</option>
+                    <option value="Чоловік">Чоловік</option>
+                    <option value="Жінка">Жінка</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="age">Вік</label>
+                <input type="number" id="age" class="required-field" placeholder="Років" inputmode="numeric" pattern="[0-9]*" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label for="height">Зріст (см)</label>
+                <input type="number" id="height" class="required-field" placeholder="Напр. 175" inputmode="numeric" pattern="[0-9]*" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">Вага (кг)</label>
+                <input type="number" id="weight" class="required-field" placeholder="Напр. 70" inputmode="numeric" pattern="[0-9]*" required>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 24px;">
+            <label for="chronics">Хронічні захворювання</label>
+            <textarea id="chronics" placeholder="Опишіть ваші хронічні стани. Якщо немає — залиште поле порожнім або напишіть 'Немає'"></textarea>
+        </div>
+    </div>
+
+    <script>
+        // Ініціалізація Telegram WebApp
+        let tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand(); 
+
+        // Налаштування головної кнопки
+        tg.MainButton.text = "ЗБЕРЕГТИ ДАНІ";
+        tg.MainButton.color = tg.themeParams.button_color || "#007aff";
+        tg.MainButton.textColor = tg.themeParams.button_text_color || "#ffffff";
+
+        // Логіка відображення кнопки (Real-time валідація)
+        const requiredFields = document.querySelectorAll('.required-field');
+        
+        function checkFields() {
+            let allFilled = true;
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    allFilled = false;
+                }
+            });
+
+            if (allFilled) {
+                tg.MainButton.show();
+            } else {
+                tg.MainButton.hide();
+            }
+        }
+
+        // Вішаємо слухачі подій на всі обов'язкові поля
+        requiredFields.forEach(field => {
+            field.addEventListener('input', checkFields);
+            field.addEventListener('change', checkFields);
+        });
+
+        // Обробка натискання на MainButton
+        tg.onEvent('mainButtonClicked', function(){
+            let name = document.getElementById("name").value.trim();
+            let gender = document.getElementById("gender").value;
+            let age = document.getElementById("age").value.trim();
+            let height = document.getElementById("height").value.trim();
+            let weight = document.getElementById("weight").value.trim();
+            let chronics = document.getElementById("chronics").value.trim() || "Немає";
+
+            let data = {
+                name: name,
+                gender: gender,
+                age: age,
+                height: height,
+                weight: weight,
+                chronics: chronics
+            };
+
+            // Візуальний фідбек натискання
+            tg.MainButton.showProgress();
+
+            try {
+                // Відправляємо дані у бот
+                tg.sendData(JSON.stringify(data));
+                
+                // Якщо sendData спрацював успішно, вікно закривається автоматично,
+                // але ми додаємо tg.close() як резервний варіант.
+                setTimeout(() => {
+                    tg.close();
+                }, 500);
+
+            } catch (error) {
+                tg.MainButton.hideProgress();
+                // Це повідомлення з'явиться, якщо використовується Inline-кнопка замість Reply-клавіатури
+                tg.showAlert("Дані збережено! Будь ласка, закрийте це вікно вручну за допомогою хрестика у правому верхньому куті.");
+                console.error("Помилка sendData:", error);
+            }
+        });
+    </script>
+</body>
+</html>
