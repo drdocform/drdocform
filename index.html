@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AIDOC UA АНКЕТА</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #000000);
+            --hint-color: var(--tg-theme-hint-color, #999999);
+            --button-color: var(--tg-theme-button-color, #007aff);
+            --button-text-color: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f0f0f0);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px 15px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: 700;
+            color: var(--button-color);
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--hint-color);
+            margin-top: 5px;
+        }
+
+        .card {
+            background-color: var(--bg-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--hint-color);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 16px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--button-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+        .row .form-group {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>AIDOC UA</h1>
+        <p>Медичний ШІ-асистент</p>
+    </div>
+
+    <div class="card">
+        <div class="row">
+            <div class="form-group">
+                <label for="gender">Стать</label>
+                <select id="gender" required>
+                    <option value="" disabled selected>Оберіть...</option>
+                    <option value="Чоловік">Чоловік</option>
+                    <option value="Жінка">Жінка</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="age">Вік</label>
+                <input type="number" id="age" placeholder="Років" inputmode="numeric" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label for="height">Зріст (см)</label>
+                <input type="number" id="height" placeholder="Напр. 175" inputmode="numeric" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">Вага (кг)</label>
+                <input type="number" id="weight" placeholder="Напр. 70" inputmode="numeric" required>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 18px;">
+            <label for="chronics">Хронічні захворювання</label>
+            <textarea id="chronics" placeholder="Якщо немає, залиште пустим або напишіть 'Ні'"></textarea>
+        </div>
+		
+		<div class="form-group">
+            <label for="name">Як до вас звертатися?</label>
+            <input type="text" id="name" placeholder="Ваше ім'я" required>
+        </div>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Розгортає вікно на весь екран
+
+        // Налаштування нативної кнопки Telegram
+        tg.MainButton.text = "ЗБЕРЕГТИ ДАНІ";
+        tg.MainButton.show();
+
+        // Обробка натискання на кнопку
+        tg.onEvent('mainButtonClicked', function(){
+            let name = document.getElementById("name").value.trim();
+            let gender = document.getElementById("gender").value;
+            let age = document.getElementById("age").value.trim();
+            let height = document.getElementById("height").value.trim();
+            let weight = document.getElementById("weight").value.trim();
+            let chronics = document.getElementById("chronics").value.trim() || "Немає";
+
+            // Перевірка, чи всі поля заповнені
+            if(!name || !gender || !age || !height || !weight) {
+                tg.showAlert("Будь ласка, заповніть всі обов'язкові поля (Ім'я, Стать, Вік, Зріст, Вага).");
+                return;
+            }
+
+            // Формуємо об'єкт для відправки боту
+            let data = {
+                name: name,
+                gender: gender,
+                age: age,
+                height: height,
+                weight: weight,
+                chronics: chronics
+            };
+
+            // Відправляємо дані у бот і закриваємо вікно
+            tg.sendData(JSON.stringify(data));
+        });
+    </script>
+</body>
+</html>
