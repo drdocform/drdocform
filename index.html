@@ -14,12 +14,28 @@
             --secondary-bg: var(--tg-theme-secondary-bg-color, #f2f2f7);
             --border-color: rgba(0, 0, 0, 0.1);
             --focus-shadow: rgba(0, 122, 255, 0.2);
+            
+            /* Нові змінні спеціально для фокусу інпутів */
+            --input-focus-border: var(--button-color);
+            --input-focus-shadow: var(--focus-shadow);
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
                 --border-color: rgba(255, 255, 255, 0.1);
                 --focus-shadow: rgba(10, 132, 255, 0.3);
+            }
+        }
+        
+        /* Клас для жіночої теми */
+        body.theme-female {
+            --input-focus-border: #ff4d85; /* Рожевий колір рамки */
+            --input-focus-shadow: rgba(255, 77, 133, 0.25); /* Рожева тінь */
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body.theme-female {
+                --input-focus-shadow: rgba(255, 77, 133, 0.35); /* Адаптація рожевої тіні для темної теми */
             }
         }
         
@@ -42,7 +58,7 @@
             font-size: 26px;
             margin: 0;
             font-weight: 800;
-            color: var(--button-color);
+            color: var(--button-color); /* Залишається стандартним системним кольором */
             letter-spacing: -0.5px;
         }
 
@@ -99,10 +115,11 @@
             background-position: right 16px center;
         }
 
+        /* Оновлено для використання нових динамічних змінних */
         input:focus, select:focus, textarea:focus {
-            border-color: var(--button-color);
+            border-color: var(--input-focus-border);
             background-color: var(--bg-color);
-            box-shadow: 0 0 0 4px var(--focus-shadow);
+            box-shadow: 0 0 0 4px var(--input-focus-shadow);
         }
 
         input::placeholder, textarea::placeholder {
@@ -191,6 +208,18 @@
         tg.MainButton.text = "ЗБЕРЕГТИ ДАНІ";
         tg.MainButton.color = tg.themeParams.button_color || "#007aff";
         tg.MainButton.textColor = tg.themeParams.button_text_color || "#ffffff";
+
+        // ЛОГІКА ЗМІНИ КОЛЬОРУ ПІДСВІТКИ ЗАЛЕЖНО ВІД СТАТІ
+        const genderSelect = document.getElementById('gender');
+        genderSelect.addEventListener('change', function() {
+            if (this.value === 'Жінка') {
+                document.body.classList.add('theme-female'); // Додаємо рожеву тему
+                tg.MainButton.color = "#ff4d85"; // Робимо головну кнопку також рожевою
+            } else {
+                document.body.classList.remove('theme-female'); // Повертаємо стандартну тему
+                tg.MainButton.color = tg.themeParams.button_color || "#007aff"; // Повертаємо колір кнопки
+            }
+        });
 
         // Логіка відображення кнопки (Real-time валідація)
         const requiredFields = document.querySelectorAll('.required-field');
