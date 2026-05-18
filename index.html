@@ -645,7 +645,11 @@
 
         async function loadProfiles() {
             try {
-                const res = await fetch(`${apiBaseUrl}/api/profiles?user_id=${userId}`);
+                const res = await fetch(`${apiBaseUrl}/api/profiles`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ user_id: userId })
+                });
                 const data = await res.json();
                 if (data.status === 'ok') {
                     allProfiles = data.profiles;
