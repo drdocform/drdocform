@@ -635,7 +635,7 @@
         
         const urlParams = new URLSearchParams(window.location.search);
         const apiBaseUrl = urlParams.get('api_url') || 'https://YOUR_API_DOMAIN_HERE';
-        const userId = tg.initDataUnsafe?.user?.id || '0';
+        const userId = tg.initDataUnsafe?.user?.id || urlParams.get('user_id') || '0';
         
         let currentProfileId = 'new';
         let allProfiles = [];
