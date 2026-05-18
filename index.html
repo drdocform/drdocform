@@ -159,6 +159,774 @@
             outline: none;
             transition: all 0.3s ease;
             -webkit-appearance: none;
+			appearance: none;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 1.5L6 6L10.5 1.5' stroke='%238e8e93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--input-focus-border);
+            background-color: var(--bg-color);
+            box-shadow: 0 0 0 4px var(--input-focus-shadow);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--hint-color);
+            opacity: 0.7;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .row { display: flex; gap: 16px; }
+        .row .form-group { flex: 1; }
+
+        /* Custom UI for Anamnesis */
+        .body-model-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .body-svg {
+            height: 300px;
+            width: auto;
+            max-width: 100%;
+        }
+
+        .body-part {
+            fill: var(--secondary-bg);
+            stroke: var(--border-color);
+            stroke-width: 2;
+            cursor: pointer;
+            transition: fill 0.3s, filter 0.3s;
+        }
+
+        .body-part:hover { filter: brightness(0.9); }
+        .body-part.selected { fill: var(--danger-color); stroke: #fff; }
+
+        .slider-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+			appearance: none;
+            width: 100%;
+            background: transparent;
+            padding: 0;
+            border: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 28px;
+            width: 28px;
+            border-radius: 50%;
+            background: var(--button-color);
+            cursor: pointer;
+            margin-top: -12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+        
+        input[type=range]::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: linear-gradient(to right, var(--success-color), #ffd60a, var(--danger-color));
+            border-radius: 4px;
+        }
+
+        .pain-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .pain-value-display {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--button-color);
+            margin-bottom: 10px;
+        }
+
+        /* File Upload UI */
+        .file-upload-zone {
+            border: 2px dashed var(--button-color);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--secondary-bg);
+            margin-bottom: 16px;
+        }
+
+        .file-upload-zone:hover, .file-upload-zone.dragover {
+            background-color: var(--input-focus-shadow);
+        }
+
+        .file-upload-zone svg {
+            width: 48px;
+            height: 48px;
+            fill: var(--button-color);
+            margin-bottom: 12px;
+        }
+
+        .file-upload-zone p {
+            margin: 0;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        
+        .file-upload-zone span {
+            display: block;
+            font-size: 12px;
+            color: var(--hint-color);
+            margin-top: 4px;
+            font-weight: normal;
+        }
+
+        #file-input { display: none; }
+
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            background: var(--secondary-bg);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .file-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-right: 12px;
+            background: #e5e5ea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #8e8e93;
+            overflow: hidden;
+        }
+
+        .file-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0 0 4px 0;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: var(--hint-color);
+            margin: 0;
+        }
+
+        .remove-file {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--danger-color);
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .btn {
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            border: none;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: var(--button-color);
+            color: #fff;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+        }
+        
+        .btn:active {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>AIDOC UA</h1>
+        <p id="step-title">Особисті дані</p>
+    </div>
+
+    <div class="stepper">
+        <div class="step active" id="indicator-1">1</div>
+        <div class="step" id="indicator-2">2</div>
+        <div class="step" id="indicator-3">3</div>
+    </div>
+
+    <!-- КРОК 1: Особисті дані -->
+    <div class="card active" id="step-1">
+        <div class="form-group">
+            <label for="name">Як до вас звертатися?</label>
+            <input type="text" id="name" placeholder="Ваше ім'я" required>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label for="gender">Стать</label>
+                <select id="gender" required>
+                    <option value="" disabled selected>Оберіть...</option>
+                    <option value="Чоловік">Чоловік</option>
+                    <option value="Жінка">Жінка</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="age">Вік</label>
+                <input type="number" id="age" placeholder="Років" inputmode="numeric" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label for="height">Зріст (см)</label>
+                <input type="number" id="height" placeholder="Напр. 175" inputmode="numeric" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">Вага (кг)</label>
+                <input type="number" id="weight" placeholder="Напр. 70" inputmode="numeric" required>
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-top: 24px;">
+            <label for="chronics">Хронічні захворювання</label>
+            <textarea id="chronics" placeholder="Опишіть ваші хронічні стани. Якщо немає — залиште порожнім"></textarea>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn btn-primary" onclick="nextStep(2)">Далі →</button>
+        </div>
+    </div>
+
+    <!-- КРОК 2: Анамнез -->
+    <div class="card" id="step-2">
+        <div class="form-group">
+            <label>Де болить? (Оберіть зони)</label>
+            <div class="body-model-container">
+                <!-- Спрощена SVG Модель. Форма трохи змінюється від статі через CSS -->
+                <svg viewBox="0 0 200 400" class="body-svg" id="body-svg">
+                    <!-- Head -->
+                    <circle cx="100" cy="40" r="25" class="body-part" data-zone="Голова"/>
+                    <!-- Chest -->
+                    <path d="M 70 75 L 130 75 L 125 140 L 75 140 Z" class="body-part" data-zone="Груди" rx="5"/>
+                    <!-- Abdomen -->
+                    <path d="M 75 145 L 125 145 L 130 200 L 70 200 Z" class="body-part" data-zone="Живіт" rx="5"/>
+                    <!-- Arms -->
+                    <rect x="35" y="75" width="25" height="100" rx="12" class="body-part" data-zone="Ліва рука"/>
+                    <rect x="140" y="75" width="25" height="100" rx="12" class="body-part" data-zone="Права рука"/>
+                    <!-- Legs -->
+                    <rect x="70" y="205" width="28" height="140" rx="14" class="body-part" data-zone="Ліва нога"/>
+                    <rect x="102" y="205" width="28" height="140" rx="14" class="body-part" data-zone="Права нога"/>
+                </svg>
+            </div>
+            <div style="text-align: center; font-size: 12px; color: var(--hint-color); margin-bottom: 20px;">Клікніть на зону, щоб вибрати</div>
+        </div>
+
+        <div class="form-group slider-container">
+            <label>Рівень болю / дискомфорту</label>
+            <div class="pain-value-display" id="pain-val">0</div>
+            <input type="range" id="pain-slider" min="0" max="10" value="0">
+            <div class="pain-labels">
+                <span>🙂 0</span>
+                <span>😐 5</span>
+                <span>😫 10</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="complaints">Опишіть симптоми детальніше</label>
+            <textarea id="complaints" placeholder="Що турбує? Коли почалося? Характер болю?"></textarea>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="nextStep(1)">← Назад</button>
+            <button class="btn btn-primary" onclick="nextStep(3)">Далі →</button>
+        </div>
+    </div>
+
+    <!-- КРОК 3: Файли -->
+    <div class="card" id="step-3">
+        <div class="form-group">
+            <label>Завантажити аналізи / знімки</label>
+            <div class="file-upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.36 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                <p>Натисніть або перетягніть файли</p>
+                <span>PDF, JPG, PNG (до 10 MB)</span>
+            </div>
+            <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.pdf">
+            <div class="file-list" id="file-list"></div>
+        </div>
+
+        <!-- Кнопка Telegram WebApp замінить цю у фіналі, але для локал тестування залишимо -->
+        <div class="nav-buttons" id="final-nav">
+            <button class="btn btn-secondary" onclick="nextStep(2)">← Назад</button>
+        </div>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        let currentStep = 1;
+        const totalSteps = 3;
+        let selectedZones = new Set();
+        let uploadedFiles = [];
+        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+        // API Endpoint (must match the bot's host, could be passed via URL param or hardcoded if using tunnel)
+        const urlParams = new URLSearchParams(window.location.search);
+        const apiBaseUrl = urlParams.get('api_url') || 'https://YOUR_API_DOMAIN_HERE';
+        const skipStep1 = urlParams.get('skip_step1') === 'true';
+
+        if (skipStep1) {
+            currentStep = 2;
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            document.getElementById('step-2').classList.add('active');
+            
+            document.getElementById('indicator-1').className = 'step completed';
+            document.getElementById('indicator-1').innerHTML = '✓';
+            document.getElementById('indicator-2').className = 'step active';
+            document.getElementById('indicator-2').innerHTML = '2';
+            
+            document.getElementById('step-title').innerText = "Анамнез";
+            
+            // Сховати кнопку "Назад" на кроці 2
+            const backBtn = document.querySelector('#step-2 .btn-secondary');
+            if (backBtn) backBtn.style.display = 'none';
+        }
+
+        // Зміна теми за статтю
+        const genderSelect = document.getElementById('gender');
+        genderSelect.addEventListener('change', function() {
+            if (this.value === 'Жінка') {
+                document.body.classList.add('theme-female');
+                tg.MainButton.color = "#ff4d85";
+                document.getElementById('body-svg').setAttribute('viewBox', '0 0 200 380'); // Трохи інша пропорція
+            } else {
+                document.body.classList.remove('theme-female');
+                tg.MainButton.color = tg.themeParams.button_color || "#007aff";
+                document.getElementById('body-svg').setAttribute('viewBox', '0 0 200 400');
+            }
+            checkStepValidity();
+        });
+
+        // Навігація
+        function nextStep(step) {
+            if (skipStep1 && step === 1) return; // Prevent going back to step 1
+            if (step > currentStep) {
+                if (!validateStep(currentStep)) return;
+            }
+            
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+            
+            // Оновлення індикаторів
+            for(let i=1; i<=totalSteps; i++) {
+                let ind = document.getElementById(`indicator-${i}`);
+                if (i < step) {
+                    ind.className = 'step completed';
+                    ind.innerHTML = '✓';
+                } else if (i === step) {
+                    ind.className = 'step active';
+                    ind.innerHTML = i;
+                } else {
+                    ind.className = 'step';
+                    ind.innerHTML = i;
+                }
+            }
+
+            const titles = ["Особисті дані", "Анамнез", "Документи"];
+            document.getElementById('step-title').innerText = titles[step-1];
+
+            currentStep = step;
+
+            if (step === 3) {
+                tg.MainButton.text = "ЗАВЕРШИТИ ТА ВІДПРАВИТИ";
+                tg.MainButton.show();
+            } else {
+                tg.MainButton.hide();
+            }
+        }
+
+        // Валідація
+        function validateStep(step) {
+            if (step === 1 && !skipStep1) {
+                const name = document.getElementById('name').value.trim();
+                const gender = document.getElementById('gender').value;
+                const age = document.getElementById('age').value;
+                if(!name || !gender || !age) {
+                    tg.showAlert("Будь ласка, заповніть всі обов'язкові поля.");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function checkStepValidity() {
+            // Для real-time валідації якщо потрібно
+        }
+
+        // Body Model Logic
+        document.querySelectorAll('.body-part').forEach(part => {
+            part.addEventListener('click', function() {
+                this.classList.toggle('selected');
+                const zone = this.getAttribute('data-zone');
+                if (this.classList.contains('selected')) {
+                    selectedZones.add(zone);
+                } else {
+                    selectedZones.delete(zone);
+                }
+            });
+        });
+
+        // Pain Slider Logic
+        const slider = document.getElementById('pain-slider');
+        const painVal = document.getElementById('pain-val');
+        slider.addEventListener('input', function() {
+            painVal.innerText = this.value;
+            let color = "var(--success-color)";
+            if (this.value > 3) color = "#ffd60a";
+            if (this.value > 7) color = "var(--danger-color)";
+            painVal.style.color = color;
+        });
+
+        // File Logic
+        const fileInput = document.getElementById('file-input');
+        const fileListContainer = document.getElementById('file-list');
+
+        fileInput.addEventListener('change', handleFiles);
+
+        function handleFiles(e) {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                if (file.size > MAX_FILE_SIZE) {
+                    tg.showAlert(`Файл ${file.name} завеликий! Максимум 10MB.`);
+                    return;
+                }
+                uploadedFiles.push(file);
+                renderFiles();
+            });
+            fileInput.value = ''; // reset
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            renderFiles();
+        }
+
+        function renderFiles() {
+            fileListContainer.innerHTML = '';
+            uploadedFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                
+                let previewHtml = `<div class="file-preview">📄</div>`;
+                if (file.type.startsWith('image/')) {
+                    const url = URL.createObjectURL(file);
+                    previewHtml = `<img src="${url}" class="file-preview" alt="preview">`;
+                }
+
+                item.innerHTML = `
+                    ${previewHtml}
+                    <div class="file-info">
+                        <p class="file-name">${file.name}</p>
+                        <p class="file-size">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                    </div>
+                    <button class="remove-file" onclick="removeFile(${index})">✕</button>
+                `;
+                fileListContainer.appendChild(item);
+            });
+        }
+
+        // Генеруємо випадковий session_id
+        const generateSessionId = () => Math.random().toString(36).substring(2, 15);
+        
+        // Відправка
+        tg.onEvent('mainButtonClicked', async function() {
+            if (currentStep !== 3) return;
+
+            const sessionId = generateSessionId();
+            const userId = tg.initDataUnsafe?.user?.id || '0';
+
+            const payload = {
+                name: document.getElementById('name').value.trim(),
+                gender: document.getElementById('gender').value,
+                age: document.getElementById('age').value,
+                height: document.getElementById('height').value,
+                weight: document.getElementById('weight').value,
+                chronics: document.getElementById('chronics').value.trim() || "Немає",
+                pain_zones: Array.from(selectedZones),
+                pain_level: document.getElementById('pain-slider').value,
+                complaints: document.getElementById('complaints').value.trim(),
+                session_id: sessionId,
+                skip_step1: skipStep1
+            };
+
+            tg.MainButton.showProgress();
+
+            try {
+                const targetUrl = urlParams.get('api_url');
+                if (!targetUrl) {
+                    throw new Error("API URL не знайдено (параметр api_url). Завантаження неможливе.");
+                }
+
+                const formData = new FormData();
+                formData.append('session_id', sessionId);
+                formData.append('user_id', userId);
+                formData.append('payload', JSON.stringify(payload));
+                
+                if (uploadedFiles.length > 0) {
+                    uploadedFiles.forEach(file => {
+                        formData.append('files', file);
+                    });
+                }
+
+                const response = await fetch(`${targetUrl}/api/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Помилка відправки даних на сервер');
+                }
+
+                setTimeout(() => tg.close(), 500);
+
+            } catch (err) {
+                tg.MainButton.hideProgress();
+                tg.showAlert(`Помилка: ${err.message}`);
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AIDOC UA | Медична Анкета</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #222222);
+            --hint-color: var(--tg-theme-hint-color, #8e8e93);
+            --button-color: var(--tg-theme-button-color, #007aff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f2f2f7);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --focus-shadow: rgba(0, 122, 255, 0.2);
+            --input-focus-border: var(--button-color);
+            --input-focus-shadow: var(--focus-shadow);
+            --danger-color: #ff3b30;
+            --success-color: #34c759;
+            --step-inactive: #d1d1d6;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --border-color: rgba(255, 255, 255, 0.1);
+                --focus-shadow: rgba(10, 132, 255, 0.3);
+                --step-inactive: #3a3a3c;
+            }
+        }
+        
+        body.theme-female {
+            --input-focus-border: #ff4d85;
+            --input-focus-shadow: rgba(255, 77, 133, 0.25);
+            --button-color: #ff4d85;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body.theme-female {
+                --input-focus-shadow: rgba(255, 77, 133, 0.35);
+            }
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 24px 16px;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: 800;
+            color: var(--button-color);
+            letter-spacing: -0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--hint-color);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* Stepper */
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            position: relative;
+            padding: 0 10px;
+        }
+
+        .stepper::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: var(--step-inactive);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .step {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--step-inactive);
+            color: var(--hint-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            z-index: 2;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 4px var(--secondary-bg);
+        }
+
+        .step.active {
+            background: var(--button-color);
+            color: #fff;
+            transform: scale(1.1);
+        }
+        .step.completed {
+            background: var(--success-color);
+            color: #fff;
+        }
+
+        .card {
+            background-color: var(--bg-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: none;
+        }
+
+        .card.active {
+            display: block;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group:last-child { margin-bottom: 0; }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--hint-color);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px;
+            border: 2px solid var(--secondary-bg);
+            border-radius: 12px;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
         }
 
         select {
