@@ -538,9 +538,26 @@
         let uploadedFiles = [];
         const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
         // API Endpoint (must match the bot's host, could be passed via URL param or hardcoded if using tunnel)
-        // We will read from a query param if provided, otherwise assume local/relative
         const urlParams = new URLSearchParams(window.location.search);
-        const apiBaseUrl = urlParams.get('api_url') || 'https://YOUR_API_DOMAIN_HERE'; // Замінити або передати через URL
+        const apiBaseUrl = urlParams.get('api_url') || 'https://YOUR_API_DOMAIN_HERE';
+        const skipStep1 = urlParams.get('skip_step1') === 'true';
+
+        if (skipStep1) {
+            currentStep = 2;
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            document.getElementById('step-2').classList.add('active');
+            
+            document.getElementById('indicator-1').className = 'step completed';
+            document.getElementById('indicator-1').innerHTML = '✓';
+            document.getElementById('indicator-2').className = 'step active';
+            document.getElementById('indicator-2').innerHTML = '2';
+            
+            document.getElementById('step-title').innerText = "Анамнез";
+            
+            // Сховати кнопку "Назад" на кроці 2
+            const backBtn = document.querySelector('#step-2 .btn-secondary');
+            if (backBtn) backBtn.style.display = 'none';
+        }
 
         // Зміна теми за статтю
         const genderSelect = document.getElementById('gender');
@@ -559,6 +576,7 @@
 
         // Навігація
         function nextStep(step) {
+            if (skipStep1 && step === 1) return; // Prevent going back to step 1
             if (step > currentStep) {
                 if (!validateStep(currentStep)) return;
             }
@@ -596,7 +614,7 @@
 
         // Валідація
         function validateStep(step) {
-            if (step === 1) {
+            if (step === 1 && !skipStep1) {
                 const name = document.getElementById('name').value.trim();
                 const gender = document.getElementById('gender').value;
                 const age = document.getElementById('age').value;
@@ -704,41 +722,38 @@
                 pain_zones: Array.from(selectedZones),
                 pain_level: document.getElementById('pain-slider').value,
                 complaints: document.getElementById('complaints').value.trim(),
-                session_id: sessionId
+                session_id: sessionId,
+                skip_step1: skipStep1
             };
 
             tg.MainButton.showProgress();
 
             try {
-                // Якщо є файли, відправляємо їх на API
-                if (uploadedFiles.length > 0) {
-                    // API_URL will be provided by the bot config via URL params
-                    // if it's not set correctly, file upload will fail.
-                    const targetUrl = urlParams.get('api_url');
-                    if (!targetUrl) {
-                        throw new Error("API URL не знайдено (параметр api_url). Завантаження файлів неможливе.");
-                    }
+                const targetUrl = urlParams.get('api_url');
+                if (!targetUrl) {
+                    throw new Error("API URL не знайдено (параметр api_url). Завантаження неможливе.");
+                }
 
-                    const formData = new FormData();
-                    formData.append('session_id', sessionId);
-                    formData.append('user_id', userId);
+                const formData = new FormData();
+                formData.append('session_id', sessionId);
+                formData.append('user_id', userId);
+                formData.append('payload', JSON.stringify(payload));
+                
+                if (uploadedFiles.length > 0) {
                     uploadedFiles.forEach(file => {
                         formData.append('files', file);
                     });
-
-                    const response = await fetch(`${targetUrl}/api/upload`, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Помилка завантаження файлів на сервер');
-                    }
                 }
 
-                // Відправляємо метадані в бот
-                tg.sendData(JSON.stringify(payload));
-                
+                const response = await fetch(`${targetUrl}/api/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Помилка відправки даних на сервер');
+                }
+
                 setTimeout(() => tg.close(), 500);
 
             } catch (err) {
