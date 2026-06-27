@@ -287,16 +287,36 @@
             max-width: 100%;
         }
 
+        @keyframes heartbeat {
+            0% { transform: scale(1); filter: brightness(1); }
+            15% { transform: scale(1.05); filter: brightness(1.2); }
+            30% { transform: scale(1); filter: brightness(1); }
+            45% { transform: scale(1.05); filter: brightness(1.2); }
+            100% { transform: scale(1); filter: brightness(1); }
+        }
+
+        .pain-labels span {
+            display: inline-block;
+            transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+            transform-origin: center center;
+        }
+
         .body-part {
             fill: var(--secondary-bg);
             stroke: var(--border-color);
             stroke-width: 2;
             cursor: pointer;
             transition: fill 0.3s, filter 0.3s;
+            transform-origin: center;
+            transform-box: fill-box;
         }
 
         .body-part:hover { filter: brightness(0.9); }
-        .body-part.selected { fill: var(--danger-color); stroke: #fff; }
+        .body-part.selected { 
+            fill: var(--pain-color, #34c759); 
+            stroke: #fff; 
+            animation: heartbeat 1.5s infinite;
+        }
 
         .slider-container {
             margin: 30px 0;
@@ -758,7 +778,7 @@
             document.querySelectorAll('.body-part').forEach(el => el.classList.remove('selected'));
             selectedZones.clear();
             document.getElementById('pain-slider').value = 0;
-            document.getElementById('pain-val').innerText = '0';
+            if (typeof updatePainUI === 'function') updatePainUI(0);
             document.getElementById('complaints').value = '';
             
             nextStep(1);
@@ -854,13 +874,35 @@
         // Pain Slider Logic
         const slider = document.getElementById('pain-slider');
         const painVal = document.getElementById('pain-val');
-        slider.addEventListener('input', function() {
-            painVal.innerText = this.value;
-            let color = "var(--success-color)";
-            if (this.value > 3) color = "#ffd60a";
-            if (this.value > 7) color = "var(--danger-color)";
+        
+        function updatePainUI(val) {
+            painVal.innerText = val;
+            
+            // Smooth color transition from green (120) to red (0)
+            const hue = 120 - (val * 12);
+            const color = `hsl(${hue}, 80%, 45%)`;
+            
             painVal.style.color = color;
+            document.documentElement.style.setProperty('--pain-color', color);
+            
+            // Emoji reaction animation
+            const painLabels = document.querySelectorAll('.pain-labels span');
+            painLabels.forEach((label, idx) => {
+                const targetVal = idx === 0 ? 0 : (idx === 1 ? 5 : 10);
+                const diff = Math.abs(val - targetVal);
+                const scale = Math.max(1, 1.5 - (diff * 0.1));
+                const opacity = Math.max(0.4, 1 - (diff * 0.12));
+                label.style.transform = `scale(${scale})`;
+                label.style.opacity = opacity;
+            });
+        }
+
+        slider.addEventListener('input', function() {
+            updatePainUI(this.value);
         });
+        
+        // Initialize pain UI state
+        updatePainUI(slider.value);
 
         // File Logic
         const fileInput = document.getElementById('file-input');
