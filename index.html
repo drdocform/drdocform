@@ -947,15 +947,15 @@
                 const height = parseInt(document.getElementById('height').value, 10);
                 const weight = parseInt(document.getElementById('weight').value, 10);
                 if (!name || !gender || isNaN(age) || isNaN(height) || isNaN(weight)) {
-                    tg.showAlert("Будь ласка, заповніть всі обов'язкові поля.");
+                    tg.showAlert("Будь ласка, заповніть всі обов'язкові поля (ім'я, стать, вік, зріст, вага).");
                     return false;
                 }
-                if (age < 12 || age > 120) {
-                    tg.showAlert("Вкажіть коректний вік (12–120 років).");
+                if (age < 12 || age > 100) {
+                    tg.showAlert("Вкажіть коректний вік (12–100 років).");
                     return false;
                 }
-                if (height < 100 || height > 250) {
-                    tg.showAlert("Вкажіть коректний зріст (100–250 см).");
+                if (height < 100 || height > 220) {
+                    tg.showAlert("Вкажіть коректний зріст (100–220 см).");
                     return false;
                 }
                 if (weight < 30 || weight > 300) {
