@@ -943,9 +943,23 @@
             if (step === 1) {
                 const name = document.getElementById('name').value.trim();
                 const gender = document.getElementById('gender').value;
-                const age = document.getElementById('age').value;
-                if(!name || !gender || !age) {
+                const age = parseInt(document.getElementById('age').value, 10);
+                const height = parseInt(document.getElementById('height').value, 10);
+                const weight = parseInt(document.getElementById('weight').value, 10);
+                if (!name || !gender || isNaN(age) || isNaN(height) || isNaN(weight)) {
                     tg.showAlert("Будь ласка, заповніть всі обов'язкові поля.");
+                    return false;
+                }
+                if (age < 12 || age > 120) {
+                    tg.showAlert("Вкажіть коректний вік (12–120 років).");
+                    return false;
+                }
+                if (height < 100 || height > 250) {
+                    tg.showAlert("Вкажіть коректний зріст (100–250 см).");
+                    return false;
+                }
+                if (weight < 30 || weight > 300) {
+                    tg.showAlert("Вкажіть коректну вагу (30–200 кг).");
                     return false;
                 }
             }
@@ -1001,9 +1015,30 @@
         // File Logic
         const fileInput = document.getElementById('file-input');
         const fileListContainer = document.getElementById('file-list');
-
+        const dropZone = document.getElementById('drop-zone');
         fileInput.addEventListener('change', handleFiles);
-
+        // Drag & Drop обробники
+        if (dropZone) {
+            ['dragenter', 'dragover'].forEach(name => {
+                dropZone.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropZone.classList.add('dragover');
+                });
+            });
+            ['dragleave', 'drop'].forEach(name => {
+                dropZone.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropZone.classList.remove('dragover');
+                });
+            });
+            dropZone.addEventListener('drop', (e) => {
+                if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+                    handleFiles({ target: { files: e.dataTransfer.files } });
+                }
+            });
+        }
         function handleFiles(e) {
             const files = Array.from(e.target.files);
             files.forEach(file => {
@@ -1016,12 +1051,10 @@
             });
             fileInput.value = ''; // reset
         }
-
         function removeFile(index) {
             uploadedFiles.splice(index, 1);
             renderFiles();
         }
-
         function renderFiles() {
             fileListContainer.innerHTML = '';
             uploadedFiles.forEach((file, index) => {
@@ -1033,7 +1066,6 @@
                     const url = URL.createObjectURL(file);
                     previewHtml = `<img src="${url}" class="file-preview" alt="preview">`;
                 }
-
                 item.innerHTML = `
                     ${previewHtml}
                     <div class="file-info">
