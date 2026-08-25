@@ -745,6 +745,15 @@
         let currentProfileId = 'new';
         let allProfiles = [];
 
+        function getAuthHeaders(extraHeaders = {}) {
+            const headers = { ...extraHeaders };
+            if (tg && tg.initData) {
+                headers['Authorization'] = `tma ${tg.initData}`;
+                headers['X-Telegram-Init-Data'] = tg.initData;
+            }
+            return headers;
+        }
+
         // Load profiles on start
         loadProfiles();
 
@@ -752,7 +761,7 @@
             try {
                 const res = await fetch(`${apiBaseUrl}/api/profiles`, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: getAuthHeaders({'Content-Type': 'application/json'}),
                     body: JSON.stringify({ user_id: userId })
                 });
                 const data = await res.json();
@@ -812,7 +821,7 @@
                     try {
                         const res = await fetch(`${apiBaseUrl}/api/profiles/delete`, {
                             method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
+                            headers: getAuthHeaders({'Content-Type': 'application/json'}),
                             body: JSON.stringify({ user_id: userId, profile_id: id })
                         });
                         if (res.ok) {
@@ -1070,6 +1079,9 @@
                 const formData = new FormData();
                 formData.append('session_id', sessionId);
                 formData.append('user_id', userId);
+                if (tg && tg.initData) {
+                    formData.append('init_data', tg.initData);
+                }
                 formData.append('payload', JSON.stringify(payload));
                 
                 if (uploadedFiles.length > 0) {
@@ -1080,6 +1092,7 @@
 
                 const response = await fetch(`${targetUrl}/api/upload`, {
                     method: 'POST',
+                    headers: getAuthHeaders(),
                     body: formData
                 });
 
