@@ -950,16 +950,16 @@
                     tg.showAlert("Будь ласка, заповніть всі обов'язкові поля (ім'я, стать, вік, зріст, вага).");
                     return false;
                 }
-                if (age < 12 || age > 100) {
-                    tg.showAlert("Вкажіть коректний вік (12–100 років).");
+                if (age < 1 || age > 100) {
+                    tg.showAlert("Вкажіть коректний вік (1–100 років).");
                     return false;
                 }
-                if (height < 100 || height > 220) {
-                    tg.showAlert("Вкажіть коректний зріст (100–220 см).");
+                if (height < 50 || height > 220) {
+                    tg.showAlert("Вкажіть коректний зріст (50–220 см).");
                     return false;
                 }
-                if (weight < 30 || weight > 300) {
-                    tg.showAlert("Вкажіть коректну вагу (30–200 кг).");
+                if (weight < 5 || weight > 300) {
+                    tg.showAlert("Вкажіть коректну вагу (5–200 кг).");
                     return false;
                 }
             }
