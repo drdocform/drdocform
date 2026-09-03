@@ -633,6 +633,50 @@
         .legal-disclaimer a:active {
             opacity: 0.6;
         }
+
+        /* Quick Symptom Tags */
+        .quick-tags-container {
+            margin-bottom: 20px;
+        }
+
+        .tags-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .symptom-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border-radius: 14px;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--neu-shadow-inner);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .symptom-tag:hover {
+            border-color: var(--button-color);
+        }
+
+        .symptom-tag:active {
+            transform: scale(0.95);
+        }
+
+        .symptom-tag.active {
+            background: var(--button-color);
+            color: #ffffff;
+            border-color: var(--button-color);
+            box-shadow: 0 4px 12px var(--input-focus-shadow);
+        }
     </style>
 </head>
 <body>
@@ -731,6 +775,18 @@
                 <span>🙂 0</span>
                 <span>😐 5</span>
                 <span>😫 10</span>
+            </div>
+        </div>
+
+        <div class="form-group quick-tags-container">
+            <label>Швидкі приводи для звернення (оберіть одне або кілька):</label>
+            <div class="tags-wrapper" id="quick-symptoms">
+                <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Розшифровка аналізів / чек-ап')">📋 Розшифровка аналізів</span>
+                <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Загальна слабкість та втома')">😴 Слабкість / Втома</span>
+                <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Підвищена температура / застуда')">🌡️ Температура / ГРВІ</span>
+                <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Дискомфорт у животі / нудота')">🤢 Шлунок / Травлення</span>
+                <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Головний біль / коливання тиску')">🤕 Головний біль / Тиск</span>
+                <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Друга думка щодо призначеного лікування')">💊 Друга думка щодо лікування</span>
             </div>
         </div>
 
@@ -912,12 +968,31 @@
             
             // Clear anamnesis data when selecting a profile
             document.querySelectorAll('.body-part').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.symptom-tag').forEach(tag => tag.classList.remove('active'));
             selectedZones.clear();
             document.getElementById('pain-slider').value = 0;
             if (typeof updatePainUI === 'function') updatePainUI(0);
             document.getElementById('complaints').value = '';
             
             nextStep(1);
+        }
+
+        function toggleSymptomTag(el, text) {
+            el.classList.toggle('active');
+            const complaintsArea = document.getElementById('complaints');
+            let currentVal = complaintsArea.value.trim();
+            
+            if (el.classList.contains('active')) {
+                if (!currentVal || currentVal === 'Інтерпретація медичних документів та аналізів.') {
+                    complaintsArea.value = text;
+                } else if (!currentVal.includes(text)) {
+                    complaintsArea.value = currentVal + (currentVal.endsWith('.') || currentVal.endsWith(',') ? ' ' : ', ') + text;
+                }
+            } else {
+                // Remove tag text if deactivated
+                let parts = currentVal.split(/,\s*/).filter(p => p.trim() && p.trim() !== text);
+                complaintsArea.value = parts.join(', ');
+            }
         }
 
         function applyGenderTheme(gender) {
@@ -1002,6 +1077,33 @@
                 }
                 if (weight < 5 || weight > 300) {
                     tg.showAlert("Вкажіть коректну вагу (5–200 кг).");
+                    return false;
+                }
+            }
+
+            if (step === 2) {
+                const complaints = document.getElementById('complaints').value.trim();
+                const painLevel = parseInt(document.getElementById('pain-slider').value, 10);
+                const hasZones = selectedZones.size > 0;
+                const hasPain = !isNaN(painLevel) && painLevel > 0;
+                const hasText = complaints.length >= 3;
+
+                // Якщо пацієнт не вказав жодного симптому
+                if (!hasZones && !hasPain && !hasText) {
+                    const confirmMsg = "Ви не вказали жодних симптомів чи зон дискомфорту.\n\nБажаєте перейти далі лише для завантаження медичних файлів / аналізів?";
+                    if (tg && typeof tg.showConfirm === 'function') {
+                        tg.showConfirm(confirmMsg, function(confirmed) {
+                            if (confirmed) {
+                                document.getElementById('complaints').value = "Інтерпретація медичних документів та аналізів.";
+                                nextStep(3);
+                            }
+                        });
+                    } else {
+                        if (confirm(confirmMsg)) {
+                            document.getElementById('complaints').value = "Інтерпретація медичних документів та аналізів.";
+                            nextStep(3);
+                        }
+                    }
                     return false;
                 }
             }
@@ -1126,6 +1228,25 @@
         tg.onEvent('mainButtonClicked', async function() {
             if (currentStep !== 3) return;
 
+            const complaints = document.getElementById('complaints').value.trim();
+            const painLevel = parseInt(document.getElementById('pain-slider').value, 10);
+            const hasZones = selectedZones.size > 0;
+            const hasPain = !isNaN(painLevel) && painLevel > 0;
+            const isDocPlaceholder = (complaints === "Інтерпретація медичних документів та аналізів.");
+            const hasRealComplaints = complaints.length >= 3 && !isDocPlaceholder;
+            const hasFiles = uploadedFiles.length > 0;
+
+            // Захисний бар'єр: кейс не може бути повністю порожнім
+            if (!hasZones && !hasPain && !hasRealComplaints && !hasFiles) {
+                const alertMsg = "⚠️ Ви не додали жодної скарги, симптому чи медичного документа.\n\nБудь ласка, завантажте файли на цьому кроці або поверніться назад та опишіть ваше самопочуття.";
+                if (tg && typeof tg.showAlert === 'function') {
+                    tg.showAlert(alertMsg);
+                } else {
+                    alert(alertMsg);
+                }
+                return;
+            }
+
             const sessionId = generateSessionId();
 
             const payload = {
@@ -1171,7 +1292,14 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Помилка відправки даних на сервер');
+                    let errMsg = 'Помилка відправки даних на сервер';
+                    try {
+                        const errJson = await response.json();
+                        if (errJson && errJson.message) {
+                            errMsg = errJson.message;
+                        }
+                    } catch (jsonErr) {}
+                    throw new Error(errMsg);
                 }
 
                 setTimeout(() => tg.close(), 500);
