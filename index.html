@@ -1071,13 +1071,29 @@
             });
         }
 
+        function cleanChronicsValue(val) {
+            if (!val) return '';
+            let cleaned = String(val).trim();
+            cleaned = cleaned.replace(/^(?:Зафіксовані хронічні стани\s*\/\s*алергії:\s*)+/gi, '').trim();
+            const lower = cleaned.toLowerCase();
+            const placeholders = [
+                'не обтяжений (хронічні патології та алергії зі слів пацієнта відсутні)',
+                'не обтяжений',
+                'немає', 'нема', 'ні', 'нет', '-', 'none', 'хз', 'не знаю', 'відсутні', 'отсутствуют'
+            ];
+            if (placeholders.includes(lower)) {
+                return '';
+            }
+            return cleaned;
+        }
+
         function selectProfile(p) {
             if (p) {
                 currentProfileId = p.id;
                 document.getElementById('name').value = p.name || p.profile_name || '';
                 document.getElementById('gender').value = p.gender || '';
                 document.getElementById('age').value = p.age || '';
-                document.getElementById('chronics').value = p.chronics || '';
+                document.getElementById('chronics').value = cleanChronicsValue(p.chronics);
                 
                 // Parse metrics
                 document.getElementById('weight').value = '';
@@ -1399,7 +1415,7 @@
                 age: document.getElementById('age').value,
                 height: document.getElementById('height').value,
                 weight: document.getElementById('weight').value,
-                chronics: document.getElementById('chronics').value.trim() || "Немає",
+                chronics: cleanChronicsValue(document.getElementById('chronics').value) || "Немає",
                 pain_zones: Array.from(selectedZones),
                 pain_level: document.getElementById('pain-slider').value,
                 complaints: document.getElementById('complaints').value.trim(),
