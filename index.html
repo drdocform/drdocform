@@ -677,6 +677,97 @@
             border-color: var(--button-color);
             box-shadow: 0 4px 12px var(--input-focus-shadow);
         }
+
+        /* Step 4: Clarifications UI */
+        .clarification-card {
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 18px 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--glass-shadow);
+            animation: slideUp 0.3s ease;
+        }
+
+        .clarification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .clarification-badge {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--button-color);
+            background: rgba(0, 122, 255, 0.12);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .clarification-question {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            line-height: 1.45;
+        }
+
+        .clarification-textarea {
+            width: 100%;
+            min-height: 76px;
+            background: var(--bg-color);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-size: 14px;
+            color: var(--text-color);
+            resize: vertical;
+            box-sizing: border-box;
+            font-family: inherit;
+            line-height: 1.4;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .clarification-textarea:focus {
+            outline: none;
+            border-color: var(--button-color);
+            box-shadow: 0 0 0 3px var(--input-focus-shadow);
+        }
+
+        .pulse-loader {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--button-color);
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulseAnim 1.6s ease-in-out infinite;
+        }
+
+        .pulse-loader svg {
+            width: 32px;
+            height: 32px;
+            fill: #ffffff;
+        }
+
+        @keyframes pulseAnim {
+            0% {
+                transform: scale(0.9);
+                box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.6);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 22px rgba(0, 122, 255, 0);
+            }
+            100% {
+                transform: scale(0.9);
+                box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -689,6 +780,7 @@
         <div class="step active" id="indicator-1">1</div>
         <div class="step" id="indicator-2">2</div>
         <div class="step" id="indicator-3">3</div>
+        <div class="step" id="indicator-4">4</div>
     </div>
 
     <!-- КРОК 0: Вибір профілю -->
@@ -816,6 +908,7 @@
 
         <div class="nav-buttons" id="final-nav">
             <button class="btn btn-secondary" onclick="nextStep(2)">← Назад</button>
+            <button class="btn btn-primary" onclick="submitCase()">Аналізувати кейс →</button>
         </div>
 
         <p class="legal-disclaimer">
@@ -825,13 +918,57 @@
         </p>
     </div>
 
+    <!-- КРОК 4: Уточнення консиліуму -->
+    <div class="card" id="step-4">
+        <!-- Стан завантаження / аналізу ШІ -->
+        <div id="clarifications-loading" style="text-align: center; padding: 36px 12px;">
+            <div class="pulse-loader">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            </div>
+            <h3 style="margin-top: 22px; font-size: 18px; color: var(--text-color); font-weight: 700;">👨‍⚕️ Консиліум AIDOC UA аналізує ваші дані...</h3>
+            <p style="color: var(--hint-color); font-size: 14px; line-height: 1.5; max-width: 320px; margin: 8px auto 0 auto;">
+                Синтезуємо скарги, анамнез та завантажені файли. Формуємо персоналізовані клінічні уточнення...
+            </p>
+        </div>
+
+        <!-- Контейнер карток із запитаннями -->
+        <div id="clarifications-content" style="display: none;">
+            <div style="margin-bottom: 18px;">
+                <h3 style="margin: 0 0 6px 0; font-size: 18px; color: var(--text-color); font-weight: 700;">Уточнення від консиліуму</h3>
+                <p style="margin: 0; color: var(--hint-color); font-size: 14px; line-height: 1.45;">
+                    Будь ласка, дайте відповіді на кілька питань лікарів, щоб отримати максимально точний клінічний висновок.
+                </p>
+            </div>
+            <div id="clarifications-list"></div>
+            <div class="nav-buttons" style="margin-top: 20px;">
+                <button class="btn btn-primary" id="btn-submit-clarifications" onclick="submitClarifications()" style="width: 100%;">
+                    Надіслати відповіді та продовжити →
+                </button>
+            </div>
+        </div>
+
+        <!-- Екран успішного завершення -->
+        <div id="clarifications-success" style="display: none; text-align: center; padding: 28px 12px;">
+            <div style="font-size: 52px; margin-bottom: 14px; line-height: 1;">✅</div>
+            <h3 style="margin: 0 0 8px 0; font-size: 20px; color: var(--text-color); font-weight: 700;">Дані успішно передано!</h3>
+            <p id="clarifications-success-text" style="color: var(--hint-color); font-size: 14px; line-height: 1.5; max-width: 320px; margin: 0 auto 24px auto;">
+                Консиліум лікарів AIDOC UA готовий до формування клінічного звіту. Перейдіть до чату для вибору тарифу.
+            </p>
+            <button class="btn btn-primary" onclick="tg.close()" style="width: 100%; max-width: 280px; margin: 0 auto;">
+                Перейти до чату з ботом →
+            </button>
+        </div>
+    </div>
+
     <script>
         let tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
 
         let currentStep = 0;
-        const totalSteps = 3;
+        const totalSteps = 4;
+        let activeQuestions = [];
+        let currentSessionId = '';
         let selectedZones = new Set();
         let uploadedFiles = [];
         const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -1014,12 +1151,13 @@
 
         // Навігація
         function nextStep(step) {
-            if (step > currentStep && currentStep > 0) {
+            if (step > currentStep && currentStep > 0 && currentStep < 4) {
                 if (!validateStep(currentStep)) return;
             }
             
             document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-            document.getElementById(`step-${step}`).classList.add('active');
+            const targetCard = document.getElementById(`step-${step}`);
+            if (targetCard) targetCard.classList.add('active');
             
             const stepper = document.getElementById('stepper');
             if (step === 0) {
@@ -1030,26 +1168,30 @@
                 // Оновлення індикаторів
                 for(let i=1; i<=totalSteps; i++) {
                     let ind = document.getElementById(`indicator-${i}`);
-                    if (i < step) {
-                        ind.className = 'step completed';
-                        ind.innerHTML = '✓';
-                    } else if (i === step) {
-                        ind.className = 'step active';
-                        ind.innerHTML = i;
-                    } else {
-                        ind.className = 'step';
-                        ind.innerHTML = i;
+                    if (ind) {
+                        if (i < step) {
+                            ind.className = 'step completed';
+                            ind.innerHTML = '✓';
+                        } else if (i === step) {
+                            ind.className = 'step active';
+                            ind.innerHTML = i;
+                        } else {
+                            ind.className = 'step';
+                            ind.innerHTML = i;
+                        }
                     }
                 }
-                const titles = ["Особисті дані", "Анамнез", "Документи"];
-                document.getElementById('step-title').innerText = titles[step-1];
+                const titles = ["Особисті дані", "Анамнез", "Документи", "Уточнення"];
+                document.getElementById('step-title').innerText = titles[step-1] || "Консультація";
             }
 
             currentStep = step;
 
             if (step === 3) {
-                tg.MainButton.text = "ЗАВЕРШИТИ ТА ВІДПРАВИТИ";
+                tg.MainButton.text = "АНАЛІЗУВАТИ КЕЙС →";
                 tg.MainButton.show();
+            } else if (step === 4) {
+                // Керується динамічно функціями рендерингу уточнень
             } else {
                 tg.MainButton.hide();
             }
@@ -1224,8 +1366,8 @@
 
         const generateSessionId = () => Math.random().toString(36).substring(2, 15);
         
-        // Відправка
-        tg.onEvent('mainButtonClicked', async function() {
+        // Відправка анкети та перехід до уточнень ШІ (Крок 4)
+        async function submitCase() {
             if (currentStep !== 3) return;
 
             const complaints = document.getElementById('complaints').value.trim();
@@ -1248,6 +1390,7 @@
             }
 
             const sessionId = generateSessionId();
+            currentSessionId = sessionId;
 
             const payload = {
                 profile_id: currentProfileId,
@@ -1263,7 +1406,10 @@
                 session_id: sessionId
             };
 
-            tg.MainButton.showProgress();
+            // Перемикаємося на Крок 4 у стані аналізу
+            nextStep(4);
+            showClarificationsLoading();
+            tg.MainButton.hide();
 
             try {
                 const targetUrl = urlParams.get('api_url');
@@ -1302,12 +1448,216 @@
                     throw new Error(errMsg);
                 }
 
-                setTimeout(() => tg.close(), 500);
+                const resData = await response.json();
+
+                // Якщо зафіксовано екстрений випадок
+                if (resData.is_emergency || resData.status === 'emergency') {
+                    const alertText = resData.message || "🚨 Увага! Зафіксовано екстрений симптом. Негайно телефонуйте 112!";
+                    if (tg && typeof tg.showAlert === 'function') {
+                        tg.showAlert(alertText, () => tg.close());
+                    } else {
+                        alert(alertText);
+                        tg.close();
+                    }
+                    return;
+                }
+
+                // Перевіряємо, чи є уточнюючі питання від консиліуму
+                if (resData.has_questions && resData.questions && resData.questions.length > 0) {
+                    activeQuestions = resData.questions;
+                    renderClarificationQuestions(activeQuestions);
+                } else {
+                    // Питань немає - показуємо екран завершення
+                    showClarificationsSuccess("Всі клінічні дані зрозумілі, додаткових уточнень немає!\n\nКонсиліум лікарів AIDOC UA переходить до формування фінального медичного звіту.");
+                }
+
+            } catch (err) {
+                nextStep(3); // Повертаємо пацієнта назад на крок 3
+                tg.MainButton.text = "АНАЛІЗУВАТИ КЕЙС →";
+                tg.MainButton.show();
+                if (tg && typeof tg.showAlert === 'function') {
+                    tg.showAlert(`Помилка: ${err.message}`);
+                } else {
+                    alert(`Помилка: ${err.message}`);
+                }
+                console.error(err);
+            }
+        }
+
+        function showClarificationsLoading() {
+            document.getElementById('clarifications-loading').style.display = 'block';
+            document.getElementById('clarifications-content').style.display = 'none';
+            document.getElementById('clarifications-success').style.display = 'none';
+        }
+
+        function renderClarificationQuestions(questions) {
+            document.getElementById('clarifications-loading').style.display = 'none';
+            document.getElementById('clarifications-success').style.display = 'none';
+            const content = document.getElementById('clarifications-content');
+            content.style.display = 'block';
+
+            const list = document.getElementById('clarifications-list');
+            list.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const savedDraft = localStorage.getItem(`draft_clarification_${idx}`) || '';
+                const card = document.createElement('div');
+                card.className = 'clarification-card';
+                card.innerHTML = `
+                    <div class="clarification-header">
+                        <span class="clarification-badge">Уточнення ${idx + 1} з ${questions.length}</span>
+                    </div>
+                    <div class="clarification-question">${escapeHtml(q)}</div>
+                    <textarea 
+                        id="clarification-ans-${idx}" 
+                        class="clarification-textarea" 
+                        placeholder="Введіть вашу відповідь тут..."
+                        oninput="saveClarificationDraft(${idx}, this.value)"
+                    >${escapeHtml(savedDraft)}</textarea>
+                `;
+                list.appendChild(card);
+            });
+
+            tg.MainButton.text = "НАДІСЛАТИ ВІДПОВІДІ";
+            tg.MainButton.show();
+        }
+
+        async function submitClarifications() {
+            if (!activeQuestions || activeQuestions.length === 0) {
+                tg.close();
+                return;
+            }
+
+            const answers = [];
+            let hasAtLeastOneAnswer = false;
+
+            activeQuestions.forEach((q, idx) => {
+                const textarea = document.getElementById(`clarification-ans-${idx}`);
+                const ansVal = textarea ? textarea.value.trim() : "";
+                if (ansVal.length > 0) {
+                    hasAtLeastOneAnswer = true;
+                }
+                answers.push({
+                    question: q,
+                    answer: ansVal || "Немає відповіді"
+                });
+            });
+
+            if (!hasAtLeastOneAnswer) {
+                const msg = "Будь ласка, надайте відповідь хоча б на одне з питань або вкажіть 'не знаю'.";
+                if (tg && typeof tg.showAlert === 'function') {
+                    tg.showAlert(msg);
+                } else {
+                    alert(msg);
+                }
+                return;
+            }
+
+            const submitBtn = document.getElementById('btn-submit-clarifications');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerText = "Зберігаю відповіді...";
+            }
+            tg.MainButton.showProgress();
+
+            try {
+                const targetUrl = urlParams.get('api_url');
+                const payload = {
+                    session_id: currentSessionId,
+                    user_id: userId,
+                    answers: answers
+                };
+
+                const response = await fetch(`${targetUrl}/api/clarifications`, {
+                    method: 'POST',
+                    headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    let errMsg = 'Помилка збереження відповідей';
+                    try {
+                        const errJson = await response.json();
+                        if (errJson && errJson.message) errMsg = errJson.message;
+                    } catch (e) {}
+                    throw new Error(errMsg);
+                }
+
+                clearClarificationsDraft();
+                tg.MainButton.hideProgress();
+                showClarificationsSuccess("Ваші відповіді прийнято консиліумом лікарів AIDOC UA!\n\nТепер перейдіть до чату з ботом, щоб обрати тариф та отримати детальний медичний звіт.");
 
             } catch (err) {
                 tg.MainButton.hideProgress();
-                tg.showAlert(`Помилка: ${err.message}`);
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Надіслати відповіді та продовжити →";
+                }
+                if (tg && typeof tg.showAlert === 'function') {
+                    tg.showAlert(`Помилка: ${err.message}`);
+                } else {
+                    alert(`Помилка: ${err.message}`);
+                }
                 console.error(err);
+            }
+        }
+
+        function showClarificationsSuccess(msg) {
+            document.getElementById('clarifications-loading').style.display = 'none';
+            document.getElementById('clarifications-content').style.display = 'none';
+            const successBox = document.getElementById('clarifications-success');
+            successBox.style.display = 'block';
+
+            if (msg) {
+                document.getElementById('clarifications-success-text').innerText = msg;
+            }
+
+            tg.MainButton.text = "ПЕРЕЙТИ ДО ЧАТУ З БОТОМ";
+            tg.MainButton.show();
+
+            // Плавне автозакриття через 4 секунди
+            setTimeout(() => {
+                try { tg.close(); } catch(e) {}
+            }, 4000);
+        }
+
+        function saveClarificationDraft(idx, text) {
+            try {
+                localStorage.setItem(`draft_clarification_${idx}`, text);
+            } catch (e) {}
+        }
+
+        function clearClarificationsDraft() {
+            try {
+                for (let i = 0; i < 10; i++) {
+                    localStorage.removeItem(`draft_clarification_${i}`);
+                }
+            } catch (e) {}
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.toString().replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // Обробник натискання головної кнопки Telegram
+        tg.onEvent('mainButtonClicked', async function() {
+            if (currentStep === 3) {
+                await submitCase();
+            } else if (currentStep === 4) {
+                const successBox = document.getElementById('clarifications-success');
+                if (successBox && successBox.style.display !== 'none') {
+                    tg.close();
+                } else {
+                    await submitClarifications();
+                }
             }
         });
 
