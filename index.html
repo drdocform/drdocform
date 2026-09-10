@@ -170,16 +170,123 @@
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 20px 16px;
+            padding: 18px 14px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
             box-shadow: var(--glass-shadow);
         }
+        .profile-card:hover {
+            border-color: rgba(0, 122, 255, 0.3);
+        }
         .profile-card:active {
-            transform: scale(0.94);
+            transform: scale(0.98);
+        }
+        .profile-card.expanded {
+            grid-column: 1 / -1;
+            padding: 20px;
+            background: var(--glass-bg);
+            border-color: var(--button-color);
+            box-shadow: 0 10px 28px rgba(0, 122, 255, 0.12), var(--glass-shadow);
+            transform: translateY(-2px);
+        }
+        .profile-card-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .profile-card.expanded .profile-card-main {
+            flex-direction: row;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+        }
+        .profile-card.expanded .profile-icon {
+            font-size: 42px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+        .profile-card.expanded .profile-info-block {
+            flex: 1;
+            min-width: 0;
+        }
+        .profile-history-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: rgba(0, 122, 255, 0.08);
+            border: 1px solid rgba(0, 122, 255, 0.18);
+            color: var(--button-color);
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .profile-history-badge:hover {
+            background: rgba(0, 122, 255, 0.16);
+            transform: scale(1.02);
+        }
+        .profile-actions-tray {
+            display: none;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--glass-border);
+            animation: fadeInTray 0.3s ease-out;
+            gap: 10px;
+        }
+        @keyframes fadeInTray {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .profile-card.expanded .profile-actions-tray {
+            display: flex;
+            flex-direction: column;
+        }
+        @media (min-width: 360px) {
+            .profile-card.expanded .profile-actions-tray {
+                flex-direction: row;
+            }
+        }
+        .profile-action-btn {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 13.5px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+        .btn-primary-action {
+            background: var(--button-color);
+            color: #ffffff;
+            box-shadow: 0 4px 12px var(--input-focus-shadow);
+        }
+        .btn-primary-action:active {
+            transform: scale(0.97);
+        }
+        .btn-archive-action {
+            background: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--neu-shadow-inner);
+        }
+        .btn-archive-action:active {
+            transform: scale(0.97);
         }
         .profile-card.add-new {
             background: transparent;
@@ -199,6 +306,7 @@
             font-size: 36px;
             margin-bottom: 12px;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            transition: all 0.3s ease;
         }
         .profile-name {
             font-weight: 700;
@@ -768,6 +876,290 @@
                 box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
             }
         }
+
+        /* Dynamic Control Banner */
+        .dynamic-control-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.12), rgba(52, 199, 89, 0.12));
+            border: 1px solid rgba(0, 122, 255, 0.25);
+            margin-bottom: 20px;
+            box-shadow: 0 4px 14px rgba(0, 122, 255, 0.08);
+            animation: slideDownBanner 0.3s ease;
+        }
+        @keyframes slideDownBanner {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .dynamic-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            flex: 1;
+        }
+        .dynamic-banner-icon {
+            font-size: 22px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .dynamic-banner-text {
+            min-width: 0;
+        }
+        .dynamic-banner-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--button-color);
+            margin-bottom: 1px;
+        }
+        .dynamic-banner-sub {
+            font-size: 12px;
+            color: var(--hint-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dynamic-banner-cancel {
+            background: rgba(142, 142, 147, 0.15);
+            border: none;
+            color: var(--hint-color);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+        .dynamic-banner-cancel:hover {
+            color: var(--danger-color);
+            background: rgba(255, 59, 48, 0.15);
+        }
+
+        /* UI Archive Drawer / Bottom Sheet */
+        .archive-drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .archive-drawer-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .archive-drawer {
+            background: var(--bg-color);
+            border-radius: 28px 28px 0 0;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+            border-top: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+        .archive-drawer-overlay.active .archive-drawer {
+            transform: translateY(0);
+        }
+        .archive-handle {
+            width: 36px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--step-inactive);
+            margin: 12px auto 6px auto;
+            flex-shrink: 0;
+        }
+        .archive-header {
+            padding: 12px 20px 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--glass-border);
+            flex-shrink: 0;
+        }
+        .archive-header-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-color);
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+        .archive-header-sub {
+            font-size: 12.5px;
+            color: var(--hint-color);
+            margin: 2px 0 0 0;
+            font-weight: 500;
+        }
+        .archive-close-btn {
+            background: var(--secondary-bg);
+            border: none;
+            color: var(--hint-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+        .archive-close-btn:hover {
+            color: var(--text-color);
+        }
+        .archive-body {
+            padding: 16px 20px 24px 20px;
+            overflow-y: auto;
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Report Item Card in Archive */
+        .archive-report-card {
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 18px 16px;
+            margin-bottom: 14px;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .archive-report-card:hover {
+            border-color: rgba(0, 122, 255, 0.25);
+            transform: translateY(-1px);
+        }
+        .archive-report-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+        .archive-category-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 10px;
+            background: rgba(0, 122, 255, 0.12);
+            color: var(--button-color);
+        }
+        .archive-date-badge {
+            font-size: 12px;
+            color: var(--hint-color);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+        .archive-teaser-text {
+            font-size: 13.5px;
+            line-height: 1.5;
+            color: var(--text-color);
+            margin-bottom: 14px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 12px;
+            padding: 10px 12px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        @media (prefers-color-scheme: dark) {
+            .archive-teaser-text {
+                background: rgba(0, 0, 0, 0.25);
+                border-color: rgba(255, 255, 255, 0.05);
+            }
+        }
+        .archive-card-actions {
+            display: flex;
+            gap: 8px;
+            flex-direction: column;
+        }
+        @media (min-width: 360px) {
+            .archive-card-actions {
+                flex-direction: row;
+            }
+        }
+        .archive-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 12.5px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .archive-btn-view {
+            background: var(--secondary-bg);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+        }
+        .archive-btn-view:hover {
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--button-color);
+        }
+        .archive-btn-dynamics {
+            background: linear-gradient(135deg, var(--button-color), #0056b3);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.25);
+        }
+        body.theme-female .archive-btn-dynamics {
+            background: linear-gradient(135deg, #ff4d85, #d92461);
+            box-shadow: 0 4px 10px rgba(255, 77, 133, 0.25);
+        }
+        .archive-btn-dynamics:active {
+            transform: scale(0.97);
+        }
+        .archive-empty-state {
+            text-align: center;
+            padding: 36px 16px;
+        }
+        .archive-empty-icon {
+            font-size: 44px;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+        .archive-empty-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 6px;
+        }
+        .archive-empty-desc {
+            font-size: 13.5px;
+            color: var(--hint-color);
+            line-height: 1.45;
+            max-width: 280px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -781,6 +1173,18 @@
         <div class="step" id="indicator-2">2</div>
         <div class="step" id="indicator-3">3</div>
         <div class="step" id="indicator-4">4</div>
+    </div>
+
+    <!-- Банер контролю динаміки (Повторне звернення) -->
+    <div class="dynamic-control-banner" id="dynamic-banner" style="display: none;">
+        <div class="dynamic-banner-content">
+            <div class="dynamic-banner-icon">🔄</div>
+            <div class="dynamic-banner-text">
+                <div class="dynamic-banner-title">Контроль динаміки</div>
+                <div class="dynamic-banner-sub" id="dynamic-banner-desc">Порівняння з минулим звітом</div>
+            </div>
+        </div>
+        <button class="dynamic-banner-cancel" onclick="cancelDynamicControl()" title="Скасувати контроль динаміки">✕</button>
     </div>
 
     <!-- КРОК 0: Вибір профілю -->
@@ -940,7 +1344,7 @@
                 </p>
             </div>
             <div id="clarifications-list"></div>
-            <div class="nav-buttons" style="margin-top: 20px;">
+            <div class="nav-buttons" style="margin-top: 24px; padding-bottom: 28px;">
                 <button class="btn btn-primary" id="btn-submit-clarifications" onclick="submitClarifications()" style="width: 100%;">
                     Надіслати відповіді та продовжити →
                 </button>
@@ -957,6 +1361,40 @@
             <button class="btn btn-primary" onclick="tg.close()" style="width: 100%; max-width: 280px; margin: 0 auto;">
                 Перейти до чату з ботом →
             </button>
+        </div>
+    </div>
+
+    <!-- UI Archive Drawer (Історія консультацій) -->
+    <div class="archive-drawer-overlay" id="archive-drawer-overlay" onclick="closeArchiveDrawer(event)">
+        <div class="archive-drawer" onclick="event.stopPropagation()">
+            <div class="archive-handle"></div>
+            <div class="archive-header">
+                <div>
+                    <h3 class="archive-header-title">Історія консультацій</h3>
+                    <p class="archive-header-sub" id="archive-profile-subtitle">Оберіть звіт для перегляду або контролю динаміки</p>
+                </div>
+                <button class="archive-close-btn" onclick="closeArchiveDrawer()">✕</button>
+            </div>
+            <div class="archive-body" id="archive-body">
+                <div class="loader" id="archive-loader"></div>
+                <div id="archive-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Text Viewer Modal (Швидкий перегляд тексту звіту) -->
+    <div class="archive-drawer-overlay" id="report-modal-overlay" onclick="closeReportModal(event)" style="z-index: 1050;">
+        <div class="archive-drawer" onclick="event.stopPropagation()" style="max-height: 90vh;">
+            <div class="archive-handle"></div>
+            <div class="archive-header">
+                <div style="min-width: 0; flex: 1;">
+                    <h3 class="archive-header-title" id="report-modal-title">Клінічний звіт</h3>
+                    <p class="archive-header-sub" id="report-modal-date"></p>
+                </div>
+                <button class="archive-close-btn" onclick="closeReportModal()">✕</button>
+            </div>
+            <div class="archive-body" id="report-modal-body" style="font-size: 13.5px; line-height: 1.6; white-space: pre-wrap; font-family: inherit;">
+            </div>
         </div>
     </div>
 
@@ -979,6 +1417,24 @@
         
         let currentProfileId = 'new';
         let allProfiles = [];
+        let selectedExpandedProfileId = null;
+        let activeParentReport = null;
+        let activeParentReportId = null;
+        let currentArchiveProfile = null;
+        let currentReportsCache = [];
+
+        function formatReportsCount(count) {
+            count = parseInt(count) || 0;
+            const mod10 = count % 10;
+            const mod100 = count % 100;
+            if (mod10 === 1 && mod100 !== 11) {
+                return `${count} звіт`;
+            } else if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
+                return `${count} звіти`;
+            } else {
+                return `${count} звітів`;
+            }
+        }
 
         function getAuthHeaders(extraHeaders = {}) {
             const headers = { ...extraHeaders };
@@ -1023,23 +1479,48 @@
                 else if (p.gender === 'Жінка') icon = '👩';
                 else if (p.gender === 'Чоловік') icon = '👨';
                 
+                const isExpanded = (selectedExpandedProfileId === p.id);
+                const reportsCount = parseInt(p.reports_count) || 0;
+                const countText = formatReportsCount(reportsCount);
+                
                 const card = document.createElement('div');
-                card.className = 'profile-card';
-                card.onclick = () => selectProfile(p);
+                card.className = `profile-card ${isExpanded ? 'expanded' : ''}`;
+                card.id = `profile-card-${p.id}`;
+                card.onclick = () => toggleProfileExpansion(p);
+                
                 card.innerHTML = `
-                    <button class="delete-profile-btn" onclick="event.stopPropagation(); deleteProfile(${p.id}, '${p.name || p.profile_name}')">
+                    <button class="delete-profile-btn" onclick="event.stopPropagation(); deleteProfile(${p.id}, '${escapeHtml(p.name || p.profile_name)}')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                     </button>
-                    <div class="profile-icon">${icon}</div>
-                    <div class="profile-name">${p.name || p.profile_name || 'Профіль'}</div>
-                    <div class="profile-meta">${p.age ? p.age + ' років' : 'Вік не вказано'}, ${p.gender || ''}</div>
+                    <div class="profile-card-main">
+                        <div class="profile-icon">${icon}</div>
+                        <div class="profile-info-block">
+                            <div class="profile-name">${escapeHtml(p.name || p.profile_name || 'Профіль')}</div>
+                            <div class="profile-meta">${p.age ? p.age + ' років' : 'Вік не вказано'}, ${escapeHtml(p.gender || '')}</div>
+                            <div class="profile-history-badge" onclick="event.stopPropagation(); openArchiveDrawerForProfile(${p.id})">
+                                <span>📋</span> ${countText}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-actions-tray" onclick="event.stopPropagation()">
+                        <button class="profile-action-btn btn-primary-action" onclick="startNewConsultationForProfile(${p.id})">
+                            <span>🩺</span> Нова консультація
+                        </button>
+                        <button class="profile-action-btn btn-archive-action" onclick="openArchiveDrawerForProfile(${p.id})">
+                            <span>📁</span> Архів (${reportsCount})
+                        </button>
+                    </div>
                 `;
                 grid.appendChild(card);
             });
             
             const addBtn = document.createElement('div');
             addBtn.className = 'profile-card add-new';
-            addBtn.onclick = () => selectProfile(null);
+            addBtn.onclick = () => {
+                selectedExpandedProfileId = null;
+                cancelDynamicControl();
+                selectProfile(null);
+            };
             addBtn.innerHTML = `
                 <div style="font-size: 32px; color: var(--button-color); margin-bottom: 8px;">+</div>
                 <div style="font-weight: 600; color: var(--button-color); font-size: 14px;">Новий профіль</div>
@@ -1048,6 +1529,201 @@
             
             document.getElementById('profiles-loading').style.display = 'none';
             document.getElementById('profiles-container').style.display = 'block';
+        }
+
+        function toggleProfileExpansion(p) {
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.selectionChanged();
+            }
+            if (selectedExpandedProfileId === p.id) {
+                selectedExpandedProfileId = null;
+            } else {
+                selectedExpandedProfileId = p.id;
+            }
+            renderProfiles(allProfiles);
+        }
+
+        function startNewConsultationForProfile(profileId) {
+            const profile = allProfiles.find(x => x.id === profileId);
+            if (!profile) return;
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('light');
+            }
+            cancelDynamicControl();
+            selectProfile(profile);
+        }
+
+        async function openArchiveDrawerForProfile(profileId) {
+            const profile = allProfiles.find(x => x.id === profileId);
+            if (!profile) return;
+            currentArchiveProfile = profile;
+            
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+            
+            const overlay = document.getElementById('archive-drawer-overlay');
+            const subtitle = document.getElementById('archive-profile-subtitle');
+            const loader = document.getElementById('archive-loader');
+            const list = document.getElementById('archive-list');
+            
+            subtitle.innerText = `Пацієнт: ${profile.name || profile.profile_name || 'Профіль'}`;
+            loader.style.display = 'block';
+            list.innerHTML = '';
+            overlay.classList.add('active');
+            
+            try {
+                const res = await fetch(`${apiBaseUrl}/api/reports/history`, {
+                    method: 'POST',
+                    headers: getAuthHeaders({'Content-Type': 'application/json'}),
+                    body: JSON.stringify({ user_id: userId, profile_id: profile.id })
+                });
+                const data = await res.json();
+                loader.style.display = 'none';
+                
+                if (data.status === 'ok' && data.reports && data.reports.length > 0) {
+                    currentReportsCache = data.reports;
+                    renderArchiveReports(data.reports, profile);
+                } else {
+                    currentReportsCache = [];
+                    list.innerHTML = `
+                        <div class="archive-empty-state">
+                            <div class="archive-empty-icon">📁</div>
+                            <div class="archive-empty-title">Історія консультацій порожня</div>
+                            <div class="archive-empty-desc">
+                                Для цього профілю ще немає збережених звітів. Після першої консультації всі висновки консиліуму будуть доступні тут.
+                            </div>
+                            <button class="btn btn-primary" onclick="closeArchiveDrawer(); startNewConsultationForProfile(${profile.id});" style="margin-top: 18px; width: 100%; max-width: 240px;">
+                                Розпочати консультацію
+                            </button>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                console.error("Error loading report history:", e);
+                loader.style.display = 'none';
+                list.innerHTML = `
+                    <div class="archive-empty-state">
+                        <div class="archive-empty-icon">⚠️</div>
+                        <div class="archive-empty-title">Не вдалося завантажити архів</div>
+                        <div class="archive-empty-desc">Перевірте підключення до мережі та спробуйте ще раз.</div>
+                    </div>
+                `;
+            }
+        }
+
+        function closeArchiveDrawer(e) {
+            if (e && e.target && e.target !== document.getElementById('archive-drawer-overlay')) {
+                return;
+            }
+            const overlay = document.getElementById('archive-drawer-overlay');
+            if (overlay) overlay.classList.remove('active');
+        }
+
+        function renderArchiveReports(reports, profile) {
+            const list = document.getElementById('archive-list');
+            list.innerHTML = '';
+            
+            reports.forEach(r => {
+                const card = document.createElement('div');
+                card.className = 'archive-report-card';
+                
+                const catName = r.category_display || r.category || 'Загальна консультація';
+                const webBtn = r.web_url 
+                    ? `<button class="archive-btn archive-btn-view" onclick="openReportUrl('${escapeHtml(r.web_url)}')"><span>🌐</span> Звіт онлайн</button>`
+                    : `<button class="archive-btn archive-btn-view" onclick="viewReportContent(${r.id})"><span>📄</span> Переглянути</button>`;
+                    
+                card.innerHTML = `
+                    <div class="archive-report-header">
+                        <span class="archive-category-pill">🩺 ${escapeHtml(catName)}</span>
+                        <span class="archive-date-badge">${escapeHtml(r.date)}</span>
+                    </div>
+                    <div class="archive-teaser-text">${escapeHtml(r.teaser || 'Консультація консиліуму лікарів AIDOC UA')}</div>
+                    <div class="archive-card-actions">
+                        ${webBtn}
+                        <button class="archive-btn archive-btn-dynamics" onclick="startDynamicControlForReport(${r.id})">
+                            <span>🔄</span> Контроль динаміки
+                        </button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function startDynamicControlForReport(reportId) {
+            const report = currentReportsCache.find(x => x.id === reportId);
+            if (!report) return;
+            
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.notificationOccurred('success');
+            }
+            
+            activeParentReport = report;
+            activeParentReportId = report.id;
+            
+            const overlay = document.getElementById('archive-drawer-overlay');
+            if (overlay) overlay.classList.remove('active');
+            
+            const banner = document.getElementById('dynamic-banner');
+            const bannerDesc = document.getElementById('dynamic-banner-desc');
+            const catName = report.category_display || report.category || 'Консультація';
+            if (banner && bannerDesc) {
+                bannerDesc.innerText = `Порівняння зі звітом від ${report.date} (${catName})`;
+                banner.style.display = 'flex';
+            }
+            
+            const targetProfile = currentArchiveProfile || allProfiles.find(x => x.id === report.profile_id);
+            if (targetProfile) {
+                selectProfile(targetProfile);
+                const complaintsArea = document.getElementById('complaints');
+                if (complaintsArea && !complaintsArea.value.trim()) {
+                    complaintsArea.placeholder = "Опишіть поточні зміни в самопочутті, ефективність призначень або нові симптоми для контролю динаміки...";
+                }
+            }
+        }
+
+        function cancelDynamicControl() {
+            activeParentReport = null;
+            activeParentReportId = null;
+            const banner = document.getElementById('dynamic-banner');
+            if (banner) banner.style.display = 'none';
+            const complaintsArea = document.getElementById('complaints');
+            if (complaintsArea) {
+                complaintsArea.placeholder = "Наприклад: болить голова, температура 37.8, слабкість...";
+            }
+        }
+
+        function viewReportContent(reportId) {
+            const report = currentReportsCache.find(x => x.id === reportId);
+            if (!report) return;
+            
+            const overlay = document.getElementById('report-modal-overlay');
+            const title = document.getElementById('report-modal-title');
+            const dateEl = document.getElementById('report-modal-date');
+            const body = document.getElementById('report-modal-body');
+            
+            const catName = report.category_display || report.category || 'Клінічний звіт';
+            title.innerText = catName;
+            dateEl.innerText = `Дата: ${report.date}`;
+            body.innerText = report.teaser || 'Текст звіту';
+            
+            overlay.classList.add('active');
+        }
+
+        function closeReportModal(e) {
+            if (e && e.target && e.target !== document.getElementById('report-modal-overlay')) {
+                return;
+            }
+            const overlay = document.getElementById('report-modal-overlay');
+            if (overlay) overlay.classList.remove('active');
+        }
+
+        function openReportUrl(url) {
+            if (tg && typeof tg.openLink === 'function') {
+                tg.openLink(url);
+            } else {
+                window.open(url, '_blank');
+            }
         }
 
         function deleteProfile(id, name) {
@@ -1060,6 +1736,8 @@
                             body: JSON.stringify({ user_id: userId, profile_id: id })
                         });
                         if (res.ok) {
+                            if (selectedExpandedProfileId === id) selectedExpandedProfileId = null;
+                            if (activeParentReport && activeParentReport.profile_id === id) cancelDynamicControl();
                             loadProfiles();
                         } else {
                             tg.showAlert('Помилка при видаленні.');
@@ -1176,11 +1854,16 @@
             if (targetCard) targetCard.classList.add('active');
             
             const stepper = document.getElementById('stepper');
+            const banner = document.getElementById('dynamic-banner');
             if (step === 0) {
                 stepper.style.display = 'none';
+                if (banner) banner.style.display = 'none';
                 document.getElementById('step-title').innerText = "Сімейні акаунти";
             } else {
                 stepper.style.display = 'flex';
+                if (banner) {
+                    banner.style.display = (activeParentReportId && step < 4) ? 'flex' : 'none';
+                }
                 // Оновлення індикаторів
                 for(let i=1; i<=totalSteps; i++) {
                     let ind = document.getElementById(`indicator-${i}`);
@@ -1207,7 +1890,8 @@
                 tg.MainButton.text = "АНАЛІЗУВАТИ КЕЙС →";
                 tg.MainButton.show();
             } else if (step === 4) {
-                // Керується динамічно функціями рендерингу уточнень
+                // Приховуємо закріплену нижню кнопку, щоб уникнути передчасного випадкового відправлення
+                tg.MainButton.hide();
             } else {
                 tg.MainButton.hide();
             }
@@ -1410,6 +2094,7 @@
 
             const payload = {
                 profile_id: currentProfileId,
+                parent_report_id: activeParentReportId || null,
                 name: document.getElementById('name').value.trim(),
                 gender: document.getElementById('gender').value,
                 age: document.getElementById('age').value,
@@ -1534,8 +2219,9 @@
                 list.appendChild(card);
             });
 
-            tg.MainButton.text = "НАДІСЛАТИ ВІДПОВІДІ";
-            tg.MainButton.show();
+            // Нижня закріплена кнопка Telegram прихована, щоб клієнт випадково не натиснув її раніше ніж відповість на всі питання.
+            // Залишається лише інлайн-кнопка під списком уточнюючих питань.
+            tg.MainButton.hide();
         }
 
         async function submitClarifications() {
@@ -1574,7 +2260,9 @@
                 submitBtn.disabled = true;
                 submitBtn.innerText = "Зберігаю відповіді...";
             }
-            tg.MainButton.showProgress();
+            if (tg && tg.MainButton && tg.MainButton.isVisible) {
+                tg.MainButton.showProgress();
+            }
 
             try {
                 const targetUrl = urlParams.get('api_url');
@@ -1600,11 +2288,15 @@
                 }
 
                 clearClarificationsDraft();
-                tg.MainButton.hideProgress();
+                if (tg && tg.MainButton && tg.MainButton.isVisible) {
+                    tg.MainButton.hideProgress();
+                }
                 showClarificationsSuccess("Ваші відповіді прийнято консиліумом лікарів AIDOC UA!\n\nТепер перейдіть до чату з ботом, щоб обрати тариф та отримати детальний медичний звіт.");
 
             } catch (err) {
-                tg.MainButton.hideProgress();
+                if (tg && tg.MainButton && tg.MainButton.isVisible) {
+                    tg.MainButton.hideProgress();
+                }
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.innerText = "Надіслати відповіді та продовжити →";
