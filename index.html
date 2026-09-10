@@ -157,46 +157,106 @@
             display: block;
         }
 
-        /* Profiles Grid */
+        /* Profiles Flex Grid with Smooth Accordion Transitions */
         .profiles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
             margin-top: 20px;
         }
         .profile-card {
+            flex: 1 1 calc(50% - 6px);
+            min-width: 135px;
+            max-width: 100%;
+            box-sizing: border-box;
             background: var(--input-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
+            border: 1.5px solid var(--glass-border);
             border-radius: 20px;
-            padding: 18px 14px;
+            padding: 16px 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: flex-basis 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+                        max-width 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.3s ease,
+                        box-shadow 0.35s ease,
+                        background-color 0.3s ease,
+                        transform 0.25s ease;
             position: relative;
             overflow: hidden;
             box-shadow: var(--glass-shadow);
         }
         .profile-card:hover {
-            border-color: rgba(0, 122, 255, 0.3);
+            border-color: var(--card-hover-border, rgba(0, 122, 255, 0.35));
         }
         .profile-card:active {
-            transform: scale(0.98);
+            transform: scale(0.985);
         }
+
+        /* Gender Theme Classes for Profile Cards */
+        .profile-card.gender-female {
+            --card-accent: #ff4d85;
+            --card-accent-rgb: 255, 77, 133;
+            --card-hover-border: rgba(255, 77, 133, 0.45);
+        }
+        .profile-card.gender-female .profile-meta {
+            color: rgba(255, 77, 133, 0.9);
+        }
+        .profile-card.gender-female .profile-icon {
+            filter: drop-shadow(0 4px 10px rgba(255, 77, 133, 0.25));
+        }
+        .profile-card.gender-female .profile-history-badge {
+            background: rgba(255, 77, 133, 0.08);
+            border: 1px solid rgba(255, 77, 133, 0.22);
+            color: #ff4d85;
+        }
+
+        .profile-card.gender-male {
+            --card-accent: #007aff;
+            --card-accent-rgb: 0, 122, 255;
+            --card-hover-border: rgba(0, 122, 255, 0.45);
+        }
+        .profile-card.gender-male .profile-meta {
+            color: rgba(0, 122, 255, 0.9);
+        }
+        .profile-card.gender-male .profile-icon {
+            filter: drop-shadow(0 4px 10px rgba(0, 122, 255, 0.25));
+        }
+        .profile-card.gender-male .profile-history-badge {
+            background: rgba(0, 122, 255, 0.08);
+            border: 1px solid rgba(0, 122, 255, 0.2);
+            color: #007aff;
+        }
+
+        .profile-card.gender-neutral {
+            --card-accent: var(--button-color);
+            --card-accent-rgb: 0, 122, 255;
+            --card-hover-border: rgba(0, 122, 255, 0.35);
+        }
+
+        /* Expanded Profile Card: Smooth Full Width & Highlight Glow */
         .profile-card.expanded {
-            grid-column: 1 / -1;
-            padding: 20px;
+            flex: 1 1 100%;
+            max-width: 100%;
+            padding: 18px 16px;
             background: var(--glass-bg);
-            border-color: var(--button-color);
-            box-shadow: 0 10px 28px rgba(0, 122, 255, 0.12), var(--glass-shadow);
+            border-color: var(--card-accent, var(--button-color));
+            box-shadow: 0 10px 28px rgba(var(--card-accent-rgb, 0, 122, 255), 0.18), var(--glass-shadow);
             transform: translateY(-2px);
         }
+        .profile-card.expanded.gender-female {
+            box-shadow: 0 10px 28px rgba(255, 77, 133, 0.22), var(--glass-shadow);
+        }
+        .profile-card.expanded.gender-male {
+            box-shadow: 0 10px 28px rgba(0, 122, 255, 0.22), var(--glass-shadow);
+        }
+
         .profile-card-main {
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 0.3s ease;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .profile-card.expanded .profile-card-main {
             flex-direction: row;
@@ -233,38 +293,45 @@
             background: rgba(0, 122, 255, 0.16);
             transform: scale(1.02);
         }
+
+        /* Smooth Accordion Expansion for Actions Tray */
+        .profile-actions-wrapper {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            opacity: 0;
+        }
+        .profile-card.expanded .profile-actions-wrapper {
+            grid-template-rows: 1fr;
+            opacity: 1;
+        }
         .profile-actions-tray {
-            display: none;
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 1px solid var(--glass-border);
-            animation: fadeInTray 0.3s ease-out;
-            gap: 10px;
-        }
-        @keyframes fadeInTray {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .profile-card.expanded .profile-actions-tray {
+            overflow: hidden;
+            min-height: 0;
             display: flex;
             flex-direction: column;
+            gap: 10px;
+            padding-top: 14px;
+            margin-top: 14px;
+            border-top: 1px solid var(--glass-border);
         }
-        @media (min-width: 360px) {
+        @media (min-width: 340px) {
             .profile-card.expanded .profile-actions-tray {
                 flex-direction: row;
             }
         }
         .profile-action-btn {
-            flex: 1;
+            flex: 1 1 auto;
+            min-width: 0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             padding: 12px 14px;
             border-radius: 14px;
             font-size: 13.5px;
             font-weight: 700;
-            border: none;
+            border: 1.5px solid transparent;
             cursor: pointer;
             transition: all 0.2s ease;
             text-decoration: none;
@@ -272,9 +339,9 @@
             white-space: nowrap;
         }
         .btn-primary-action {
-            background: var(--button-color);
+            background: var(--card-accent, var(--button-color));
             color: #ffffff;
-            box-shadow: 0 4px 12px var(--input-focus-shadow);
+            box-shadow: 0 4px 14px rgba(var(--card-accent-rgb, 0, 122, 255), 0.3);
         }
         .btn-primary-action:active {
             transform: scale(0.97);
@@ -282,13 +349,18 @@
         .btn-archive-action {
             background: var(--input-bg);
             color: var(--text-color);
-            border: 1px solid var(--glass-border);
+            border-color: rgba(var(--card-accent-rgb, 0, 122, 255), 0.25);
             box-shadow: var(--neu-shadow-inner);
+        }
+        .btn-archive-action:hover {
+            border-color: var(--card-accent, var(--button-color));
         }
         .btn-archive-action:active {
             transform: scale(0.97);
         }
         .profile-card.add-new {
+            flex: 1 1 calc(50% - 6px);
+            min-width: 135px;
             background: transparent;
             border: 2px dashed rgba(142, 142, 147, 0.4);
             display: flex;
@@ -297,6 +369,7 @@
             align-items: center;
             min-height: 130px;
             box-shadow: none;
+            transition: all 0.3s ease;
         }
         .profile-card.add-new:hover {
             background: rgba(0, 122, 255, 0.05);
@@ -1160,6 +1233,104 @@
             max-width: 280px;
             margin: 0 auto;
         }
+
+        /* Structured Report Viewer Styles */
+        .report-modal-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .report-copy-btn {
+            background: var(--secondary-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 12px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .report-copy-btn:hover {
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--button-color);
+        }
+        .report-copy-btn.copied {
+            background: rgba(52, 199, 89, 0.15);
+            color: #34c759;
+            border-color: rgba(52, 199, 89, 0.3);
+        }
+        .report-h3 {
+            font-size: 15.5px;
+            font-weight: 800;
+            color: var(--text-color);
+            margin: 18px 0 8px 0;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--glass-border);
+            letter-spacing: -0.2px;
+        }
+        .report-h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--button-color);
+            margin: 14px 0 6px 0;
+        }
+        .report-quote {
+            margin: 12px 0;
+            padding: 10px 14px;
+            background: rgba(0, 122, 255, 0.06);
+            border-left: 3.5px solid var(--button-color);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+            color: var(--text-color);
+            font-size: 13.5px;
+            line-height: 1.55;
+        }
+        .report-list {
+            margin: 8px 0 12px 18px;
+            padding: 0;
+        }
+        .report-list li {
+            margin-bottom: 6px;
+            color: var(--text-color);
+            font-size: 13.5px;
+            line-height: 1.55;
+        }
+        .report-num-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+        }
+        .report-num-badge {
+            background: var(--button-color);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 800;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .report-num-content {
+            flex: 1;
+            color: var(--text-color);
+            font-size: 13.5px;
+            line-height: 1.55;
+        }
+        .report-p {
+            margin: 0 0 10px 0;
+            color: var(--text-color);
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -1391,9 +1562,15 @@
                     <h3 class="archive-header-title" id="report-modal-title">Клінічний звіт</h3>
                     <p class="archive-header-sub" id="report-modal-date"></p>
                 </div>
-                <button class="archive-close-btn" onclick="closeReportModal()">✕</button>
+                <div class="report-modal-header-actions">
+                    <button class="report-copy-btn" id="report-copy-btn" onclick="copyModalReport()" title="Скопіювати звіт">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <span id="copy-btn-label">Скопіювати</span>
+                    </button>
+                    <button class="archive-close-btn" onclick="closeReportModal()">✕</button>
+                </div>
             </div>
-            <div class="archive-body" id="report-modal-body" style="font-size: 13.5px; line-height: 1.6; white-space: pre-wrap; font-family: inherit;">
+            <div class="archive-body" id="report-modal-body" style="font-size: 14px; line-height: 1.65; overflow-y: auto; max-height: 75vh; -webkit-overflow-scrolling: touch;">
             </div>
         </div>
     </div>
@@ -1479,13 +1656,21 @@
                 else if (p.gender === 'Жінка') icon = '👩';
                 else if (p.gender === 'Чоловік') icon = '👨';
                 
+                let genderClass = 'gender-neutral';
+                if (p.gender === 'Жінка') {
+                    genderClass = 'gender-female';
+                } else if (p.gender === 'Чоловік') {
+                    genderClass = 'gender-male';
+                }
+
                 const isExpanded = (selectedExpandedProfileId === p.id);
                 const reportsCount = parseInt(p.reports_count) || 0;
                 const countText = formatReportsCount(reportsCount);
                 
                 const card = document.createElement('div');
-                card.className = `profile-card ${isExpanded ? 'expanded' : ''}`;
+                card.className = `profile-card ${genderClass} ${isExpanded ? 'expanded' : ''}`;
                 card.id = `profile-card-${p.id}`;
+                card.dataset.profileId = p.id;
                 card.onclick = () => toggleProfileExpansion(p);
                 
                 card.innerHTML = `
@@ -1502,13 +1687,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="profile-actions-tray" onclick="event.stopPropagation()">
-                        <button class="profile-action-btn btn-primary-action" onclick="startNewConsultationForProfile(${p.id})">
-                            <span>🩺</span> Нова консультація
-                        </button>
-                        <button class="profile-action-btn btn-archive-action" onclick="openArchiveDrawerForProfile(${p.id})">
-                            <span>📁</span> Архів (${reportsCount})
-                        </button>
+                    <div class="profile-actions-wrapper">
+                        <div class="profile-actions-tray" onclick="event.stopPropagation()">
+                            <button class="profile-action-btn btn-primary-action" onclick="startNewConsultationForProfile(${p.id})">
+                                <span>🩺</span> Нова консультація
+                            </button>
+                            <button class="profile-action-btn btn-archive-action" onclick="openArchiveDrawerForProfile(${p.id})">
+                                <span>📁</span> Архів (${reportsCount})
+                            </button>
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -1518,6 +1705,8 @@
             addBtn.className = 'profile-card add-new';
             addBtn.onclick = () => {
                 selectedExpandedProfileId = null;
+                document.querySelectorAll('.profile-card[data-profile-id]').forEach(c => c.classList.remove('expanded'));
+                applyGenderTheme('');
                 cancelDynamicControl();
                 selectProfile(null);
             };
@@ -1529,18 +1718,38 @@
             
             document.getElementById('profiles-loading').style.display = 'none';
             document.getElementById('profiles-container').style.display = 'block';
+
+            if (selectedExpandedProfileId) {
+                const activeP = allProfiles.find(x => x.id === selectedExpandedProfileId);
+                if (activeP && activeP.gender) applyGenderTheme(activeP.gender);
+            }
         }
 
         function toggleProfileExpansion(p) {
             if (tg && tg.HapticFeedback) {
                 tg.HapticFeedback.selectionChanged();
             }
-            if (selectedExpandedProfileId === p.id) {
-                selectedExpandedProfileId = null;
+            
+            const isCollapsing = (selectedExpandedProfileId === p.id);
+            selectedExpandedProfileId = isCollapsing ? null : p.id;
+            
+            // Smooth DOM toggling without destroying elements
+            const cards = document.querySelectorAll('.profile-card[data-profile-id]');
+            cards.forEach(card => {
+                const cardId = parseInt(card.dataset.profileId);
+                if (cardId === selectedExpandedProfileId) {
+                    card.classList.add('expanded');
+                } else {
+                    card.classList.remove('expanded');
+                }
+            });
+
+            // Gender theme dynamic highlighting
+            if (!isCollapsing && p && p.gender) {
+                applyGenderTheme(p.gender);
             } else {
-                selectedExpandedProfileId = p.id;
+                applyGenderTheme('');
             }
-            renderProfiles(allProfiles);
         }
 
         function startNewConsultationForProfile(profileId) {
@@ -1549,6 +1758,7 @@
             if (tg && tg.HapticFeedback) {
                 tg.HapticFeedback.impactOccurred('light');
             }
+            applyGenderTheme(profile.gender);
             cancelDynamicControl();
             selectProfile(profile);
         }
@@ -1620,6 +1830,87 @@
             if (overlay) overlay.classList.remove('active');
         }
 
+        function cleanHtmlAndMarkdown(text) {
+            if (!text) return '';
+            let cleaned = text
+                .replace(/<[^>]+>/g, '') // remove HTML tags
+                .replace(/🔗\s*(?:Ваш медичний ШІ-асистент:?|ШІ-асистент AIDOC UA)[^\n]*/gi, '')
+                .replace(/t\.me\/AidocUAbot/gi, '')
+                .replace(/^#+\s*/gm, '')
+                .replace(/[*_`~]/g, '')
+                .trim();
+            return cleaned;
+        }
+
+        let activeModalReportText = '';
+
+        function renderFormattedReport(rawText) {
+            if (!rawText) return '<p class="report-p">Текст звіту відсутній.</p>';
+            
+            // Remove bot signature lines and unclosed tags
+            let text = rawText
+                .replace(/🔗\s*(?:<b>)?Ваш медичний ШІ-асистент:?(?:<\/b>)?\s*t\.me\/AidocUAbot[^\n]*/gi, '')
+                .replace(/📅\s*(?:<b>)?Дата(?:\s+генерації)?(?:\s+звіту)?:?(?:<\/b>)?[^\n]*/gi, '')
+                .replace(/<[^>]+>/g, '')
+                .trim();
+            
+            const lines = text.split('\n');
+            let html = '';
+            let inList = false;
+            
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (!line) {
+                    if (inList) {
+                        html += '</ul>';
+                        inList = false;
+                    }
+                    continue;
+                }
+                
+                // Format bold markdown **text**
+                line = escapeHtml(line).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                
+                // Headers: ### or ##
+                if (line.startsWith('### ')) {
+                    if (inList) { html += '</ul>'; inList = false; }
+                    html += `<h4 class="report-h4">${line.slice(4)}</h4>`;
+                } else if (line.startsWith('## ') || line.startsWith('# ')) {
+                    if (inList) { html += '</ul>'; inList = false; }
+                    const titleText = line.replace(/^#+\s*/, '');
+                    html += `<h3 class="report-h3">${titleText}</h3>`;
+                } else if (line.startsWith('&gt; ') || line.startsWith('> ')) {
+                    if (inList) { html += '</ul>'; inList = false; }
+                    const quoteText = line.replace(/^(?:&gt;|>)\s*/, '');
+                    html += `<blockquote class="report-quote">${quoteText}</blockquote>`;
+                } else if (/^[-*•]\s+/.test(line)) {
+                    if (!inList) {
+                        html += '<ul class="report-list">';
+                        inList = true;
+                    }
+                    const itemText = line.replace(/^[-*•]\s+/, '');
+                    html += `<li>${itemText}</li>`;
+                } else if (/^\d+\.\s+/.test(line)) {
+                    if (inList) { html += '</ul>'; inList = false; }
+                    const numMatch = line.match(/^(\d+)\.\s+(.*)/);
+                    if (numMatch) {
+                        html += `<div class="report-num-item"><span class="report-num-badge">${numMatch[1]}</span><span class="report-num-content">${numMatch[2]}</span></div>`;
+                    } else {
+                        html += `<p class="report-p">${line}</p>`;
+                    }
+                } else {
+                    if (inList) { html += '</ul>'; inList = false; }
+                    html += `<p class="report-p">${line}</p>`;
+                }
+            }
+            
+            if (inList) {
+                html += '</ul>';
+            }
+            
+            return html;
+        }
+
         function renderArchiveReports(reports, profile) {
             const list = document.getElementById('archive-list');
             list.innerHTML = '';
@@ -1632,13 +1923,21 @@
                 const webBtn = r.web_url 
                     ? `<button class="archive-btn archive-btn-view" onclick="openReportUrl('${escapeHtml(r.web_url)}')"><span>🌐</span> Звіт онлайн</button>`
                     : `<button class="archive-btn archive-btn-view" onclick="viewReportContent(${r.id})"><span>📄</span> Переглянути</button>`;
+                
+                let cleanTeaser = cleanHtmlAndMarkdown(r.teaser);
+                if (!cleanTeaser && r.report) {
+                    cleanTeaser = cleanHtmlAndMarkdown(r.report).slice(0, 180) + '...';
+                }
+                if (!cleanTeaser) {
+                    cleanTeaser = 'Консультація консиліуму лікарів AIDOC UA';
+                }
                     
                 card.innerHTML = `
                     <div class="archive-report-header">
                         <span class="archive-category-pill">🩺 ${escapeHtml(catName)}</span>
                         <span class="archive-date-badge">${escapeHtml(r.date)}</span>
                     </div>
-                    <div class="archive-teaser-text">${escapeHtml(r.teaser || 'Консультація консиліуму лікарів AIDOC UA')}</div>
+                    <div class="archive-teaser-text">${escapeHtml(cleanTeaser)}</div>
                     <div class="archive-card-actions">
                         ${webBtn}
                         <button class="archive-btn archive-btn-dynamics" onclick="startDynamicControlForReport(${r.id})">
@@ -1697,17 +1996,81 @@
             const report = currentReportsCache.find(x => x.id === reportId);
             if (!report) return;
             
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('light');
+            }
+
             const overlay = document.getElementById('report-modal-overlay');
             const title = document.getElementById('report-modal-title');
             const dateEl = document.getElementById('report-modal-date');
             const body = document.getElementById('report-modal-body');
+            const copyBtn = document.getElementById('report-copy-btn');
+            const copyLabel = document.getElementById('copy-btn-label');
+            
+            if (copyBtn) copyBtn.classList.remove('copied');
+            if (copyLabel) copyLabel.innerText = 'Скопіювати';
             
             const catName = report.category_display || report.category || 'Клінічний звіт';
             title.innerText = catName;
-            dateEl.innerText = `Дата: ${report.date}`;
-            body.innerText = report.teaser || 'Текст звіту';
+            dateEl.innerText = report.date ? `Дата консультації: ${report.date}` : '';
+            
+            // Prioritize full report content over teaser
+            const fullContent = report.report || report.teaser || 'Текст звіту відсутній.';
+            activeModalReportText = fullContent;
+            
+            body.innerHTML = renderFormattedReport(fullContent);
             
             overlay.classList.add('active');
+        }
+
+        function copyModalReport() {
+            if (!activeModalReportText) return;
+            
+            const cleanText = activeModalReportText
+                .replace(/<[^>]+>/g, '')
+                .replace(/\*\*/g, '')
+                .trim();
+                
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(cleanText).then(() => {
+                    handleCopySuccess();
+                }).catch(() => {
+                    fallbackCopyText(cleanText);
+                });
+            } else {
+                fallbackCopyText(cleanText);
+            }
+        }
+
+        function handleCopySuccess() {
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.notificationOccurred('success');
+            }
+            const copyBtn = document.getElementById('report-copy-btn');
+            const copyLabel = document.getElementById('copy-btn-label');
+            if (copyBtn) copyBtn.classList.add('copied');
+            if (copyLabel) copyLabel.innerText = 'Скопійовано!';
+            setTimeout(() => {
+                if (copyBtn) copyBtn.classList.remove('copied');
+                if (copyLabel) copyLabel.innerText = 'Скопіювати';
+            }, 2000);
+        }
+
+        function fallbackCopyText(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try {
+                document.execCommand('copy');
+                handleCopySuccess();
+            } catch (err) {
+                console.error('Fallback copy failed', err);
+            }
+            document.body.removeChild(ta);
         }
 
         function closeReportModal(e) {
