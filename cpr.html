@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Аудіо-метроном СЛР 110 BPM | AIDOC UA</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #0b0f19;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    .header {
+      width: 100%;
+      max-width: 480px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+    .title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-top: 0.25rem;
+    }
+    
+    /* Central Visual Heart Beat Area */
+    .cpr-stage {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem auto;
+    }
+    .pulse-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.35) 0%, rgba(239, 68, 68, 0.05) 70%, transparent 100%);
+      transform: scale(0.9);
+      transition: transform 0.08s ease-out, opacity 0.08s ease-out;
+      opacity: 0.6;
+    }
+    .cpr-stage.beat .pulse-ring {
+      transform: scale(1.22);
+      opacity: 1;
+    }
+    .cpr-heart {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+      border: 4px solid #f87171;
+      box-shadow: 0 0 35px rgba(220, 38, 38, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .cpr-stage.beat .cpr-heart {
+      transform: scale(1.1);
+      box-shadow: 0 0 55px rgba(239, 68, 68, 0.85);
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    }
+    .counter-display {
+      font-size: 3.6rem;
+      font-weight: 900;
+      line-height: 1;
+      color: #ffffff;
+      font-variant-numeric: tabular-nums;
+    }
+    .counter-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #fecaca;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+    
+    /* Cycle Status Banner */
+    .status-banner {
+      width: 100%;
+      max-width: 480px;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      font-size: 0.95rem;
+      font-weight: 600;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .status-banner.breath-alert {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #ffffff;
+      animation: flashBreath 0.5s infinite alternate;
+    }
+    @keyframes flashBreath {
+      from { transform: scale(1); }
+      to { transform: scale(1.03); }
+    }
+
+    /* Rules guide */
+    .rules-card {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.85rem;
+      text-align: left;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+      margin: 0.5rem 0;
+    }
+    .rules-card strong {
+      color: #f8fafc;
+    }
+    .rules-card ul {
+      padding-left: 1.25rem;
+      margin-top: 4px;
+    }
+
+    /* Controls */
+    .actions {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .btn-main {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 14px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-start {
+      background: #dc2626;
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+    }
+    .btn-start:active {
+      transform: scale(0.98);
+      background: #b91c1c;
+    }
+    .btn-stop {
+      background: #334155;
+      color: #f1f5f9;
+    }
+    .btn-stop:active {
+      transform: scale(0.98);
+      background: #1e293b;
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #475569;
+      color: #94a3b8;
+      padding: 0.6rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="badge">🚨 РЕАНІМАЦІЙНИЙ СТАНДАРТ ERC/AHA</div>
+    <h1 class="title">Аудіо-метроном СЛР</h1>
+    <p class="subtitle">Еталонний темп: 110 компресій на хвилину</p>
+  </div>
+
+  <div class="cpr-stage" id="cprStage">
+    <div class="pulse-ring"></div>
+    <div class="cpr-heart">
+      <div class="counter-display" id="countDisplay">0</div>
+      <div class="counter-label" id="cycleLabel">Компресій</div>
+    </div>
+  </div>
+
+  <div class="status-banner" id="statusBanner">
+    <span>Натисніть кнопку «СТАРТ» та тисніть у такт звуку</span>
+  </div>
+
+  <div class="rules-card">
+    <strong>📋 Пам'ятка непрямого масажу серця:</strong>
+    <ul>
+      <li>Покладіть постраждалого на тверду підлогу на спину.</li>
+      <li>Основа долоні — строго на середину грудної клітки.</li>
+      <li>Глибина: <b>5–6 см</b>. Дайте грудній клітці повністю піднятися!</li>
+      <li>Цикл: <b>30 компресій : 2 вдихи</b> (або тисніть безперервно).</li>
+    </ul>
+  </div>
+
+  <div class="actions">
+    <button class="btn-main btn-start" id="toggleBtn" onclick="toggleMetronome()">
+      ▶️ РОЗПОЧАТИ СЛР (110 УД/ХВ)
+    </button>
+    <button class="btn-secondary" onclick="closeMetronome()">
+      ✕ Закрити метроном
+    </button>
+  </div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.expand();
+      try { tg.enableClosingConfirmation(); } catch (e) {}
+    }
+
+    let isRunning = false;
+    let audioCtx = null;
+    let timerId = null;
+    let beatCount = 0;
+    let totalCycle = 1;
+    const BPM = 110;
+    const intervalMs = (60 / BPM) * 1000; // ~545.45 ms
+
+    const cprStage = document.getElementById('cprStage');
+    const countDisplay = document.getElementById('countDisplay');
+    const cycleLabel = document.getElementById('cycleLabel');
+    const statusBanner = document.getElementById('statusBanner');
+    const toggleBtn = document.getElementById('toggleBtn');
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playBeep(isHigh) {
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const now = audioCtx.currentTime;
+
+        const freq = isHigh ? 1320 : 920;
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.8, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.05);
+      } catch (e) {
+        console.error("Audio error", e);
+      }
+    }
+
+    function tick() {
+      beatCount++;
+      const isCycleEnd = (beatCount === 30);
+
+      // Звук
+      playBeep(isCycleEnd);
+
+      // Тактильна вібрація (якщо підтримується)
+      if (tg?.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred(isCycleEnd ? 'heavy' : 'medium');
+      } else if (navigator.vibrate) {
+        navigator.vibrate(isCycleEnd ? 60 : 30);
+      }
+
+      // Візуальна анімація
+      cprStage.classList.add('beat');
+      setTimeout(() => cprStage.classList.remove('beat'), 90);
+
+      countDisplay.innerText = beatCount;
+
+      if (isCycleEnd) {
+        cycleLabel.innerText = `Цикл ${totalCycle} завершено!`;
+        statusBanner.className = "status-banner breath-alert";
+        statusBanner.innerHTML = "💨 <b>2 ВДИХИ (4-5 сек)</b> або продовжуйте безперервний масаж!";
+        
+        // Скидаємо лічильник для наступного циклу
+        beatCount = 0;
+        totalCycle++;
+      } else {
+        cycleLabel.innerText = `Цикл ${totalCycle}`;
+        statusBanner.className = "status-banner";
+        statusBanner.innerHTML = `Тисніть у такт: <b>${countDisplay.innerText}</b> / 30 (глибина 5-6 см)`;
+      }
+    }
+
+    function toggleMetronome() {
+      initAudio();
+      if (isRunning) {
+        stopMetronome();
+      } else {
+        startMetronome();
+      }
+    }
+
+    function startMetronome() {
+      isRunning = true;
+      toggleBtn.className = "btn-main btn-stop";
+      toggleBtn.innerText = "⏸️ ЗУПИНИТИ МЕТРОНОМ";
+      statusBanner.innerHTML = "Тисніть двома руками на середину грудної клітки!";
+      
+      tick();
+      timerId = setInterval(tick, intervalMs);
+    }
+
+    function stopMetronome() {
+      isRunning = false;
+      if (timerId) clearInterval(timerId);
+      toggleBtn.className = "btn-main btn-start";
+      toggleBtn.innerText = "▶️ ПРОДОВЖИТИ СЛР (110 УД/ХВ)";
+      statusBanner.className = "status-banner";
+      statusBanner.innerHTML = "Метроном призупинено.";
+    }
+
+    function closeMetronome() {
+      stopMetronome();
+      if (tg) {
+        tg.close();
+      } else {
+        window.history.back();
+      }
+    }
+  </script>
+</body>
+</html>
