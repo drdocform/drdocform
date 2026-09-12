@@ -2,154 +2,153 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>AIDOC UA | Медична Анкета</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: var(--tg-theme-bg-color, #ffffff);
-            --text-color: var(--tg-theme-text-color, #222222);
-            --hint-color: var(--tg-theme-hint-color, #8e8e93);
-            --button-color: var(--tg-theme-button-color, #007aff);
-            --secondary-bg: var(--tg-theme-secondary-bg-color, #f2f2f7);
-            --danger-color: #ff3b30;
-            --success-color: #34c759;
-            --step-inactive: #d1d1d6;
-
-            /* Glassmorphism Variables */
-            --glass-bg: rgba(255, 255, 255, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.4);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            /* Apple HIG Light Theme Tokens */
+            --bg-color: #F2F2F7;
+            --card-bg: rgba(255, 255, 255, 0.88);
+            --card-border: rgba(60, 60, 67, 0.12);
+            --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            --separator: rgba(60, 60, 67, 0.14);
             
-            /* Neumorphism Shadows */
-            --neu-shadow-outer: 6px 6px 16px rgba(163, 177, 198, 0.4), -6px -6px 16px rgba(255, 255, 255, 0.8);
-            --neu-shadow-inner: inset 4px 4px 8px rgba(163, 177, 198, 0.4), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+            --text-color: #1C1C1E;
+            --hint-color: #8E8E93;
+            --secondary-bg: #E5E5EA;
+            --input-bg: #FFFFFF;
             
-            --input-bg: rgba(255, 255, 255, 0.5);
-            --focus-shadow: rgba(0, 122, 255, 0.2);
-            --input-focus-border: var(--button-color);
-            --input-focus-shadow: var(--focus-shadow);
+            --button-color: #007AFF;
+            --button-color-rgb: 0, 122, 255;
+            --button-active: #0062CC;
+            
+            --success-color: #34C759;
+            --danger-color: #FF3B30;
+            --warning-color: #FF9500;
+            --step-inactive: rgba(120, 120, 128, 0.2);
+            
+            --pain-color: #34C759;
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
-                --step-inactive: #3a3a3c;
-                --glass-bg: rgba(30, 30, 30, 0.65);
-                --glass-border: rgba(255, 255, 255, 0.08);
-                --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+                /* Apple HIG Dark Theme Tokens */
+                --bg-color: #000000;
+                --card-bg: rgba(28, 28, 30, 0.82);
+                --card-border: rgba(255, 255, 255, 0.1);
+                --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+                --separator: rgba(84, 84, 88, 0.35);
                 
-                --neu-shadow-outer: 6px 6px 16px rgba(0, 0, 0, 0.6), -6px -6px 16px rgba(60, 60, 60, 0.3);
-                --neu-shadow-inner: inset 4px 4px 8px rgba(0, 0, 0, 0.6), inset -4px -4px 8px rgba(60, 60, 60, 0.3);
+                --text-color: #F2F2F7;
+                --hint-color: #8E8E93;
+                --secondary-bg: #1C1C1E;
+                --input-bg: #2C2C2E;
                 
-                --input-bg: rgba(20, 20, 20, 0.4);
-                --focus-shadow: rgba(10, 132, 255, 0.3);
+                --button-color: #0A84FF;
+                --button-color-rgb: 10, 132, 255;
+                --button-active: #0071E3;
+                
+                --step-inactive: rgba(255, 255, 255, 0.16);
             }
         }
         
         body.theme-female {
-            --input-focus-border: #ff4d85;
-            --input-focus-shadow: rgba(255, 77, 133, 0.25);
-            --button-color: #ff4d85;
+            --button-color: #FF2D55;
+            --button-color-rgb: 255, 45, 85;
+            --button-active: #E02449;
         }
         
         @media (prefers-color-scheme: dark) {
             body.theme-female {
-                --input-focus-shadow: rgba(255, 77, 133, 0.35);
+                --button-color: #FF375F;
+                --button-color-rgb: 255, 55, 95;
+                --button-active: #EB2850;
             }
         }
         
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--secondary-bg);
-            /* Soft mesh gradient background to enhance glassmorphism */
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(0, 122, 255, 0.05) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(52, 199, 89, 0.05) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(var(--button-color-rgb), 0.06) 0px, transparent 55%),
+                radial-gradient(at 100% 100%, rgba(52, 199, 89, 0.05) 0px, transparent 55%);
             background-attachment: fixed;
             color: var(--text-color);
             margin: 0;
-            padding: 24px 16px;
-            box-sizing: border-box;
+            padding: 16px 16px 36px 16px;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
         }
 
+        /* Apple Navigation Bar & Segmented Story Flow */
+        .ios-progress-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 0 2px;
+        }
+        
+        .ios-progress-segment {
+            flex: 1;
+            height: 3.5px;
+            background: var(--step-inactive);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .ios-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--button-color);
+            border-radius: 2px;
+            transition: width 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        
+        .ios-progress-segment.active .ios-progress-fill {
+            width: 100%;
+        }
+
         .header {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             padding: 0 4px;
         }
 
-        .header h1 {
-            font-size: 22px;
-            margin: 0;
-            font-weight: 800;
+        .header-pretitle {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
             color: var(--button-color);
-            letter-spacing: -1px;
-            transition: color 0.3s ease;
-            text-align: left;
+            margin-bottom: 3px;
         }
 
-        /* Stepper */
-        .stepper {
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            position: relative;
-            padding: 0 10px;
-        }
-
-        .stepper::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 20px;
-            right: 20px;
-            height: 3px;
-            background: var(--step-inactive);
-            z-index: 1;
-            transform: translateY(-50%);
-            border-radius: 2px;
-        }
-
-        .step {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--secondary-bg);
-            box-shadow: var(--neu-shadow-outer);
-            color: var(--hint-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .header h1 {
+            font-size: 26px;
+            margin: 0;
             font-weight: 700;
-            font-size: 15px;
-            z-index: 2;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: var(--text-color);
+            letter-spacing: -0.5px;
+            line-height: 1.2;
         }
 
-        .step.active {
-            background: var(--button-color);
-            color: #fff;
-            transform: scale(1.15);
-            box-shadow: 0 8px 16px var(--input-focus-shadow);
-        }
-        .step.completed {
-            background: var(--success-color);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
-        }
-
-        /* Glassmorphism Card */
+        /* Apple Material Card */
         .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            background: var(--card-bg);
+            backdrop-filter: blur(28px) saturate(190%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%);
             border-radius: 24px;
-            padding: 28px 24px;
-            box-shadow: var(--glass-shadow);
-            border: 1px solid var(--glass-border);
-            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 24px 20px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--card-border);
+            animation: appleCardFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             display: none;
         }
 
@@ -157,106 +156,71 @@
             display: block;
         }
 
-        /* Profiles Flex Grid with Smooth Accordion Transitions */
+        @keyframes appleCardFadeIn {
+            from { opacity: 0; transform: translateY(14px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Profiles Grid & Apple Family Cards */
         .profiles-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
-            margin-top: 20px;
+            margin-top: 16px;
         }
+        
         .profile-card {
             flex: 1 1 calc(50% - 6px);
             min-width: 135px;
             max-width: 100%;
-            box-sizing: border-box;
             background: var(--input-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1.5px solid var(--glass-border);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
             padding: 16px 12px;
             text-align: center;
             cursor: pointer;
-            transition: flex-basis 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-                        max-width 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-                        border-color 0.3s ease,
-                        box-shadow 0.35s ease,
-                        background-color 0.3s ease,
-                        transform 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1);
             position: relative;
             overflow: hidden;
-            box-shadow: var(--glass-shadow);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
         }
+        
         .profile-card:hover {
-            border-color: var(--card-hover-border, rgba(0, 122, 255, 0.35));
+            border-color: rgba(var(--button-color-rgb), 0.35);
         }
+        
         .profile-card:active {
-            transform: scale(0.985);
+            transform: scale(0.975);
         }
 
-        /* Gender Theme Classes for Profile Cards */
         .profile-card.gender-female {
-            --card-accent: #ff4d85;
-            --card-accent-rgb: 255, 77, 133;
-            --card-hover-border: rgba(255, 77, 133, 0.45);
+            --card-accent: #FF2D55;
+            --card-accent-rgb: 255, 45, 85;
         }
-        .profile-card.gender-female .profile-meta {
-            color: rgba(255, 77, 133, 0.9);
-        }
-        .profile-card.gender-female .profile-icon {
-            filter: drop-shadow(0 4px 10px rgba(255, 77, 133, 0.25));
-        }
-        .profile-card.gender-female .profile-history-badge {
-            background: rgba(255, 77, 133, 0.08);
-            border: 1px solid rgba(255, 77, 133, 0.22);
-            color: #ff4d85;
-        }
-
         .profile-card.gender-male {
-            --card-accent: #007aff;
+            --card-accent: #007AFF;
             --card-accent-rgb: 0, 122, 255;
-            --card-hover-border: rgba(0, 122, 255, 0.45);
         }
-        .profile-card.gender-male .profile-meta {
-            color: rgba(0, 122, 255, 0.9);
-        }
-        .profile-card.gender-male .profile-icon {
-            filter: drop-shadow(0 4px 10px rgba(0, 122, 255, 0.25));
-        }
-        .profile-card.gender-male .profile-history-badge {
-            background: rgba(0, 122, 255, 0.08);
-            border: 1px solid rgba(0, 122, 255, 0.2);
-            color: #007aff;
-        }
-
         .profile-card.gender-neutral {
             --card-accent: var(--button-color);
-            --card-accent-rgb: 0, 122, 255;
-            --card-hover-border: rgba(0, 122, 255, 0.35);
+            --card-accent-rgb: var(--button-color-rgb);
         }
 
-        /* Expanded Profile Card: Smooth Full Width & Highlight Glow */
         .profile-card.expanded {
             flex: 1 1 100%;
             max-width: 100%;
-            padding: 18px 16px;
-            background: var(--glass-bg);
+            padding: 20px 18px;
+            background: var(--card-bg);
             border-color: var(--card-accent, var(--button-color));
-            box-shadow: 0 10px 28px rgba(var(--card-accent-rgb, 0, 122, 255), 0.18), var(--glass-shadow);
-            transform: translateY(-2px);
-        }
-        .profile-card.expanded.gender-female {
-            box-shadow: 0 10px 28px rgba(255, 77, 133, 0.22), var(--glass-shadow);
-        }
-        .profile-card.expanded.gender-male {
-            box-shadow: 0 10px 28px rgba(0, 122, 255, 0.22), var(--glass-shadow);
+            box-shadow: 0 8px 24px rgba(var(--card-accent-rgb), 0.18);
+            transform: translateY(-1px);
         }
 
         .profile-card-main {
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1);
         }
         .profile-card.expanded .profile-card-main {
             flex-direction: row;
@@ -273,6 +237,7 @@
             flex: 1;
             min-width: 0;
         }
+        
         .profile-history-badge {
             display: inline-flex;
             align-items: center;
@@ -280,25 +245,24 @@
             margin-top: 8px;
             padding: 4px 10px;
             border-radius: 12px;
-            background: rgba(0, 122, 255, 0.08);
-            border: 1px solid rgba(0, 122, 255, 0.18);
+            background: rgba(var(--button-color-rgb), 0.08);
+            border: 0.5px solid rgba(var(--button-color-rgb), 0.18);
             color: var(--button-color);
             font-size: 11.5px;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: 0.2px;
             transition: all 0.2s ease;
             user-select: none;
         }
         .profile-history-badge:hover {
-            background: rgba(0, 122, 255, 0.16);
+            background: rgba(var(--button-color-rgb), 0.16);
             transform: scale(1.02);
         }
 
-        /* Smooth Accordion Expansion for Actions Tray */
         .profile-actions-wrapper {
             display: grid;
             grid-template-rows: 0fr;
-            transition: grid-template-rows 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            transition: grid-template-rows 0.35s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.25s ease;
             opacity: 0;
         }
         .profile-card.expanded .profile-actions-wrapper {
@@ -313,7 +277,7 @@
             gap: 10px;
             padding-top: 14px;
             margin-top: 14px;
-            border-top: 1px solid var(--glass-border);
+            border-top: 0.5px solid var(--separator);
         }
         @media (min-width: 340px) {
             .profile-card.expanded .profile-actions-tray {
@@ -330,228 +294,307 @@
             padding: 12px 14px;
             border-radius: 14px;
             font-size: 13.5px;
-            font-weight: 700;
-            border: 1.5px solid transparent;
+            font-weight: 600;
+            border: none;
             cursor: pointer;
             transition: all 0.2s ease;
             text-decoration: none;
-            box-sizing: border-box;
             white-space: nowrap;
         }
         .btn-primary-action {
             background: var(--card-accent, var(--button-color));
             color: #ffffff;
-            box-shadow: 0 4px 14px rgba(var(--card-accent-rgb, 0, 122, 255), 0.3);
+            box-shadow: 0 4px 14px rgba(var(--card-accent-rgb), 0.28);
         }
         .btn-primary-action:active {
             transform: scale(0.97);
         }
         .btn-archive-action {
-            background: var(--input-bg);
+            background: var(--secondary-bg);
             color: var(--text-color);
-            border-color: rgba(var(--card-accent-rgb, 0, 122, 255), 0.25);
-            box-shadow: var(--neu-shadow-inner);
-        }
-        .btn-archive-action:hover {
-            border-color: var(--card-accent, var(--button-color));
+            border: 0.5px solid var(--card-border);
         }
         .btn-archive-action:active {
             transform: scale(0.97);
         }
+        
         .profile-card.add-new {
             flex: 1 1 calc(50% - 6px);
             min-width: 135px;
-            background: transparent;
-            border: 2px dashed rgba(142, 142, 147, 0.4);
+            background: rgba(var(--button-color-rgb), 0.04);
+            border: 1.5px dashed rgba(var(--button-color-rgb), 0.35);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 130px;
             box-shadow: none;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
         .profile-card.add-new:hover {
-            background: rgba(0, 122, 255, 0.05);
+            background: rgba(var(--button-color-rgb), 0.08);
             border-color: var(--button-color);
         }
         .profile-icon {
             font-size: 36px;
-            margin-bottom: 12px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            margin-bottom: 10px;
             transition: all 0.3s ease;
         }
         .profile-name {
-            font-weight: 700;
-            font-size: 16px;
+            font-weight: 600;
+            font-size: 15.5px;
             color: var(--text-color);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .profile-meta {
-            font-size: 13px;
+            font-size: 12.5px;
             color: var(--hint-color);
         }
         .delete-profile-btn {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(255, 59, 48, 0.15);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background: rgba(255, 59, 48, 0.12);
             color: var(--danger-color);
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             z-index: 10;
         }
         .profile-card:hover .delete-profile-btn {
             opacity: 1;
         }
         @media (hover: none) {
-            .delete-profile-btn { opacity: 1; }
+            .delete-profile-btn { opacity: 0.9; }
         }
 
+        /* Apple Spinner Loader */
         .loader {
-            border: 4px solid var(--glass-border);
-            border-top: 4px solid var(--button-color);
+            border: 3px solid var(--separator);
+            border-top: 3px solid var(--button-color);
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            animation: spin 1s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
-            margin: 40px auto;
+            width: 32px;
+            height: 32px;
+            animation: spin 0.8s linear infinite;
+            margin: 36px auto;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .form-group { margin-bottom: 24px; }
-        .form-group:last-child { margin-bottom: 0; }
-
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--hint-color);
-            margin-bottom: 8px;
-            letter-spacing: 0.3px;
-            margin-left: 4px;
+        /* iOS Inset Grouped Form Style */
+        .ios-grouped-list {
+            background: var(--input-bg);
+            border-radius: 18px;
+            border: 0.5px solid var(--card-border);
+            overflow: hidden;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
         }
-
-        /* Neumorphism Input Fields */
-        input, select, textarea {
-            width: 100%;
-            padding: 16px;
-            font-size: 16px;
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            background-color: var(--input-bg);
+        
+        .ios-list-row {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 13px 16px;
+            min-height: 48px;
+        }
+        
+        .ios-list-row:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 16px;
+            right: 0;
+            height: 0.5px;
+            background: var(--separator);
+        }
+        
+        .ios-list-row label {
+            font-size: 14.5px;
+            font-weight: 500;
             color: var(--text-color);
-            box-sizing: border-box;
+            width: 124px;
+            flex-shrink: 0;
+            margin: 0;
+            letter-spacing: -0.1px;
+        }
+        
+        .ios-list-row input, .ios-list-row select {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0;
+            font-size: 15.5px;
+            font-family: inherit;
+            color: var(--text-color);
+            text-align: right;
             outline: none;
-            transition: all 0.3s ease;
             -webkit-appearance: none;
             appearance: none;
-            box-shadow: var(--neu-shadow-inner);
+        }
+        
+        .ios-list-row select {
+            text-align-last: right;
+            direction: rtl;
+            padding-right: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238E8E93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0 center;
+        }
+        
+        .ios-list-row input::placeholder {
+            color: var(--hint-color);
+            opacity: 0.55;
+        }
+        
+        .ios-unit {
+            font-size: 14px;
+            color: var(--hint-color);
+            margin-left: 6px;
+            flex-shrink: 0;
             font-weight: 500;
         }
 
-        select {
-            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 1.5L6 6L10.5 1.5' stroke='%238e8e93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
+        /* iOS Textarea Card */
+        .ios-textarea-card {
+            background: var(--input-bg);
+            border-radius: 18px;
+            border: 0.5px solid var(--card-border);
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
         }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--input-focus-border);
-            background-color: var(--glass-bg);
-            box-shadow: 0 0 0 4px var(--input-focus-shadow), var(--neu-shadow-inner);
-        }
-
-        input::placeholder, textarea::placeholder {
+        
+        .ios-textarea-card label {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 600;
             color: var(--hint-color);
-            opacity: 0.6;
+            margin-bottom: 8px;
+            letter-spacing: -0.1px;
         }
-
-        textarea {
-            resize: vertical;
-            min-height: 120px;
+        
+        .ios-textarea-card textarea {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 0;
+            font-size: 15px;
+            line-height: 1.55;
             font-family: inherit;
+            color: var(--text-color);
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .ios-textarea-card textarea::placeholder {
+            color: var(--hint-color);
+            opacity: 0.55;
         }
 
-        .row { display: flex; gap: 16px; }
-        .row .form-group { flex: 1; }
-
-        /* Custom UI for Anamnesis */
+        /* Apple Health Style Body Anatomy Map */
         .body-model-container {
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            margin: 24px 0;
+            margin: 16px 0 20px 0;
             position: relative;
             background: var(--input-bg);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: var(--neu-shadow-inner);
-            border: 1px solid var(--glass-border);
+            border-radius: 22px;
+            padding: 24px 16px;
+            border: 0.5px solid var(--card-border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
 
         .body-svg {
-            height: 320px;
+            height: 310px;
             width: auto;
             max-width: 100%;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
-        }
-
-        @keyframes heartbeat {
-            0% { transform: scale(1); filter: brightness(1); }
-            15% { transform: scale(1.03); filter: brightness(1.15); }
-            30% { transform: scale(1); filter: brightness(1); }
-            45% { transform: scale(1.03); filter: brightness(1.15); }
-            100% { transform: scale(1); filter: brightness(1); }
-        }
-
-        .pain-labels span {
-            display: inline-block;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease-out;
-            transform-origin: center center;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.04));
         }
 
         .body-part {
             fill: var(--secondary-bg);
-            stroke: var(--hint-color);
-            stroke-width: 1.5;
+            stroke: rgba(142, 142, 147, 0.4);
+            stroke-width: 1.2;
             cursor: pointer;
-            transition: all 0.3s ease;
-            transform-origin: center;
-            transform-box: fill-box;
+            transition: all 0.25s cubic-bezier(0.32, 0.72, 0, 1);
         }
 
         .body-part:hover { 
-            fill: var(--step-inactive);
+            fill: rgba(var(--button-color-rgb), 0.15);
+            stroke: var(--button-color);
         }
+        
         .body-part.selected { 
             fill: var(--pain-color, #34c759); 
-            stroke: rgba(255,255,255,0.8); 
-            stroke-width: 2.5;
-            animation: heartbeat 1.5s infinite;
+            stroke: #FFFFFF; 
+            stroke-width: 2.2;
+            filter: drop-shadow(0 0 10px rgba(var(--button-color-rgb), 0.4));
+            animation: bodyGlowPulse 1.8s ease-in-out infinite;
         }
 
+        @keyframes bodyGlowPulse {
+            0% { filter: drop-shadow(0 0 4px rgba(var(--button-color-rgb), 0.3)); }
+            50% { filter: drop-shadow(0 0 12px rgba(var(--button-color-rgb), 0.6)); }
+            100% { filter: drop-shadow(0 0 4px rgba(var(--button-color-rgb), 0.3)); }
+        }
+
+        /* Apple Sensory Pain Slider */
         .slider-container {
-            margin: 36px 0;
+            margin: 24px 0 20px 0;
             text-align: center;
             background: var(--input-bg);
-            padding: 24px;
+            padding: 20px 18px;
             border-radius: 20px;
-            box-shadow: var(--glass-shadow);
-            border: 1px solid var(--glass-border);
+            border: 0.5px solid var(--card-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .slider-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .slider-header-row label {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--hint-color);
+            margin: 0;
+        }
+
+        .pain-badge {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--pain-color);
+            background: rgba(var(--button-color-rgb), 0.08);
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-variant-numeric: tabular-nums;
+            transition: color 0.2s ease;
+        }
+
+        .pain-value-display {
+            font-size: 46px;
+            font-weight: 800;
+            color: var(--pain-color);
+            margin: 4px 0 12px 0;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -1.5px;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
 
         input[type=range] {
@@ -560,94 +603,157 @@
             width: 100%;
             background: transparent;
             padding: 0;
+            margin: 8px 0;
             border: none;
-            box-shadow: none;
+            outline: none;
         }
 
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 32px;
-            width: 32px;
+            height: 28px;
+            width: 28px;
             border-radius: 50%;
-            background: #ffffff;
-            border: 1px solid rgba(0,0,0,0.1);
+            background: #FFFFFF;
+            border: 0.5px solid rgba(0,0,0,0.1);
             cursor: pointer;
-            margin-top: -13px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15), inset 0 -2px 4px rgba(0,0,0,0.05);
-            transition: transform 0.1s, box-shadow 0.2s;
+            margin-top: -11px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+            transition: transform 0.15s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.15s ease;
         }
         
         input[type=range]::-webkit-slider-thumb:active {
-            transform: scale(1.15);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            transform: scale(1.18);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
         }
 
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%;
-            height: 8px;
+            height: 7px;
             cursor: pointer;
-            background: linear-gradient(to right, var(--success-color), #ffd60a, var(--danger-color));
-            border-radius: 6px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+            background: linear-gradient(to right, #34C759, #FFD60A, #FF9500, #FF3B30);
+            border-radius: 4px;
         }
 
         .pain-labels {
             display: flex;
             justify-content: space-between;
-            margin-top: 16px;
-            font-size: 18px;
+            margin-top: 14px;
+            font-size: 13.5px;
             font-weight: 600;
+            color: var(--hint-color);
         }
 
-        .pain-value-display {
-            font-size: 42px;
-            font-weight: 800;
-            color: var(--button-color);
-            margin-bottom: 12px;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        .pain-labels span {
+            display: inline-block;
+            transition: transform 0.2s cubic-bezier(0.32, 0.72, 0, 1), color 0.2s ease;
         }
 
-        /* File Upload UI */
-        .file-upload-zone {
+        /* Symptom Capsule Tags */
+        .tags-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .symptom-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 14px;
+            border-radius: 16px;
             background: var(--input-bg);
-            border: 2px dashed rgba(142, 142, 147, 0.4);
-            border-radius: 20px;
-            padding: 36px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-            box-shadow: var(--neu-shadow-inner);
-        }
-
-        .file-upload-zone:hover, .file-upload-zone.dragover {
-            background-color: var(--glass-bg);
-            border-color: var(--button-color);
-        }
-
-        .file-upload-zone svg {
-            width: 54px;
-            height: 54px;
-            fill: var(--button-color);
-            margin-bottom: 16px;
-            filter: drop-shadow(0 4px 6px rgba(0, 122, 255, 0.2));
-        }
-
-        .file-upload-zone p {
-            margin: 0;
+            border: 0.5px solid var(--card-border);
+            font-size: 13px;
+            font-weight: 600;
             color: var(--text-color);
-            font-weight: 700;
-            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+            user-select: none;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
         }
-        
-        .file-upload-zone span {
-            display: block;
+
+        .symptom-tag:hover {
+            border-color: rgba(var(--button-color-rgb), 0.4);
+        }
+
+        .symptom-tag:active {
+            transform: scale(0.96);
+        }
+
+        .symptom-tag.active {
+            background: var(--button-color);
+            color: #FFFFFF;
+            border-color: var(--button-color);
+            box-shadow: 0 4px 12px rgba(var(--button-color-rgb), 0.25);
+        }
+
+        /* Apple Files & Quick Actions Zone */
+        .file-upload-card {
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 22px 18px;
+            text-align: center;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .file-upload-icon-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: rgba(var(--button-color-rgb), 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+        }
+
+        .file-upload-icon-wrap svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--button-color);
+        }
+
+        .file-upload-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        .file-upload-subtitle {
             font-size: 13px;
             color: var(--hint-color);
-            margin-top: 6px;
-            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .file-quick-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .file-action-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            background: var(--secondary-bg);
+            border: 0.5px solid var(--card-border);
+            color: var(--text-color);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-action-chip:active {
+            transform: scale(0.96);
         }
 
         #file-input { display: none; }
@@ -655,35 +761,34 @@
         .file-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            margin-top: 14px;
         }
 
         .file-item {
             display: flex;
             align-items: center;
-            background: var(--glass-bg);
-            padding: 12px;
+            background: var(--input-bg);
+            padding: 10px 14px;
             border-radius: 16px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            border: 0.5px solid var(--card-border);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
         }
 
         .file-preview {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
             object-fit: cover;
-            margin-right: 14px;
-            background: var(--step-inactive);
+            margin-right: 12px;
+            background: var(--secondary-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            color: #ffffff;
+            font-size: 18px;
+            color: var(--text-color);
             overflow: hidden;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            flex-shrink: 0;
         }
 
         .file-info {
@@ -692,17 +797,17 @@
         }
 
         .file-name {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            margin: 0 0 4px 0;
+            margin: 0 0 2px 0;
             color: var(--text-color);
         }
 
         .file-size {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--hint-color);
             margin: 0;
             font-weight: 500;
@@ -712,242 +817,139 @@
             background: rgba(255, 59, 48, 0.1);
             color: var(--danger-color);
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
             transition: background 0.2s;
-        }
-        
-        .remove-file:active {
-            background: rgba(255, 59, 48, 0.2);
+            flex-shrink: 0;
+            margin-left: 8px;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        
+        /* Apple System Buttons */
         .nav-buttons {
             display: flex;
-            gap: 16px;
-            margin-top: 32px;
+            gap: 12px;
+            margin-top: 24px;
         }
-        
-        /* Neumorphism Buttons */
+
         .btn {
-            padding: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 18px;
             border-radius: 16px;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             text-align: center;
             flex: 1;
             border: none;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            letter-spacing: 0.5px;
+            transition: all 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+            letter-spacing: -0.2px;
         }
-        
+
         .btn-primary {
             background: var(--button-color);
-            color: #fff;
-            /* Strong modern drop shadow for primary */
-            box-shadow: 0 10px 20px -5px var(--input-focus-shadow), 0 0 0 1px rgba(0,0,0,0.05) inset;
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(var(--button-color-rgb), 0.25);
         }
-        
+
         .btn-secondary {
             background: var(--secondary-bg);
             color: var(--text-color);
-            /* Neumorphism for secondary button */
-            box-shadow: var(--neu-shadow-outer);
         }
-        
+
         .btn:active {
-            transform: scale(0.96);
-        }
-        
-        .btn-primary:active {
-            box-shadow: 0 4px 10px -2px var(--input-focus-shadow), inset 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .btn-secondary:active {
-            box-shadow: var(--neu-shadow-inner);
+            transform: scale(0.97);
         }
 
-        /* Legal & Privacy Disclaimer */
-        .legal-disclaimer {
-            font-size: 11.5px;
-            line-height: 1.45;
-            color: var(--hint-color);
-            text-align: center;
-            margin-top: 20px;
-            padding: 0 8px;
-            letter-spacing: 0.1px;
-            opacity: 0.85;
-            transition: opacity 0.2s ease;
+        /* Dynamic Enablement State: Prevents premature clicking */
+        .btn-disabled {
+            opacity: 0.38 !important;
+            pointer-events: none !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
-        .legal-disclaimer:hover {
-            opacity: 1;
-        }
-
-        .legal-disclaimer a {
-            color: var(--button-color);
-            text-decoration: underline;
-            text-decoration-thickness: 1px;
-            text-underline-offset: 3px;
-            text-decoration-color: rgba(0, 122, 255, 0.4);
-            font-weight: 600;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        body.theme-female .legal-disclaimer a {
-            text-decoration-color: rgba(255, 77, 133, 0.4);
-        }
-
-        .legal-disclaimer a:active {
-            opacity: 0.6;
-        }
-
-        /* Quick Symptom Tags */
-        .quick-tags-container {
-            margin-bottom: 20px;
-        }
-
-        .tags-wrapper {
+        /* Apple Intelligence Loading Glow (Step 4) */
+        .apple-ai-loading {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .symptom-tag {
-            display: inline-flex;
+            flex-direction: column;
             align-items: center;
-            padding: 8px 14px;
-            border-radius: 14px;
-            background: var(--input-bg);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--neu-shadow-inner);
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-color);
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            justify-content: center;
+            padding: 40px 16px;
         }
 
-        .symptom-tag:hover {
-            border-color: var(--button-color);
-        }
-
-        .symptom-tag:active {
-            transform: scale(0.95);
-        }
-
-        .symptom-tag.active {
-            background: var(--button-color);
-            color: #ffffff;
-            border-color: var(--button-color);
-            box-shadow: 0 4px 12px var(--input-focus-shadow);
-        }
-
-        /* Step 4: Clarifications UI */
-        .clarification-card {
-            background: var(--input-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 18px 16px;
-            margin-bottom: 16px;
-            box-shadow: var(--glass-shadow);
-            animation: slideUp 0.3s ease;
-        }
-
-        .clarification-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-
-        .clarification-badge {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--button-color);
-            background: rgba(0, 122, 255, 0.12);
-            padding: 4px 10px;
-            border-radius: 12px;
-        }
-
-        .clarification-question {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 12px;
-            line-height: 1.45;
-        }
-
-        .clarification-textarea {
-            width: 100%;
-            min-height: 76px;
-            background: var(--bg-color);
-            border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            padding: 12px 14px;
-            font-size: 14px;
-            color: var(--text-color);
-            resize: vertical;
-            box-sizing: border-box;
-            font-family: inherit;
-            line-height: 1.4;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .clarification-textarea:focus {
-            outline: none;
-            border-color: var(--button-color);
-            box-shadow: 0 0 0 3px var(--input-focus-shadow);
-        }
-
-        .pulse-loader {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--button-color);
-            margin: 0 auto;
+        .apple-ai-orb {
             position: relative;
+            width: 84px;
+            height: 84px;
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: pulseAnim 1.6s ease-in-out infinite;
+            margin-bottom: 24px;
         }
 
-        .pulse-loader svg {
-            width: 32px;
-            height: 32px;
-            fill: #ffffff;
+        .apple-ai-glow {
+            position: absolute;
+            inset: -14px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #007AFF, #5856D6, #AF52DE, #FF2D55, #007AFF);
+            filter: blur(16px);
+            opacity: 0.7;
+            animation: rotateAura 4s linear infinite;
         }
 
-        @keyframes pulseAnim {
-            0% {
-                transform: scale(0.9);
-                box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.6);
-            }
-            70% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 22px rgba(0, 122, 255, 0);
-            }
-            100% {
-                transform: scale(0.9);
-                box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
-            }
+        .apple-ai-core {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .apple-ai-core svg {
+            width: 34px;
+            height: 34px;
+            fill: var(--button-color);
+        }
+
+        @keyframes rotateAura {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .apple-ai-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0 0 8px 0;
+            text-align: center;
+            letter-spacing: -0.3px;
+        }
+
+        .apple-ai-subtitle {
+            font-size: 14px;
+            color: var(--hint-color);
+            line-height: 1.5;
+            max-width: 320px;
+            margin: 0 auto;
+            text-align: center;
+            transition: opacity 0.25s ease;
         }
 
         /* Dynamic Control Banner */
@@ -957,10 +959,9 @@
             justify-content: space-between;
             padding: 12px 16px;
             border-radius: 16px;
-            background: linear-gradient(135deg, rgba(0, 122, 255, 0.12), rgba(52, 199, 89, 0.12));
-            border: 1px solid rgba(0, 122, 255, 0.25);
-            margin-bottom: 20px;
-            box-shadow: 0 4px 14px rgba(0, 122, 255, 0.08);
+            background: rgba(var(--button-color-rgb), 0.08);
+            border: 1px solid rgba(var(--button-color-rgb), 0.22);
+            margin-bottom: 16px;
             animation: slideDownBanner 0.3s ease;
         }
         @keyframes slideDownBanner {
@@ -975,8 +976,7 @@
             flex: 1;
         }
         .dynamic-banner-icon {
-            font-size: 22px;
-            line-height: 1;
+            font-size: 20px;
             flex-shrink: 0;
         }
         .dynamic-banner-text {
@@ -996,11 +996,11 @@
             text-overflow: ellipsis;
         }
         .dynamic-banner-cancel {
-            background: rgba(142, 142, 147, 0.15);
+            background: var(--secondary-bg);
             border: none;
             color: var(--hint-color);
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -1012,12 +1012,8 @@
             flex-shrink: 0;
             margin-left: 8px;
         }
-        .dynamic-banner-cancel:hover {
-            color: var(--danger-color);
-            background: rgba(255, 59, 48, 0.15);
-        }
 
-        /* UI Archive Drawer / Bottom Sheet */
+        /* UI Bottom Sheet / Drawers */
         .archive-drawer-overlay {
             position: fixed;
             top: 0;
@@ -1025,30 +1021,32 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 1000;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1);
         }
         .archive-drawer-overlay.active {
             opacity: 1;
             pointer-events: auto;
         }
         .archive-drawer {
-            background: var(--bg-color);
+            background: var(--card-bg);
+            backdrop-filter: blur(30px) saturate(190%);
+            -webkit-backdrop-filter: blur(30px) saturate(190%);
             border-radius: 28px 28px 0 0;
-            max-height: 85vh;
+            max-height: 88vh;
             display: flex;
             flex-direction: column;
             transform: translateY(100%);
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
-            border-top: 1px solid var(--glass-border);
+            transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            box-shadow: 0 -8px 36px rgba(0, 0, 0, 0.2);
+            border-top: 1px solid var(--card-border);
             overflow: hidden;
         }
         .archive-drawer-overlay.active .archive-drawer {
@@ -1056,23 +1054,23 @@
         }
         .archive-handle {
             width: 36px;
-            height: 4px;
-            border-radius: 2px;
-            background: var(--step-inactive);
-            margin: 12px auto 6px auto;
+            height: 4.5px;
+            border-radius: 3px;
+            background: rgba(120, 120, 128, 0.3);
+            margin: 10px auto 4px auto;
             flex-shrink: 0;
         }
         .archive-header {
-            padding: 12px 20px 16px 20px;
+            padding: 12px 20px 14px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid var(--glass-border);
+            border-bottom: 0.5px solid var(--separator);
             flex-shrink: 0;
         }
         .archive-header-title {
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 17.5px;
+            font-weight: 700;
             color: var(--text-color);
             margin: 0;
             letter-spacing: -0.3px;
@@ -1087,8 +1085,8 @@
             background: var(--secondary-bg);
             border: none;
             color: var(--hint-color);
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -1098,9 +1096,6 @@
             font-weight: 700;
             transition: all 0.2s ease;
         }
-        .archive-close-btn:hover {
-            color: var(--text-color);
-        }
         .archive-body {
             padding: 16px 20px 24px 20px;
             overflow-y: auto;
@@ -1108,26 +1103,143 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Report Item Card in Archive */
+        /* Safari Reader Style for Full Report (100% Text Integrity) */
+        .report-toc-bar {
+            display: flex;
+            gap: 8px;
+            padding: 8px 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-bottom: 0.5px solid var(--separator);
+            background: var(--card-bg);
+            flex-shrink: 0;
+        }
+        .report-toc-bar::-webkit-scrollbar { display: none; }
+        
+        .report-toc-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 12px;
+            border-radius: 12px;
+            background: var(--secondary-bg);
+            color: var(--button-color);
+            font-size: 12px;
+            font-weight: 600;
+            border: 0.5px solid var(--card-border);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .report-toc-pill:active { transform: scale(0.96); }
+
+        .report-modal-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .report-copy-btn {
+            background: var(--secondary-bg);
+            border: 0.5px solid var(--card-border);
+            color: var(--text-color);
+            border-radius: 12px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .report-copy-btn.copied {
+            background: rgba(52, 199, 89, 0.15);
+            color: #34C759;
+            border-color: rgba(52, 199, 89, 0.3);
+        }
+        
+        .report-h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 20px 0 10px 0;
+            padding-bottom: 6px;
+            border-bottom: 0.5px solid var(--separator);
+            letter-spacing: -0.2px;
+        }
+        .report-h4 {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--button-color);
+            margin: 14px 0 6px 0;
+        }
+        .report-quote {
+            margin: 12px 0;
+            padding: 10px 14px;
+            background: rgba(var(--button-color-rgb), 0.05);
+            border-left: 3px solid var(--button-color);
+            border-radius: 0 12px 12px 0;
+            color: var(--text-color);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .report-list {
+            margin: 8px 0 12px 20px;
+            padding: 0;
+        }
+        .report-list li {
+            margin-bottom: 6px;
+            color: var(--text-color);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .report-num-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+        }
+        .report-num-badge {
+            background: var(--button-color);
+            color: #FFFFFF;
+            font-size: 11px;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .report-num-content {
+            flex: 1;
+            color: var(--text-color);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .report-p {
+            margin: 0 0 12px 0;
+            color: var(--text-color);
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        /* Archive Report Cards */
         .archive-report-card {
             background: var(--input-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 18px 16px;
-            margin-bottom: 14px;
-            box-shadow: var(--glass-shadow);
-            transition: all 0.25s ease;
-            position: relative;
-        }
-        .archive-report-card:hover {
-            border-color: rgba(0, 122, 255, 0.25);
-            transform: translateY(-1px);
+            border: 0.5px solid var(--card-border);
+            border-radius: 18px;
+            padding: 16px 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
         }
         .archive-report-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             gap: 8px;
         }
         .archive-category-pill {
@@ -1136,33 +1248,25 @@
             gap: 4px;
             font-size: 12px;
             font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 10px;
-            background: rgba(0, 122, 255, 0.12);
+            padding: 4px 9px;
+            border-radius: 9px;
+            background: rgba(var(--button-color-rgb), 0.1);
             color: var(--button-color);
         }
         .archive-date-badge {
             font-size: 12px;
             color: var(--hint-color);
-            font-weight: 600;
+            font-weight: 500;
             font-variant-numeric: tabular-nums;
         }
         .archive-teaser-text {
             font-size: 13.5px;
             line-height: 1.5;
             color: var(--text-color);
-            margin-bottom: 14px;
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.35);
+            margin-bottom: 12px;
+            background: rgba(120, 120, 128, 0.05);
             border-radius: 12px;
             padding: 10px 12px;
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        @media (prefers-color-scheme: dark) {
-            .archive-teaser-text {
-                background: rgba(0, 0, 0, 0.25);
-                border-color: rgba(255, 255, 255, 0.05);
-            }
         }
         .archive-card-actions {
             display: flex;
@@ -1179,7 +1283,7 @@
             padding: 10px 12px;
             border-radius: 12px;
             font-size: 12.5px;
-            font-weight: 700;
+            font-weight: 600;
             border: none;
             cursor: pointer;
             text-align: center;
@@ -1188,37 +1292,27 @@
             justify-content: center;
             gap: 6px;
             transition: all 0.2s ease;
-            text-decoration: none;
         }
         .archive-btn-view {
             background: var(--secondary-bg);
             color: var(--text-color);
-            border: 1px solid var(--glass-border);
-        }
-        .archive-btn-view:hover {
-            background: rgba(0, 122, 255, 0.1);
-            color: var(--button-color);
+            border: 0.5px solid var(--card-border);
         }
         .archive-btn-dynamics {
-            background: linear-gradient(135deg, var(--button-color), #0056b3);
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.25);
+            background: var(--button-color);
+            color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(var(--button-color-rgb), 0.25);
         }
-        body.theme-female .archive-btn-dynamics {
-            background: linear-gradient(135deg, #ff4d85, #d92461);
-            box-shadow: 0 4px 10px rgba(255, 77, 133, 0.25);
-        }
-        .archive-btn-dynamics:active {
-            transform: scale(0.97);
-        }
+        .archive-btn-dynamics:active { transform: scale(0.97); }
+        
         .archive-empty-state {
             text-align: center;
             padding: 36px 16px;
         }
         .archive-empty-icon {
-            font-size: 44px;
-            margin-bottom: 12px;
-            opacity: 0.85;
+            font-size: 40px;
+            margin-bottom: 10px;
+            opacity: 0.8;
         }
         .archive-empty-title {
             font-size: 16px;
@@ -1234,116 +1328,88 @@
             margin: 0 auto;
         }
 
-        /* Structured Report Viewer Styles */
-        .report-modal-header-actions {
+        /* Step 4: Clarifications */
+        .clarification-card {
+            background: var(--input-bg);
+            border: 0.5px solid var(--card-border);
+            border-radius: 18px;
+            padding: 16px 14px;
+            margin-bottom: 14px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+            animation: appleCardFadeIn 0.3s ease;
+        }
+        .clarification-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            margin-bottom: 8px;
         }
-        .report-copy-btn {
+        .clarification-badge {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--button-color);
+            background: rgba(var(--button-color-rgb), 0.1);
+            padding: 3px 9px;
+            border-radius: 10px;
+        }
+        .clarification-question {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            line-height: 1.45;
+        }
+        .clarification-textarea {
+            width: 100%;
+            min-height: 72px;
             background: var(--secondary-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-color);
+            border: 0.5px solid var(--card-border);
             border-radius: 12px;
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .report-copy-btn:hover {
-            background: rgba(0, 122, 255, 0.1);
-            color: var(--button-color);
-        }
-        .report-copy-btn.copied {
-            background: rgba(52, 199, 89, 0.15);
-            color: #34c759;
-            border-color: rgba(52, 199, 89, 0.3);
-        }
-        .report-h3 {
-            font-size: 15.5px;
-            font-weight: 800;
-            color: var(--text-color);
-            margin: 18px 0 8px 0;
-            padding-bottom: 6px;
-            border-bottom: 1px solid var(--glass-border);
-            letter-spacing: -0.2px;
-        }
-        .report-h4 {
+            padding: 10px 12px;
             font-size: 14px;
-            font-weight: 700;
+            color: var(--text-color);
+            resize: vertical;
+            font-family: inherit;
+            line-height: 1.45;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .clarification-textarea:focus {
+            border-color: var(--button-color);
+            box-shadow: 0 0 0 3px rgba(var(--button-color-rgb), 0.2);
+        }
+
+        /* Legal & Privacy Disclaimer */
+        .legal-disclaimer {
+            font-size: 11.5px;
+            line-height: 1.45;
+            color: var(--hint-color);
+            text-align: center;
+            margin-top: 18px;
+            padding: 0 4px;
+            opacity: 0.85;
+        }
+        .legal-disclaimer a {
             color: var(--button-color);
-            margin: 14px 0 6px 0;
-        }
-        .report-quote {
-            margin: 12px 0;
-            padding: 10px 14px;
-            background: rgba(0, 122, 255, 0.06);
-            border-left: 3.5px solid var(--button-color);
-            border-radius: 0 12px 12px 0;
-            font-style: italic;
-            color: var(--text-color);
-            font-size: 13.5px;
-            line-height: 1.55;
-        }
-        .report-list {
-            margin: 8px 0 12px 18px;
-            padding: 0;
-        }
-        .report-list li {
-            margin-bottom: 6px;
-            color: var(--text-color);
-            font-size: 13.5px;
-            line-height: 1.55;
-        }
-        .report-num-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin: 8px 0;
-        }
-        .report-num-badge {
-            background: var(--button-color);
-            color: #ffffff;
-            font-size: 11px;
-            font-weight: 800;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-        .report-num-content {
-            flex: 1;
-            color: var(--text-color);
-            font-size: 13.5px;
-            line-height: 1.55;
-        }
-        .report-p {
-            margin: 0 0 10px 0;
-            color: var(--text-color);
-            font-size: 13.5px;
-            line-height: 1.6;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1 id="step-title">Сімейні акаунти</h1>
+    <!-- iOS Story / Segmented Flow Bar -->
+    <div class="ios-progress-bar" id="stepper" style="display: none;">
+        <div class="ios-progress-segment active" id="indicator-1"><div class="ios-progress-fill"></div></div>
+        <div class="ios-progress-segment" id="indicator-2"><div class="ios-progress-fill"></div></div>
+        <div class="ios-progress-segment" id="indicator-3"><div class="ios-progress-fill"></div></div>
+        <div class="ios-progress-segment" id="indicator-4"><div class="ios-progress-fill"></div></div>
     </div>
 
-    <div class="stepper" id="stepper">
-        <div class="step active" id="indicator-1">1</div>
-        <div class="step" id="indicator-2">2</div>
-        <div class="step" id="indicator-3">3</div>
-        <div class="step" id="indicator-4">4</div>
+    <div class="header">
+        <div class="header-pretitle" id="step-pretitle">AIDOC UA</div>
+        <h1 id="step-title">Сімейні акаунти</h1>
     </div>
 
     <!-- Банер контролю динаміки (Повторне звернення) -->
@@ -1362,9 +1428,9 @@
     <div class="card active" id="step-0">
         <div id="profiles-loading" class="loader"></div>
         <div id="profiles-container" style="display: none;">
-            <div style="text-align: center; margin-bottom: 16px;">
-                <h2 style="margin:0; font-size: 20px; color: var(--text-color);">Оберіть профіль</h2>
-                <p style="margin:4px 0 0 0; color: var(--hint-color); font-size:14px;">або створіть новий для члена родини</p>
+            <div style="text-align: center; margin-bottom: 14px;">
+                <h2 style="margin:0; font-size: 19px; font-weight: 700; color: var(--text-color);">Оберіть профіль</h2>
+                <p style="margin:4px 0 0 0; color: var(--hint-color); font-size:13.5px;">або створіть новий для члена родини</p>
             </div>
             <div class="profiles-grid" id="profiles-grid">
                 <!-- Injected via JS -->
@@ -1372,70 +1438,81 @@
         </div>
     </div>
 
-    <!-- КРОК 1: Особисті дані -->
+    <!-- КРОК 1: Особисті дані (iOS Inset Grouped List) -->
     <div class="card" id="step-1">
-        <div class="form-group">
-            <label for="name">Як до вас звертатися?</label>
-            <input type="text" id="name" placeholder="Ваше ім'я" required>
-        </div>
-
-        <div class="row">
-            <div class="form-group">
+        <div class="ios-grouped-list">
+            <div class="ios-list-row">
+                <label for="name">Ім'я</label>
+                <input type="text" id="name" placeholder="Як звертатися" autocomplete="off" required>
+            </div>
+            <div class="ios-list-row">
                 <label for="gender">Стать</label>
                 <select id="gender" required>
-                    <option value="" disabled selected>Оберіть...</option>
+                    <option value="" disabled selected>Оберіть</option>
                     <option value="Чоловік">Чоловік</option>
                     <option value="Жінка">Жінка</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="ios-list-row">
                 <label for="age">Вік</label>
-                <input type="number" id="age" placeholder="Років" inputmode="numeric" required>
+                <input type="number" id="age" placeholder="0" inputmode="numeric" required>
+                <span class="ios-unit">років</span>
+            </div>
+            <div class="ios-list-row">
+                <label for="height">Зріст</label>
+                <input type="number" id="height" placeholder="0" inputmode="numeric" required>
+                <span class="ios-unit">см</span>
+            </div>
+            <div class="ios-list-row">
+                <label for="weight">Вага</label>
+                <input type="number" id="weight" placeholder="0" inputmode="numeric" required>
+                <span class="ios-unit">кг</span>
             </div>
         </div>
 
-        <div class="row">
-            <div class="form-group">
-                <label for="height">Зріст (см)</label>
-                <input type="number" id="height" placeholder="Напр. 175" inputmode="numeric" required>
-            </div>
-            <div class="form-group">
-                <label for="weight">Вага (кг)</label>
-                <input type="number" id="weight" placeholder="Напр. 70" inputmode="numeric" required>
-            </div>
-        </div>
-        
-        <div class="form-group" style="margin-top: 24px;">
-            <label for="chronics">Хронічні захворювання</label>
-            <textarea id="chronics" placeholder="Опишіть ваші хронічні стани. Якщо немає — залиште порожнім"></textarea>
+        <div class="ios-textarea-card">
+            <label for="chronics">Хронічні захворювання / Алергії</label>
+            <textarea id="chronics" placeholder="Опишіть хронічні стани. Якщо немає — залиште порожнім"></textarea>
         </div>
 
         <div class="nav-buttons">
             <button class="btn btn-secondary" onclick="nextStep(0)">← Назад</button>
-            <button class="btn btn-primary" onclick="nextStep(2)">Далі →</button>
+            <!-- In-flow button with Dynamic Enablement protection -->
+            <button class="btn btn-primary btn-disabled" id="btn-step-1-next" onclick="nextStep(2)">Далі →</button>
         </div>
     </div>
 
-    <!-- КРОК 2: Анамнез -->
+    <!-- КРОК 2: Анамнез та симптоми -->
     <div class="card" id="step-2">
-        <div class="form-group">
-            <label>Де болить? (Оберіть зони)</label>
+        <div style="margin-bottom: 6px;">
+            <label style="font-size: 13.5px; font-weight: 600; color: var(--hint-color); margin-left: 2px;">Локалізація дискомфорту (Оберіть зони)</label>
             <div class="body-model-container">
-                <svg viewBox="0 0 200 400" class="body-svg" id="body-svg">
-                    <circle cx="100" cy="40" r="25" class="body-part" data-zone="Голова"/>
-                    <path d="M 70 75 L 130 75 L 125 140 L 75 140 Z" class="body-part" data-zone="Груди" rx="5"/>
-                    <path d="M 75 145 L 125 145 L 130 200 L 70 200 Z" class="body-part" data-zone="Живіт" rx="5"/>
-                    <rect x="35" y="75" width="25" height="100" rx="12" class="body-part" data-zone="Ліва рука"/>
-                    <rect x="140" y="75" width="25" height="100" rx="12" class="body-part" data-zone="Права рука"/>
-                    <rect x="70" y="205" width="28" height="140" rx="14" class="body-part" data-zone="Ліва нога"/>
-                    <rect x="102" y="205" width="28" height="140" rx="14" class="body-part" data-zone="Права нога"/>
+                <svg viewBox="0 0 240 400" class="body-svg" id="body-svg">
+                    <!-- Head -->
+                    <path d="M 120 22 C 106 22 95 34 95 50 C 95 66 106 78 120 78 C 134 78 145 66 145 50 C 145 34 134 22 120 22 Z" class="body-part" data-zone="Голова"/>
+                    <!-- Chest / Torso Upper -->
+                    <path d="M 90 85 C 80 88 78 96 75 106 L 73 148 C 73 150 78 152 82 152 L 158 152 C 162 152 167 150 167 148 L 165 106 C 162 96 160 88 150 85 C 140 82 130 83 120 83 C 110 83 100 82 90 85 Z" class="body-part" data-zone="Груди"/>
+                    <!-- Abdomen / Torso Lower -->
+                    <path d="M 82 156 L 79 198 C 78 206 83 212 90 215 L 115 220 L 125 220 L 150 215 C 157 212 162 206 161 198 L 158 156 Z" class="body-part" data-zone="Живіт"/>
+                    <!-- Left Arm (viewer's left) -->
+                    <path d="M 68 92 C 58 95 48 106 45 118 L 36 172 C 34 182 38 190 44 191 C 50 192 55 186 57 178 L 65 132 L 69 130 Z" class="body-part" data-zone="Ліва рука"/>
+                    <!-- Right Arm (viewer's right) -->
+                    <path d="M 172 92 C 182 95 192 106 195 118 L 204 172 C 206 182 202 190 196 191 C 190 192 185 186 183 178 L 175 132 L 171 130 Z" class="body-part" data-zone="Права рука"/>
+                    <!-- Left Leg -->
+                    <path d="M 88 224 C 82 226 78 234 78 244 L 79 320 C 79 332 82 358 83 370 C 84 376 90 380 96 380 C 102 380 106 374 105 367 L 103 322 L 107 238 C 107 230 102 224 96 224 Z" class="body-part" data-zone="Ліва нога"/>
+                    <!-- Right Leg -->
+                    <path d="M 152 224 C 158 226 162 234 162 244 L 161 320 C 161 332 158 358 157 370 C 156 376 150 380 144 380 C 138 380 134 374 135 367 L 137 322 L 133 238 C 133 230 138 224 144 224 Z" class="body-part" data-zone="Права нога"/>
                 </svg>
+                <div style="font-size: 12px; color: var(--hint-color); margin-top: 10px;">Торкніться зони для вибору</div>
             </div>
-            <div style="text-align: center; font-size: 12px; color: var(--hint-color); margin-bottom: 20px;">Клікніть на зону, щоб вибрати</div>
         </div>
 
-        <div class="form-group slider-container">
-            <label>Рівень болю / дискомфорту</label>
+        <!-- Sensory Pain Slider -->
+        <div class="slider-container">
+            <div class="slider-header-row">
+                <label>Рівень болю / дискомфорту</label>
+                <span class="pain-badge" id="pain-badge">0 / 10 • Відсутній</span>
+            </div>
             <div class="pain-value-display" id="pain-val">0</div>
             <input type="range" id="pain-slider" min="0" max="10" value="0">
             <div class="pain-labels">
@@ -1445,21 +1522,21 @@
             </div>
         </div>
 
-        <div class="form-group quick-tags-container">
-            <label>Швидкі приводи для звернення (оберіть одне/кілька або заповніть нижче самостійно):</label>
+        <div style="margin-bottom: 18px;">
+            <label style="font-size: 13.5px; font-weight: 600; color: var(--hint-color); margin-left: 2px;">Швидкі приводи для звернення</label>
             <div class="tags-wrapper" id="quick-symptoms">
                 <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Розшифровка аналізів / чек-ап')">📋 Розшифровка аналізів</span>
-				<span class="symptom-tag" onclick="toggleSymptomTag(this, 'Друга думка щодо призначеного лікування')">💊 Друга думка щодо лікування</span>
+                <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Друга думка щодо призначеного лікування')">💊 Друга думка</span>
                 <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Загальна слабкість та втома')">😴 Слабкість / Втома</span>
                 <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Підвищена температура / застуда')">🌡️ Температура / ГРВІ</span>
                 <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Дискомфорт у животі / нудота')">🤢 Шлунок / Травлення</span>
                 <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Головний біль / коливання тиску')">🤕 Головний біль / Тиск</span>
-			</div>
+            </div>
         </div>
 
-        <div class="form-group">
+        <div class="ios-textarea-card">
             <label for="complaints">Опишіть симптоми детальніше</label>
-            <textarea id="complaints" placeholder="Що турбує? Коли почалося? Характер болю?"></textarea>
+            <textarea id="complaints" placeholder="Що саме турбує? Коли почалося? Характер болю?"></textarea>
         </div>
 
         <div class="nav-buttons">
@@ -1468,22 +1545,34 @@
         </div>
     </div>
 
-    <!-- КРОК 3: Файли -->
+    <!-- КРОК 3: Медичні документи (Apple Files Quick Actions) -->
     <div class="card" id="step-3">
-        <div class="form-group">
-            <label>Завантажити аналізи / знімки</label>
-            <div class="file-upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+        <div class="file-upload-card" id="drop-zone">
+            <div class="file-upload-icon-wrap">
                 <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.36 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
-                <p>Натисніть або перетягніть файли</p>
-                <span>PDF, JPG, PNG (до 10 MB)</span>
+            </div>
+            <div class="file-upload-title">Медичні аналізи та знімки</div>
+            <div class="file-upload-subtitle">PDF, JPG, PNG (до 10 MB кожен)</div>
+            
+            <div class="file-quick-actions">
+                <button type="button" class="file-action-chip" onclick="document.getElementById('file-input').click()">
+                    <span>📸</span> Камера
+                </button>
+                <button type="button" class="file-action-chip" onclick="document.getElementById('file-input').click()">
+                    <span>🖼️</span> Галерея
+                </button>
+                <button type="button" class="file-action-chip" onclick="document.getElementById('file-input').click()">
+                    <span>📄</span> Документи
+                </button>
             </div>
             <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.pdf">
-            <div class="file-list" id="file-list"></div>
         </div>
+
+        <div class="file-list" id="file-list"></div>
 
         <div class="nav-buttons" id="final-nav">
             <button class="btn btn-secondary" onclick="nextStep(2)">← Назад</button>
-            <button class="btn btn-primary" onclick="submitCase()">Аналізувати кейс →</button>
+            <button class="btn btn-primary" id="btn-submit-case" onclick="submitCase()">Аналізувати кейс →</button>
         </div>
 
         <p class="legal-disclaimer">
@@ -1493,29 +1582,32 @@
         </p>
     </div>
 
-    <!-- КРОК 4: Уточнення консиліуму -->
+    <!-- КРОК 4: Уточнення консиліуму (Apple Intelligence Aura) -->
     <div class="card" id="step-4">
-        <!-- Стан завантаження / аналізу ШІ -->
-        <div id="clarifications-loading" style="text-align: center; padding: 36px 12px;">
-            <div class="pulse-loader">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <!-- Стан аналізу ШІ з аурою Apple Intelligence -->
+        <div id="clarifications-loading" class="apple-ai-loading">
+            <div class="apple-ai-orb">
+                <div class="apple-ai-glow"></div>
+                <div class="apple-ai-core">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
             </div>
-            <h3 style="margin-top: 22px; font-size: 18px; color: var(--text-color); font-weight: 700;">👨‍⚕️ Консиліум AIDOC UA аналізує ваші дані...</h3>
-            <p style="color: var(--hint-color); font-size: 14px; line-height: 1.5; max-width: 320px; margin: 8px auto 0 auto;">
-                Синтезуємо скарги, анамнез та завантажені файли. Формуємо персоналізовані клінічні уточнення...
+            <h3 class="apple-ai-title">Консиліум AIDOC UA аналізує дані...</h3>
+            <p id="ai-loading-step-text" class="apple-ai-subtitle">
+                Синтезуємо скарги, анамнез та завантажені файли...
             </p>
         </div>
 
         <!-- Контейнер карток із запитаннями -->
         <div id="clarifications-content" style="display: none;">
-            <div style="margin-bottom: 18px;">
-                <h3 style="margin: 0 0 6px 0; font-size: 18px; color: var(--text-color); font-weight: 700;">Уточнення від консиліуму</h3>
-                <p style="margin: 0; color: var(--hint-color); font-size: 14px; line-height: 1.45;">
-                    Будь ласка, дайте відповіді на кілька питань лікарів, щоб отримати максимально точний клінічний висновок.
+            <div style="margin-bottom: 16px;">
+                <h3 style="margin: 0 0 4px 0; font-size: 17.5px; color: var(--text-color); font-weight: 700;">Уточнення від консиліуму</h3>
+                <p style="margin: 0; color: var(--hint-color); font-size: 13.5px; line-height: 1.45;">
+                    Будь ласка, дайте відповіді на запитання лікарів для максимально точного клінічного висновку.
                 </p>
             </div>
             <div id="clarifications-list"></div>
-            <div class="nav-buttons" style="margin-top: 24px; padding-bottom: 28px;">
+            <div class="nav-buttons" style="margin-top: 20px;">
                 <button class="btn btn-primary" id="btn-submit-clarifications" onclick="submitClarifications()" style="width: 100%;">
                     Надіслати відповіді та продовжити →
                 </button>
@@ -1523,11 +1615,11 @@
         </div>
 
         <!-- Екран успішного завершення -->
-        <div id="clarifications-success" style="display: none; text-align: center; padding: 28px 12px;">
-            <div style="font-size: 52px; margin-bottom: 14px; line-height: 1;">✅</div>
-            <h3 style="margin: 0 0 8px 0; font-size: 20px; color: var(--text-color); font-weight: 700;">Дані успішно передано!</h3>
+        <div id="clarifications-success" style="display: none; text-align: center; padding: 32px 12px;">
+            <div style="font-size: 54px; margin-bottom: 12px; line-height: 1;">✅</div>
+            <h3 style="margin: 0 0 6px 0; font-size: 20px; color: var(--text-color); font-weight: 700;">Дані успішно передано!</h3>
             <p id="clarifications-success-text" style="color: var(--hint-color); font-size: 14px; line-height: 1.5; max-width: 320px; margin: 0 auto 24px auto;">
-                Консиліум лікарів AIDOC UA готовий до формування клінічного звіту. Перейдіть до чату для вибору тарифу.
+                Консиліум лікарів AIDOC UA переходить до формування клінічного звіту.
             </p>
             <button class="btn btn-primary" onclick="tg.close()" style="width: 100%; max-width: 280px; margin: 0 auto;">
                 Перейти до чату з ботом →
@@ -1553,9 +1645,9 @@
         </div>
     </div>
 
-    <!-- Report Text Viewer Modal (Швидкий перегляд тексту звіту) -->
+    <!-- Report Text Viewer Modal (Safari Reader Mode - 100% збереження повного тексту звіту) -->
     <div class="archive-drawer-overlay" id="report-modal-overlay" onclick="closeReportModal(event)" style="z-index: 1050;">
-        <div class="archive-drawer" onclick="event.stopPropagation()" style="max-height: 90vh;">
+        <div class="archive-drawer" onclick="event.stopPropagation()" style="max-height: 92vh;">
             <div class="archive-handle"></div>
             <div class="archive-header">
                 <div style="min-width: 0; flex: 1;">
@@ -1563,15 +1655,16 @@
                     <p class="archive-header-sub" id="report-modal-date"></p>
                 </div>
                 <div class="report-modal-header-actions">
-                    <button class="report-copy-btn" id="report-copy-btn" onclick="copyModalReport()" title="Скопіювати звіт">
+                    <button class="report-copy-btn" id="report-copy-btn" onclick="copyModalReport()" title="Скопіювати повний звіт">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         <span id="copy-btn-label">Скопіювати</span>
                     </button>
                     <button class="archive-close-btn" onclick="closeReportModal()">✕</button>
                 </div>
             </div>
-            <div class="archive-body" id="report-modal-body" style="font-size: 14px; line-height: 1.65; overflow-y: auto; max-height: 75vh; -webkit-overflow-scrolling: touch;">
-            </div>
+            <!-- Quick Jump TOC Navigation Bar (Плаваючий швидкий перехід по повному тексту) -->
+            <div class="report-toc-bar" id="report-toc-bar" style="display: none;"></div>
+            <div class="archive-body" id="report-modal-body"></div>
         </div>
     </div>
 
@@ -1599,6 +1692,7 @@
         let activeParentReportId = null;
         let currentArchiveProfile = null;
         let currentReportsCache = [];
+        let aiStepInterval = null;
 
         function formatReportsCount(count) {
             count = parseInt(count) || 0;
@@ -1622,7 +1716,7 @@
             return headers;
         }
 
-        // Load profiles on start
+        // Завантаження профілів на старті
         loadProfiles();
 
         async function loadProfiles() {
@@ -1642,7 +1736,7 @@
             } catch (e) {
                 console.error('Failed to load profiles:', e);
                 document.getElementById('profiles-loading').style.display = 'none';
-                renderProfiles([]); // Show only "Add new" if offline
+                renderProfiles([]);
             }
         }
 
@@ -1675,7 +1769,7 @@
                 
                 card.innerHTML = `
                     <button class="delete-profile-btn" onclick="event.stopPropagation(); deleteProfile(${p.id}, '${escapeHtml(p.name || p.profile_name)}')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                     </button>
                     <div class="profile-card-main">
                         <div class="profile-icon">${icon}</div>
@@ -1711,8 +1805,8 @@
                 selectProfile(null);
             };
             addBtn.innerHTML = `
-                <div style="font-size: 32px; color: var(--button-color); margin-bottom: 8px;">+</div>
-                <div style="font-weight: 600; color: var(--button-color); font-size: 14px;">Новий профіль</div>
+                <div style="font-size: 28px; color: var(--button-color); margin-bottom: 6px; font-weight: 300;">+</div>
+                <div style="font-weight: 600; color: var(--button-color); font-size: 13.5px;">Новий профіль</div>
             `;
             grid.appendChild(addBtn);
             
@@ -1733,7 +1827,6 @@
             const isCollapsing = (selectedExpandedProfileId === p.id);
             selectedExpandedProfileId = isCollapsing ? null : p.id;
             
-            // Smooth DOM toggling without destroying elements
             const cards = document.querySelectorAll('.profile-card[data-profile-id]');
             cards.forEach(card => {
                 const cardId = parseInt(card.dataset.profileId);
@@ -1744,7 +1837,6 @@
                 }
             });
 
-            // Gender theme dynamic highlighting
             if (!isCollapsing && p && p.gender) {
                 applyGenderTheme(p.gender);
             } else {
@@ -1801,7 +1893,7 @@
                             <div class="archive-empty-icon">📁</div>
                             <div class="archive-empty-title">Історія консультацій порожня</div>
                             <div class="archive-empty-desc">
-                                Для цього профілю ще немає збережених звітів. Після першої консультації всі висновки консиліуму будуть доступні тут.
+                                Для цього профілю ще немає збережених звітів. Після першої консультації всі висновки консиліуму будуть збережені тут.
                             </div>
                             <button class="btn btn-primary" onclick="closeArchiveDrawer(); startNewConsultationForProfile(${profile.id});" style="margin-top: 18px; width: 100%; max-width: 240px;">
                                 Розпочати консультацію
@@ -1833,7 +1925,7 @@
         function cleanHtmlAndMarkdown(text) {
             if (!text) return '';
             let cleaned = text
-                .replace(/<[^>]+>/g, '') // remove HTML tags
+                .replace(/<[^>]+>/g, '')
                 .replace(/🔗\s*(?:Ваш медичний ШІ-асистент:?|ШІ-асистент AIDOC UA)[^\n]*/gi, '')
                 .replace(/t\.me\/AidocUAbot/gi, '')
                 .replace(/^#+\s*/gm, '')
@@ -1844,10 +1936,11 @@
 
         let activeModalReportText = '';
 
+        // Safari Reader Formatter: 100% збереження повного тексту без скорочень + плаваючий TOC
         function renderFormattedReport(rawText) {
             if (!rawText) return '<p class="report-p">Текст звіту відсутній.</p>';
             
-            // Remove bot signature lines and unclosed tags
+            // Медична аксіома: жодних скорочень тексту
             let text = rawText
                 .replace(/🔗\s*(?:<b>)?Ваш медичний ШІ-асистент:?(?:<\/b>)?\s*t\.me\/AidocUAbot[^\n]*/gi, '')
                 .replace(/📅\s*(?:<b>)?Дата(?:\s+генерації)?(?:\s+звіту)?:?(?:<\/b>)?[^\n]*/gi, '')
@@ -1857,6 +1950,8 @@
             const lines = text.split('\n');
             let html = '';
             let inList = false;
+            let sectionCount = 0;
+            const tocItems = [];
             
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i].trim();
@@ -1868,17 +1963,24 @@
                     continue;
                 }
                 
-                // Format bold markdown **text**
+                // Bold markdown **text**
                 line = escapeHtml(line).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                 
                 // Headers: ### or ##
                 if (line.startsWith('### ')) {
                     if (inList) { html += '</ul>'; inList = false; }
-                    html += `<h4 class="report-h4">${line.slice(4)}</h4>`;
+                    sectionCount++;
+                    const titleText = line.slice(4);
+                    const cleanTitle = titleText.replace(/<[^>]+>/g, '').trim();
+                    tocItems.push({ id: `rep-sec-${sectionCount}`, title: cleanTitle });
+                    html += `<h4 class="report-h4" id="rep-sec-${sectionCount}">${titleText}</h4>`;
                 } else if (line.startsWith('## ') || line.startsWith('# ')) {
                     if (inList) { html += '</ul>'; inList = false; }
+                    sectionCount++;
                     const titleText = line.replace(/^#+\s*/, '');
-                    html += `<h3 class="report-h3">${titleText}</h3>`;
+                    const cleanTitle = titleText.replace(/<[^>]+>/g, '').trim();
+                    tocItems.push({ id: `rep-sec-${sectionCount}`, title: cleanTitle });
+                    html += `<h3 class="report-h3" id="rep-sec-${sectionCount}">${titleText}</h3>`;
                 } else if (line.startsWith('&gt; ') || line.startsWith('> ')) {
                     if (inList) { html += '</ul>'; inList = false; }
                     const quoteText = line.replace(/^(?:&gt;|>)\s*/, '');
@@ -1907,8 +2009,36 @@
             if (inList) {
                 html += '</ul>';
             }
+
+            // Quick Jump TOC Capsule Bar
+            const tocContainer = document.getElementById('report-toc-bar');
+            if (tocContainer) {
+                if (tocItems.length > 1) {
+                    let tocHtml = '';
+                    tocItems.forEach(item => {
+                        let pillLabel = item.title;
+                        if (pillLabel.length > 22) pillLabel = pillLabel.slice(0, 20) + '…';
+                        tocHtml += `<button class="report-toc-pill" onclick="scrollToReportSection('${item.id}')">${escapeHtml(pillLabel)}</button>`;
+                    });
+                    tocContainer.innerHTML = tocHtml;
+                    tocContainer.style.display = 'flex';
+                } else {
+                    tocContainer.innerHTML = '';
+                    tocContainer.style.display = 'none';
+                }
+            }
             
             return html;
+        }
+
+        function scrollToReportSection(sectionId) {
+            const el = document.getElementById(sectionId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (tg && tg.HapticFeedback) {
+                    tg.HapticFeedback.selectionChanged();
+                }
+            }
         }
 
         function renderArchiveReports(reports, profile) {
@@ -1921,7 +2051,7 @@
                 
                 const catName = r.category_display || r.category || 'Загальна консультація';
                 const webBtn = r.web_url 
-                    ? `<button class="archive-btn archive-btn-view" onclick="openReportUrl('${escapeHtml(r.web_url)}')"><span>🌐</span> Звіт онлайн</button>`
+                    ? `<button class="archive-btn archive-btn-view" onclick="openReportUrl('${escapeHtml(r.web_url)}')"><span>🌐</span> Онлайн</button>`
                     : `<button class="archive-btn archive-btn-view" onclick="viewReportContent(${r.id})"><span>📄</span> Переглянути</button>`;
                 
                 let cleanTeaser = cleanHtmlAndMarkdown(r.teaser);
@@ -1976,7 +2106,7 @@
                 selectProfile(targetProfile);
                 const complaintsArea = document.getElementById('complaints');
                 if (complaintsArea && !complaintsArea.value.trim()) {
-                    complaintsArea.placeholder = "Опишіть поточні зміни в самопочутті, ефективність призначень або нові симптоми для контролю динаміки...";
+                    complaintsArea.placeholder = "Опишіть поточні зміни в самопочутті, динаміку або нові симптоми...";
                 }
             }
         }
@@ -1988,7 +2118,7 @@
             if (banner) banner.style.display = 'none';
             const complaintsArea = document.getElementById('complaints');
             if (complaintsArea) {
-                complaintsArea.placeholder = "Наприклад: болить голова, температура 37.8, слабкість...";
+                complaintsArea.placeholder = "Що саме турбує? Коли почалося? Характер болю?";
             }
         }
 
@@ -2014,12 +2144,11 @@
             title.innerText = catName;
             dateEl.innerText = report.date ? `Дата консультації: ${report.date}` : '';
             
-            // Prioritize full report content over teaser
+            // 100% повний автентичний текст
             const fullContent = report.report || report.teaser || 'Текст звіту відсутній.';
             activeModalReportText = fullContent;
             
             body.innerHTML = renderFormattedReport(fullContent);
-            
             overlay.classList.add('active');
         }
 
@@ -2136,7 +2265,6 @@
                 document.getElementById('age').value = p.age || '';
                 document.getElementById('chronics').value = cleanChronicsValue(p.chronics);
                 
-                // Parse metrics
                 document.getElementById('weight').value = '';
                 document.getElementById('height').value = '';
                 if (p.metrics) {
@@ -2150,7 +2278,6 @@
                 applyGenderTheme(p.gender);
             } else {
                 currentProfileId = 'new';
-                // Clear form
                 document.getElementById('name').value = '';
                 document.getElementById('gender').value = '';
                 document.getElementById('age').value = '';
@@ -2160,7 +2287,6 @@
                 applyGenderTheme('');
             }
             
-            // Clear anamnesis data when selecting a profile
             document.querySelectorAll('.body-part').forEach(el => el.classList.remove('selected'));
             document.querySelectorAll('.symptom-tag').forEach(tag => tag.classList.remove('active'));
             selectedZones.clear();
@@ -2173,6 +2299,9 @@
 
         function toggleSymptomTag(el, text) {
             el.classList.toggle('active');
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.selectionChanged();
+            }
             const complaintsArea = document.getElementById('complaints');
             let currentVal = complaintsArea.value.trim();
             
@@ -2183,7 +2312,6 @@
                     complaintsArea.value = currentVal + (currentVal.endsWith('.') || currentVal.endsWith(',') ? ' ' : ', ') + text;
                 }
             } else {
-                // Remove tag text if deactivated
                 let parts = currentVal.split(/,\s*/).filter(p => p.trim() && p.trim() !== text);
                 complaintsArea.value = parts.join(', ');
             }
@@ -2192,21 +2320,56 @@
         function applyGenderTheme(gender) {
             if (gender === 'Жінка') {
                 document.body.classList.add('theme-female');
-                tg.MainButton.color = "#ff4d85";
-                document.getElementById('body-svg').setAttribute('viewBox', '0 0 200 380');
             } else {
                 document.body.classList.remove('theme-female');
-                tg.MainButton.color = tg.themeParams.button_color || "#007aff";
-                document.getElementById('body-svg').setAttribute('viewBox', '0 0 200 400');
             }
         }
 
         const genderSelect = document.getElementById('gender');
         genderSelect.addEventListener('change', function() {
             applyGenderTheme(this.value);
+            checkStep1Validity();
         });
 
-        // Навігація
+        // Реактивна валідація на Кроці 1: унеможливлює випадкове натискання кнопки
+        function checkStep1Validity() {
+            const name = (document.getElementById('name').value || '').trim();
+            const gender = document.getElementById('gender').value || '';
+            const age = parseInt(document.getElementById('age').value, 10);
+            const height = parseInt(document.getElementById('height').value, 10);
+            const weight = parseInt(document.getElementById('weight').value, 10);
+
+            const isValid = name.length >= 2 &&
+                            (gender === 'Чоловік' || gender === 'Жінка') &&
+                            !isNaN(age) && age >= 1 && age <= 110 &&
+                            !isNaN(height) && height >= 40 && height <= 230 &&
+                            !isNaN(weight) && weight >= 3 && weight <= 300;
+
+            const nextBtn = document.getElementById('btn-step-1-next');
+            if (nextBtn) {
+                if (isValid) {
+                    if (nextBtn.classList.contains('btn-disabled')) {
+                        nextBtn.classList.remove('btn-disabled');
+                        if (tg && tg.HapticFeedback) {
+                            tg.HapticFeedback.impactOccurred('light');
+                        }
+                    }
+                } else {
+                    nextBtn.classList.add('btn-disabled');
+                }
+            }
+            return isValid;
+        }
+
+        // Слухачі для реактивної форми
+        ['input', 'change', 'blur'].forEach(evt => {
+            ['name', 'gender', 'age', 'height', 'weight'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener(evt, checkStep1Validity);
+            });
+        });
+
+        // Навігація між кроками
         function nextStep(step) {
             if (step > currentStep && currentStep > 0 && currentStep < 4) {
                 if (!validateStep(currentStep)) return;
@@ -2218,72 +2381,56 @@
             
             const stepper = document.getElementById('stepper');
             const banner = document.getElementById('dynamic-banner');
+            const pretitle = document.getElementById('step-pretitle');
+            const stepTitle = document.getElementById('step-title');
+            
             if (step === 0) {
-                stepper.style.display = 'none';
+                if (stepper) stepper.style.display = 'none';
                 if (banner) banner.style.display = 'none';
-                document.getElementById('step-title').innerText = "Сімейні акаунти";
+                if (pretitle) pretitle.innerText = "AIDOC UA";
+                if (stepTitle) stepTitle.innerText = "Сімейні акаунти";
             } else {
-                stepper.style.display = 'flex';
-                if (banner) {
-                    banner.style.display = (activeParentReportId && step < 4) ? 'flex' : 'none';
-                }
-                // Оновлення індикаторів
-                for(let i=1; i<=totalSteps; i++) {
-                    let ind = document.getElementById(`indicator-${i}`);
-                    if (ind) {
-                        if (i < step) {
-                            ind.className = 'step completed';
-                            ind.innerHTML = '✓';
-                        } else if (i === step) {
-                            ind.className = 'step active';
-                            ind.innerHTML = i;
-                        } else {
-                            ind.className = 'step';
-                            ind.innerHTML = i;
+                if (stepper) {
+                    stepper.style.display = 'flex';
+                    for (let i = 1; i <= totalSteps; i++) {
+                        const seg = document.getElementById(`indicator-${i}`);
+                        if (seg) {
+                            if (i <= step) {
+                                seg.classList.add('active');
+                            } else {
+                                seg.classList.remove('active');
+                            }
                         }
                     }
                 }
-                const titles = ["Особисті дані", "Анамнез", "Документи", "Уточнення"];
-                document.getElementById('step-title').innerText = titles[step-1] || "Консультація";
+                if (banner) {
+                    banner.style.display = (activeParentReportId && step < 4) ? 'flex' : 'none';
+                }
+                const subtitles = ["Крок 1 з 4", "Крок 2 з 4", "Крок 3 з 4", "Крок 4 з 4"];
+                const titles = ["Особисті дані", "Симптоми та анамнез", "Медичні документи", "Клінічні уточнення"];
+                if (pretitle) pretitle.innerText = subtitles[step-1] || "Консультація";
+                if (stepTitle) stepTitle.innerText = titles[step-1] || "Консультація";
             }
 
             currentStep = step;
 
-            if (step === 3) {
-                tg.MainButton.text = "АНАЛІЗУВАТИ КЕЙС →";
-                tg.MainButton.show();
-            } else if (step === 4) {
-                // Приховуємо закріплену нижню кнопку, щоб уникнути передчасного випадкового відправлення
-                tg.MainButton.hide();
-            } else {
+            // Безпека від випадкових натискань: приховуємо tg.MainButton
+            // Вся навігація здійснюється усвідомлено кнопками In-Flow
+            if (tg && tg.MainButton) {
                 tg.MainButton.hide();
             }
+
+            if (step === 1) {
+                checkStep1Validity();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Валідація
+        // Валідація кроків
         function validateStep(step) {
             if (step === 1) {
-                const name = document.getElementById('name').value.trim();
-                const gender = document.getElementById('gender').value;
-                const age = parseInt(document.getElementById('age').value, 10);
-                const height = parseInt(document.getElementById('height').value, 10);
-                const weight = parseInt(document.getElementById('weight').value, 10);
-                if (!name || !gender || isNaN(age) || isNaN(height) || isNaN(weight)) {
-                    tg.showAlert("Будь ласка, заповніть всі обов'язкові поля (ім'я, стать, вік, зріст, вага).");
-                    return false;
-                }
-                if (age < 1 || age > 100) {
-                    tg.showAlert("Вкажіть коректний вік (1–100 років).");
-                    return false;
-                }
-                if (height < 50 || height > 220) {
-                    tg.showAlert("Вкажіть коректний зріст (50–220 см).");
-                    return false;
-                }
-                if (weight < 5 || weight > 300) {
-                    tg.showAlert("Вкажіть коректну вагу (5–200 кг).");
-                    return false;
-                }
+                return checkStep1Validity();
             }
 
             if (step === 2) {
@@ -2293,9 +2440,8 @@
                 const hasPain = !isNaN(painLevel) && painLevel > 0;
                 const hasText = complaints.length >= 3;
 
-                // Якщо пацієнт не вказав жодного симптому
                 if (!hasZones && !hasPain && !hasText) {
-                    const confirmMsg = "Ви не вказали жодних симптомів чи зон дискомфорту.\n\nБажаєте перейти далі лише для завантаження медичних файлів / аналізів?";
+                    const confirmMsg = "Ви не вказали жодних симптомів чи зон дискомфорту.\n\nБажаєте перейти далі лише для завантаження медичних документів / аналізів?";
                     if (tg && typeof tg.showConfirm === 'function') {
                         tg.showConfirm(confirmMsg, function(confirmed) {
                             if (confirmed) {
@@ -2315,7 +2461,7 @@
             return true;
         }
 
-        // Body Model Logic
+        // Логіка анатомічної моделі тіла
         document.querySelectorAll('.body-part').forEach(part => {
             part.addEventListener('click', function() {
                 this.classList.toggle('selected');
@@ -2325,61 +2471,74 @@
                 } else {
                     selectedZones.delete(zone);
                 }
+                if (tg && tg.HapticFeedback) {
+                    tg.HapticFeedback.selectionChanged();
+                }
             });
         });
 
-        // Pain Slider Logic
+        // Сенсорний слайдер болю
         const slider = document.getElementById('pain-slider');
         const painVal = document.getElementById('pain-val');
+        const painBadge = document.getElementById('pain-badge');
         
         function updatePainUI(val) {
-            painVal.innerText = val;
+            val = parseInt(val, 10) || 0;
+            if (painVal) painVal.innerText = val;
             
-            // Smooth color transition from green (120) to red (0)
             const hue = 120 - (val * 12);
-            const color = `hsl(${hue}, 80%, 45%)`;
+            const color = `hsl(${hue}, 82%, 46%)`;
             
-            painVal.style.color = color;
+            if (painVal) painVal.style.color = color;
             document.documentElement.style.setProperty('--pain-color', color);
             
-            // Emoji reaction animation
+            let textDesc = "Відсутній";
+            if (val >= 1 && val <= 3) textDesc = "Легкий дискомфорт";
+            else if (val >= 4 && val <= 6) textDesc = "Помірний біль";
+            else if (val >= 7 && val <= 8) textDesc = "Сильний біль";
+            else if (val >= 9) textDesc = "Гострий / Нестерпний";
+            
+            if (painBadge) {
+                painBadge.innerText = `${val} / 10 • ${textDesc}`;
+                painBadge.style.color = color;
+            }
+
             const painLabels = document.querySelectorAll('.pain-labels span');
             painLabels.forEach((label, idx) => {
                 const targetVal = idx === 0 ? 0 : (idx === 1 ? 5 : 10);
                 const diff = Math.abs(val - targetVal);
-                const scale = Math.max(1, 1.5 - (diff * 0.1));
-                const opacity = Math.max(0.4, 1 - (diff * 0.12));
+                const scale = Math.max(1, 1.3 - (diff * 0.08));
                 label.style.transform = `scale(${scale})`;
-                label.style.opacity = opacity;
             });
         }
 
         slider.addEventListener('input', function() {
             updatePainUI(this.value);
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.selectionChanged();
+            }
         });
         
-        // Initialize pain UI state
         updatePainUI(slider.value);
 
-        // File Logic
+        // Файлова логіка
         const fileInput = document.getElementById('file-input');
         const fileListContainer = document.getElementById('file-list');
         const dropZone = document.getElementById('drop-zone');
+        
         fileInput.addEventListener('change', handleFiles);
-        // Drag & Drop обробники
+
         if (dropZone) {
             ['dragenter', 'dragover'].forEach(name => {
                 dropZone.addEventListener(name, (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    dropZone.classList.add('dragover');
                 });
             });
             ['dragleave', 'drop'].forEach(name => {
                 dropZone.addEventListener(name, (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    dropZone.classList.remove('dragover');
                 });
             });
             dropZone.addEventListener('drop', (e) => {
@@ -2388,6 +2547,7 @@
                 }
             });
         }
+
         function handleFiles(e) {
             const files = Array.from(e.target.files);
             files.forEach(file => {
@@ -2398,12 +2558,20 @@
                 uploadedFiles.push(file);
                 renderFiles();
             });
-            fileInput.value = ''; // reset
+            fileInput.value = '';
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.notificationOccurred('success');
+            }
         }
+
         function removeFile(index) {
             uploadedFiles.splice(index, 1);
             renderFiles();
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('light');
+            }
         }
+
         function renderFiles() {
             fileListContainer.innerHTML = '';
             uploadedFiles.forEach((file, index) => {
@@ -2418,7 +2586,7 @@
                 item.innerHTML = `
                     ${previewHtml}
                     <div class="file-info">
-                        <p class="file-name">${file.name}</p>
+                        <p class="file-name">${escapeHtml(file.name)}</p>
                         <p class="file-size">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
                     </div>
                     <button class="remove-file" onclick="removeFile(${index})">✕</button>
@@ -2429,7 +2597,7 @@
 
         const generateSessionId = () => Math.random().toString(36).substring(2, 15);
         
-        // Відправка анкети та перехід до уточнень ШІ (Крок 4)
+        // Відправка кейсу
         async function submitCase() {
             if (currentStep !== 3) return;
 
@@ -2441,9 +2609,8 @@
             const hasRealComplaints = complaints.length >= 3 && !isDocPlaceholder;
             const hasFiles = uploadedFiles.length > 0;
 
-            // Захисний бар'єр: кейс не може бути повністю порожнім
             if (!hasZones && !hasPain && !hasRealComplaints && !hasFiles) {
-                const alertMsg = "⚠️ Ви не додали жодної скарги, симптому чи медичного документа.\n\nБудь ласка, завантажте файли на цьому кроці або поверніться назад та опишіть ваше самопочуття.";
+                const alertMsg = "⚠️ Ви не додали жодної скарги чи медичного документа.\n\nБудь ласка, прикріпіть файли або поверніться назад та опишіть ваше самопочуття.";
                 if (tg && typeof tg.showAlert === 'function') {
                     tg.showAlert(alertMsg);
                 } else {
@@ -2470,10 +2637,8 @@
                 session_id: sessionId
             };
 
-            // Перемикаємося на Крок 4 у стані аналізу
             nextStep(4);
             showClarificationsLoading();
-            tg.MainButton.hide();
 
             try {
                 const targetUrl = urlParams.get('api_url');
@@ -2514,7 +2679,6 @@
 
                 const resData = await response.json();
 
-                // Якщо зафіксовано екстрений випадок
                 if (resData.is_emergency || resData.status === 'emergency') {
                     const alertText = resData.message || "🚨 Увага! Зафіксовано екстрений симптом. Негайно телефонуйте 112!";
                     if (tg && typeof tg.showAlert === 'function') {
@@ -2526,19 +2690,16 @@
                     return;
                 }
 
-                // Перевіряємо, чи є уточнюючі питання від консиліуму
                 if (resData.has_questions && resData.questions && resData.questions.length > 0) {
                     activeQuestions = resData.questions;
                     renderClarificationQuestions(activeQuestions);
                 } else {
-                    // Питань немає - показуємо екран завершення
                     showClarificationsSuccess("Всі клінічні дані зрозумілі, додаткових уточнень немає!\n\nКонсиліум лікарів AIDOC UA переходить до формування фінального медичного звіту.");
                 }
 
             } catch (err) {
-                nextStep(3); // Повертаємо пацієнта назад на крок 3
-                tg.MainButton.text = "АНАЛІЗУВАТИ КЕЙС →";
-                tg.MainButton.show();
+                stopAiLoadingAnimation();
+                nextStep(3);
                 if (tg && typeof tg.showAlert === 'function') {
                     tg.showAlert(`Помилка: ${err.message}`);
                 } else {
@@ -2548,13 +2709,45 @@
             }
         }
 
+        const aiSteps = [
+            "Синтезуємо скарги, анамнез та завантажені файли...",
+            "Оцифровуємо показники лабораторних аналізів...",
+            "Звіряємо з міжнародними клінічними протоколами...",
+            "Формуємо персоналізовані клінічні уточнення..."
+        ];
+
+        function startAiLoadingAnimation() {
+            let idx = 0;
+            const textEl = document.getElementById('ai-loading-step-text');
+            if (aiStepInterval) clearInterval(aiStepInterval);
+            aiStepInterval = setInterval(() => {
+                idx = (idx + 1) % aiSteps.length;
+                if (textEl) {
+                    textEl.style.opacity = '0';
+                    setTimeout(() => {
+                        textEl.innerText = aiSteps[idx];
+                        textEl.style.opacity = '1';
+                    }, 250);
+                }
+            }, 2800);
+        }
+
+        function stopAiLoadingAnimation() {
+            if (aiStepInterval) {
+                clearInterval(aiStepInterval);
+                aiStepInterval = null;
+            }
+        }
+
         function showClarificationsLoading() {
-            document.getElementById('clarifications-loading').style.display = 'block';
+            document.getElementById('clarifications-loading').style.display = 'flex';
             document.getElementById('clarifications-content').style.display = 'none';
             document.getElementById('clarifications-success').style.display = 'none';
+            startAiLoadingAnimation();
         }
 
         function renderClarificationQuestions(questions) {
+            stopAiLoadingAnimation();
             document.getElementById('clarifications-loading').style.display = 'none';
             document.getElementById('clarifications-success').style.display = 'none';
             const content = document.getElementById('clarifications-content');
@@ -2581,10 +2774,6 @@
                 `;
                 list.appendChild(card);
             });
-
-            // Нижня закріплена кнопка Telegram прихована, щоб клієнт випадково не натиснув її раніше ніж відповість на всі питання.
-            // Залишається лише інлайн-кнопка під списком уточнюючих питань.
-            tg.MainButton.hide();
         }
 
         async function submitClarifications() {
@@ -2623,9 +2812,6 @@
                 submitBtn.disabled = true;
                 submitBtn.innerText = "Зберігаю відповіді...";
             }
-            if (tg && tg.MainButton && tg.MainButton.isVisible) {
-                tg.MainButton.showProgress();
-            }
 
             try {
                 const targetUrl = urlParams.get('api_url');
@@ -2651,15 +2837,9 @@
                 }
 
                 clearClarificationsDraft();
-                if (tg && tg.MainButton && tg.MainButton.isVisible) {
-                    tg.MainButton.hideProgress();
-                }
                 showClarificationsSuccess("Ваші відповіді прийнято консиліумом лікарів AIDOC UA!\n\nТепер перейдіть до чату з ботом, щоб обрати тариф та отримати детальний медичний звіт.");
 
             } catch (err) {
-                if (tg && tg.MainButton && tg.MainButton.isVisible) {
-                    tg.MainButton.hideProgress();
-                }
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.innerText = "Надіслати відповіді та продовжити →";
@@ -2674,6 +2854,7 @@
         }
 
         function showClarificationsSuccess(msg) {
+            stopAiLoadingAnimation();
             document.getElementById('clarifications-loading').style.display = 'none';
             document.getElementById('clarifications-content').style.display = 'none';
             const successBox = document.getElementById('clarifications-success');
@@ -2683,13 +2864,9 @@
                 document.getElementById('clarifications-success-text').innerText = msg;
             }
 
-            tg.MainButton.text = "ПЕРЕЙТИ ДО ЧАТУ З БОТОМ";
-            tg.MainButton.show();
-
-            // Плавне автозакриття через 4 секунди
             setTimeout(() => {
                 try { tg.close(); } catch(e) {}
-            }, 4000);
+            }, 4500);
         }
 
         function saveClarificationDraft(idx, text) {
@@ -2717,20 +2894,6 @@
             };
             return text.toString().replace(/[&<>"']/g, function(m) { return map[m]; });
         }
-
-        // Обробник натискання головної кнопки Telegram
-        tg.onEvent('mainButtonClicked', async function() {
-            if (currentStep === 3) {
-                await submitCase();
-            } else if (currentStep === 4) {
-                const successBox = document.getElementById('clarifications-success');
-                if (successBox && successBox.style.display !== 'none') {
-                    tg.close();
-                } else {
-                    await submitClarifications();
-                }
-            }
-        });
 
         function openLegalLink(e, url) {
             if (window.Telegram && window.Telegram.WebApp && typeof window.Telegram.WebApp.openLink === 'function') {
