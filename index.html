@@ -72,6 +72,12 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
@@ -81,7 +87,7 @@
             background-attachment: fixed;
             color: var(--text-color);
             margin: 0;
-            padding: 16px 16px 36px 16px;
+            padding: 12px 12px 32px 12px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
@@ -91,7 +97,7 @@
         .ios-progress-bar {
             display: flex;
             gap: 6px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             padding: 0 2px;
         }
         
@@ -117,25 +123,25 @@
         }
 
         .header {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             padding: 0 4px;
         }
 
         .header-pretitle {
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.6px;
             color: var(--button-color);
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         .header h1 {
-            font-size: 26px;
+            font-size: 24px;
             margin: 0;
             font-weight: 700;
             color: var(--text-color);
-            letter-spacing: -0.5px;
+            letter-spacing: -0.4px;
             line-height: 1.2;
         }
 
@@ -144,12 +150,14 @@
             background: var(--card-bg);
             backdrop-filter: blur(28px) saturate(190%);
             -webkit-backdrop-filter: blur(28px) saturate(190%);
-            border-radius: 24px;
-            padding: 24px 20px;
+            border-radius: 22px;
+            padding: 20px 16px;
             box-shadow: var(--card-shadow);
             border: 1px solid var(--card-border);
             animation: appleCardFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             display: none;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         .card.active {
@@ -165,18 +173,18 @@
         .profiles-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 16px;
+            gap: 10px;
+            margin-top: 14px;
         }
         
         .profile-card {
-            flex: 1 1 calc(50% - 6px);
-            min-width: 135px;
+            flex: 1 1 calc(50% - 5px);
+            min-width: 130px;
             max-width: 100%;
             background: var(--input-bg);
             border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 16px 12px;
+            border-radius: 18px;
+            padding: 14px 10px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1);
@@ -209,7 +217,7 @@
         .profile-card.expanded {
             flex: 1 1 100%;
             max-width: 100%;
-            padding: 20px 18px;
+            padding: 18px 16px;
             background: var(--card-bg);
             border-color: var(--card-accent, var(--button-color));
             box-shadow: 0 8px 24px rgba(var(--card-accent-rgb), 0.18);
@@ -225,11 +233,11 @@
         .profile-card.expanded .profile-card-main {
             flex-direction: row;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
             text-align: left;
         }
         .profile-card.expanded .profile-icon {
-            font-size: 42px;
+            font-size: 38px;
             margin-bottom: 0;
             flex-shrink: 0;
         }
@@ -241,22 +249,18 @@
         .profile-history-badge {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            margin-top: 8px;
-            padding: 4px 10px;
-            border-radius: 12px;
+            gap: 4px;
+            margin-top: 6px;
+            padding: 4px 9px;
+            border-radius: 10px;
             background: rgba(var(--button-color-rgb), 0.08);
             border: 0.5px solid rgba(var(--button-color-rgb), 0.18);
             color: var(--button-color);
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 600;
             letter-spacing: 0.2px;
             transition: all 0.2s ease;
             user-select: none;
-        }
-        .profile-history-badge:hover {
-            background: rgba(var(--button-color-rgb), 0.16);
-            transform: scale(1.02);
         }
 
         .profile-actions-wrapper {
@@ -274,9 +278,9 @@
             min-height: 0;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            padding-top: 14px;
-            margin-top: 14px;
+            gap: 8px;
+            padding-top: 12px;
+            margin-top: 12px;
             border-top: 0.5px solid var(--separator);
         }
         @media (min-width: 340px) {
@@ -290,10 +294,10 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 12px 14px;
-            border-radius: 14px;
-            font-size: 13.5px;
+            gap: 6px;
+            padding: 11px 12px;
+            border-radius: 12px;
+            font-size: 13px;
             font-weight: 600;
             border: none;
             cursor: pointer;
@@ -306,28 +310,24 @@
             color: #ffffff;
             box-shadow: 0 4px 14px rgba(var(--card-accent-rgb), 0.28);
         }
-        .btn-primary-action:active {
-            transform: scale(0.97);
-        }
+        .btn-primary-action:active { transform: scale(0.97); }
         .btn-archive-action {
             background: var(--secondary-bg);
             color: var(--text-color);
             border: 0.5px solid var(--card-border);
         }
-        .btn-archive-action:active {
-            transform: scale(0.97);
-        }
+        .btn-archive-action:active { transform: scale(0.97); }
         
         .profile-card.add-new {
-            flex: 1 1 calc(50% - 6px);
-            min-width: 135px;
+            flex: 1 1 calc(50% - 5px);
+            min-width: 130px;
             background: rgba(var(--button-color-rgb), 0.04);
             border: 1.5px dashed rgba(var(--button-color-rgb), 0.35);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 130px;
+            min-height: 120px;
             box-shadow: none;
             transition: all 0.25s ease;
         }
@@ -336,32 +336,32 @@
             border-color: var(--button-color);
         }
         .profile-icon {
-            font-size: 36px;
-            margin-bottom: 10px;
+            font-size: 34px;
+            margin-bottom: 8px;
             transition: all 0.3s ease;
         }
         .profile-name {
             font-weight: 600;
-            font-size: 15.5px;
+            font-size: 15px;
             color: var(--text-color);
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .profile-meta {
-            font-size: 12.5px;
+            font-size: 12px;
             color: var(--hint-color);
         }
         .delete-profile-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 8px;
+            right: 8px;
             background: rgba(255, 59, 48, 0.12);
             color: var(--danger-color);
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -371,12 +371,8 @@
             transition: all 0.2s ease;
             z-index: 10;
         }
-        .profile-card:hover .delete-profile-btn {
-            opacity: 1;
-        }
-        @media (hover: none) {
-            .delete-profile-btn { opacity: 0.9; }
-        }
+        .profile-card:hover .delete-profile-btn { opacity: 1; }
+        @media (hover: none) { .delete-profile-btn { opacity: 0.9; } }
 
         /* Apple Spinner Loader */
         .loader {
@@ -390,78 +386,99 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* iOS Inset Grouped Form Style */
+        /* iOS Inset Grouped Form Style (Zero Overflow, Anti-Zoom 16px) */
         .ios-grouped-list {
             background: var(--input-bg);
             border-radius: 18px;
             border: 0.5px solid var(--card-border);
             overflow: hidden;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .ios-list-row {
             position: relative;
             display: flex;
             align-items: center;
-            padding: 13px 16px;
+            justify-content: space-between;
+            padding: 13px 14px;
             min-height: 48px;
+            gap: 10px;
+            box-sizing: border-box;
+            width: 100%;
         }
         
         .ios-list-row:not(:last-child)::after {
             content: '';
             position: absolute;
             bottom: 0;
-            left: 16px;
+            left: 14px;
             right: 0;
             height: 0.5px;
             background: var(--separator);
         }
         
         .ios-list-row label {
-            font-size: 14.5px;
+            font-size: 15px;
             font-weight: 500;
             color: var(--text-color);
-            width: 124px;
             flex-shrink: 0;
             margin: 0;
-            letter-spacing: -0.1px;
+            width: auto;
+            max-width: 45%;
+            letter-spacing: -0.2px;
+        }
+
+        .ios-row-input-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex: 1;
+            min-width: 0;
+            gap: 4px;
+            box-sizing: border-box;
         }
         
         .ios-list-row input, .ios-list-row select {
-            flex: 1;
             border: none;
             background: transparent;
-            padding: 0;
-            font-size: 15.5px;
+            padding: 2px 0;
+            font-size: 16px !important; /* CRITICAL: 16px kills iOS Safari auto-zoom completely! */
             font-family: inherit;
             color: var(--text-color);
             text-align: right;
             outline: none;
             -webkit-appearance: none;
             appearance: none;
+            min-width: 0;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .ios-list-row select {
-            text-align-last: right;
-            direction: rtl;
-            padding-right: 16px;
+            padding-right: 18px;
             background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238E8E93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 0 center;
+            text-align-last: right;
+            direction: rtl;
+            cursor: pointer;
         }
         
         .ios-list-row input::placeholder {
             color: var(--hint-color);
-            opacity: 0.55;
+            opacity: 0.6;
         }
         
         .ios-unit {
-            font-size: 14px;
+            font-size: 14.5px;
             color: var(--hint-color);
-            margin-left: 6px;
+            margin-left: 4px;
             flex-shrink: 0;
             font-weight: 500;
+            white-space: nowrap;
         }
 
         /* iOS Textarea Card */
@@ -469,9 +486,11 @@
             background: var(--input-bg);
             border-radius: 18px;
             border: 0.5px solid var(--card-border);
-            padding: 14px 16px;
-            margin-bottom: 20px;
+            padding: 14px 14px;
+            margin-bottom: 18px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .ios-textarea-card label {
@@ -488,13 +507,14 @@
             border: none;
             background: transparent;
             padding: 0;
-            font-size: 15px;
+            font-size: 16px !important; /* CRITICAL: 16px kills auto-zoom */
             line-height: 1.55;
             font-family: inherit;
             color: var(--text-color);
             outline: none;
             resize: vertical;
             min-height: 80px;
+            box-sizing: border-box;
         }
         
         .ios-textarea-card textarea::placeholder {
@@ -502,31 +522,68 @@
             opacity: 0.55;
         }
 
-        /* Apple Health Style Body Anatomy Map */
+        /* Front / Back Segmented Control */
+        .body-view-toggle {
+            display: flex;
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 3px;
+            margin-bottom: 14px;
+            width: 100%;
+            max-width: 270px;
+            box-sizing: border-box;
+            border: 0.5px solid var(--card-border);
+        }
+        
+        .body-view-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 9px;
+            border: none;
+            background: transparent;
+            color: var(--hint-color);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+            user-select: none;
+            white-space: nowrap;
+        }
+        
+        .body-view-btn.active {
+            background: var(--card-bg);
+            color: var(--text-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Apple Health Style Body Anatomy Map (Proportionate Athletic Silhouette) */
         .body-model-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin: 16px 0 20px 0;
+            margin: 12px 0 18px 0;
             position: relative;
             background: var(--input-bg);
-            border-radius: 22px;
-            padding: 24px 16px;
+            border-radius: 20px;
+            padding: 16px 12px;
             border: 0.5px solid var(--card-border);
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .body-svg {
-            height: 310px;
+            height: 320px;
             width: auto;
             max-width: 100%;
             filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.04));
+            transition: opacity 0.25s ease;
         }
 
         .body-part {
             fill: var(--secondary-bg);
-            stroke: rgba(142, 142, 147, 0.4);
+            stroke: rgba(142, 142, 147, 0.45);
             stroke-width: 1.2;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.32, 0.72, 0, 1);
@@ -553,20 +610,22 @@
 
         /* Apple Sensory Pain Slider */
         .slider-container {
-            margin: 24px 0 20px 0;
+            margin: 20px 0 18px 0;
             text-align: center;
             background: var(--input-bg);
-            padding: 20px 18px;
-            border-radius: 20px;
+            padding: 18px 16px;
+            border-radius: 18px;
             border: 0.5px solid var(--card-border);
             box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .slider-header-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .slider-header-row label {
@@ -581,20 +640,20 @@
             font-weight: 700;
             color: var(--pain-color);
             background: rgba(var(--button-color-rgb), 0.08);
-            padding: 3px 10px;
-            border-radius: 10px;
+            padding: 3px 9px;
+            border-radius: 9px;
             font-variant-numeric: tabular-nums;
             transition: color 0.2s ease;
         }
 
         .pain-value-display {
-            font-size: 46px;
+            font-size: 44px;
             font-weight: 800;
             color: var(--pain-color);
-            margin: 4px 0 12px 0;
+            margin: 2px 0 10px 0;
             font-variant-numeric: tabular-nums;
             letter-spacing: -1.5px;
-            transition: color 0.2s ease, transform 0.2s ease;
+            transition: color 0.2s ease;
         }
 
         input[type=range] {
@@ -618,12 +677,11 @@
             cursor: pointer;
             margin-top: -11px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.18);
-            transition: transform 0.15s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.15s ease;
+            transition: transform 0.15s cubic-bezier(0.32, 0.72, 0, 1);
         }
         
         input[type=range]::-webkit-slider-thumb:active {
             transform: scale(1.18);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
         }
 
         input[type=range]::-webkit-slider-runnable-track {
@@ -637,15 +695,10 @@
         .pain-labels {
             display: flex;
             justify-content: space-between;
-            margin-top: 14px;
-            font-size: 13.5px;
+            margin-top: 12px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--hint-color);
-        }
-
-        .pain-labels span {
-            display: inline-block;
-            transition: transform 0.2s cubic-bezier(0.32, 0.72, 0, 1), color 0.2s ease;
         }
 
         /* Symptom Capsule Tags */
@@ -653,15 +706,15 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .symptom-tag {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 9px 14px;
-            border-radius: 16px;
+            padding: 8px 12px;
+            border-radius: 14px;
             background: var(--input-bg);
             border: 0.5px solid var(--card-border);
             font-size: 13px;
@@ -692,47 +745,49 @@
         .file-upload-card {
             background: var(--input-bg);
             border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 22px 18px;
+            border-radius: 18px;
+            padding: 20px 16px;
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .file-upload-icon-wrap {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
             background: rgba(var(--button-color-rgb), 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px auto;
+            margin: 0 auto 10px auto;
         }
 
         .file-upload-icon-wrap svg {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             fill: var(--button-color);
         }
 
         .file-upload-title {
-            font-size: 16px;
+            font-size: 15.5px;
             font-weight: 700;
             color: var(--text-color);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             letter-spacing: -0.2px;
         }
 
         .file-upload-subtitle {
-            font-size: 13px;
+            font-size: 12.5px;
             color: var(--hint-color);
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .file-quick-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             justify-content: center;
             flex-wrap: wrap;
         }
@@ -740,52 +795,52 @@
         .file-action-chip {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 10px 14px;
-            border-radius: 14px;
+            gap: 5px;
+            padding: 9px 12px;
+            border-radius: 12px;
             background: var(--secondary-bg);
             border: 0.5px solid var(--card-border);
             color: var(--text-color);
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .file-action-chip:active {
-            transform: scale(0.96);
-        }
+        .file-action-chip:active { transform: scale(0.96); }
 
         #file-input { display: none; }
 
         .file-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-top: 14px;
+            gap: 8px;
+            margin-top: 12px;
         }
 
         .file-item {
             display: flex;
             align-items: center;
             background: var(--input-bg);
-            padding: 10px 14px;
-            border-radius: 16px;
+            padding: 10px 12px;
+            border-radius: 14px;
             border: 0.5px solid var(--card-border);
             box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .file-preview {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
             object-fit: cover;
-            margin-right: 12px;
+            margin-right: 10px;
             background: var(--secondary-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             color: var(--text-color);
             overflow: hidden;
             flex-shrink: 0;
@@ -794,10 +849,11 @@
         .file-info {
             flex: 1;
             overflow: hidden;
+            min-width: 0;
         }
 
         .file-name {
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
@@ -807,7 +863,7 @@
         }
 
         .file-size {
-            font-size: 12px;
+            font-size: 11.5px;
             color: var(--hint-color);
             margin: 0;
             font-weight: 500;
@@ -834,8 +890,10 @@
         /* Apple System Buttons */
         .nav-buttons {
             display: flex;
-            gap: 12px;
-            margin-top: 24px;
+            gap: 10px;
+            margin-top: 22px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .btn {
@@ -843,9 +901,9 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 14px 18px;
-            border-radius: 16px;
-            font-size: 16px;
+            padding: 13px 16px;
+            border-radius: 14px;
+            font-size: 15.5px;
             font-weight: 600;
             cursor: pointer;
             text-align: center;
@@ -853,6 +911,7 @@
             border: none;
             transition: all 0.25s cubic-bezier(0.32, 0.72, 0, 1);
             letter-spacing: -0.2px;
+            box-sizing: border-box;
         }
 
         .btn-primary {
@@ -866,11 +925,8 @@
             color: var(--text-color);
         }
 
-        .btn:active {
-            transform: scale(0.97);
-        }
+        .btn:active { transform: scale(0.97); }
 
-        /* Dynamic Enablement State: Prevents premature clicking */
         .btn-disabled {
             opacity: 0.38 !important;
             pointer-events: none !important;
@@ -885,33 +941,33 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px 16px;
+            padding: 36px 12px;
         }
 
         .apple-ai-orb {
             position: relative;
-            width: 84px;
-            height: 84px;
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
         .apple-ai-glow {
             position: absolute;
-            inset: -14px;
+            inset: -12px;
             border-radius: 50%;
             background: conic-gradient(from 0deg, #007AFF, #5856D6, #AF52DE, #FF2D55, #007AFF);
-            filter: blur(16px);
+            filter: blur(15px);
             opacity: 0.7;
             animation: rotateAura 4s linear infinite;
         }
 
         .apple-ai-core {
             position: relative;
-            width: 72px;
-            height: 72px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
             background: var(--card-bg);
             backdrop-filter: blur(20px);
@@ -923,8 +979,8 @@
         }
 
         .apple-ai-core svg {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             fill: var(--button-color);
         }
 
@@ -934,19 +990,19 @@
         }
 
         .apple-ai-title {
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--text-color);
-            margin: 0 0 8px 0;
+            margin: 0 0 6px 0;
             text-align: center;
             letter-spacing: -0.3px;
         }
 
         .apple-ai-subtitle {
-            font-size: 14px;
+            font-size: 13.5px;
             color: var(--hint-color);
             line-height: 1.5;
-            max-width: 320px;
+            max-width: 300px;
             margin: 0 auto;
             text-align: center;
             transition: opacity 0.25s ease;
@@ -957,11 +1013,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 16px;
-            border-radius: 16px;
+            padding: 11px 14px;
+            border-radius: 14px;
             background: rgba(var(--button-color-rgb), 0.08);
             border: 1px solid rgba(var(--button-color-rgb), 0.22);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             animation: slideDownBanner 0.3s ease;
         }
         @keyframes slideDownBanner {
@@ -971,25 +1027,25 @@
         .dynamic-banner-content {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             min-width: 0;
             flex: 1;
         }
         .dynamic-banner-icon {
-            font-size: 20px;
+            font-size: 18px;
             flex-shrink: 0;
         }
         .dynamic-banner-text {
             min-width: 0;
         }
         .dynamic-banner-title {
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--button-color);
             margin-bottom: 1px;
         }
         .dynamic-banner-sub {
-            font-size: 12px;
+            font-size: 11.5px;
             color: var(--hint-color);
             white-space: nowrap;
             overflow: hidden;
@@ -999,18 +1055,18 @@
             background: var(--secondary-bg);
             border: none;
             color: var(--hint-color);
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             transition: all 0.2s;
             flex-shrink: 0;
-            margin-left: 8px;
+            margin-left: 6px;
         }
 
         /* UI Bottom Sheet / Drawers */
@@ -1039,7 +1095,7 @@
             background: var(--card-bg);
             backdrop-filter: blur(30px) saturate(190%);
             -webkit-backdrop-filter: blur(30px) saturate(190%);
-            border-radius: 28px 28px 0 0;
+            border-radius: 26px 26px 0 0;
             max-height: 88vh;
             display: flex;
             flex-direction: column;
@@ -1061,7 +1117,7 @@
             flex-shrink: 0;
         }
         .archive-header {
-            padding: 12px 20px 14px 20px;
+            padding: 12px 18px 12px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1069,14 +1125,14 @@
             flex-shrink: 0;
         }
         .archive-header-title {
-            font-size: 17.5px;
+            font-size: 17px;
             font-weight: 700;
             color: var(--text-color);
             margin: 0;
             letter-spacing: -0.3px;
         }
         .archive-header-sub {
-            font-size: 12.5px;
+            font-size: 12px;
             color: var(--hint-color);
             margin: 2px 0 0 0;
             font-weight: 500;
@@ -1085,19 +1141,19 @@
             background: var(--secondary-bg);
             border: none;
             color: var(--hint-color);
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             transition: all 0.2s ease;
         }
         .archive-body {
-            padding: 16px 20px 24px 20px;
+            padding: 14px 16px 24px 16px;
             overflow-y: auto;
             flex: 1;
             -webkit-overflow-scrolling: touch;
@@ -1106,8 +1162,8 @@
         /* Safari Reader Style for Full Report (100% Text Integrity) */
         .report-toc-bar {
             display: flex;
-            gap: 8px;
-            padding: 8px 16px;
+            gap: 6px;
+            padding: 8px 14px;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             border-bottom: 0.5px solid var(--separator);
@@ -1119,11 +1175,11 @@
         .report-toc-pill {
             display: inline-flex;
             align-items: center;
-            padding: 5px 12px;
-            border-radius: 12px;
+            padding: 5px 11px;
+            border-radius: 10px;
             background: var(--secondary-bg);
             color: var(--button-color);
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 600;
             border: 0.5px solid var(--card-border);
             cursor: pointer;
@@ -1141,13 +1197,13 @@
             background: var(--secondary-bg);
             border: 0.5px solid var(--card-border);
             color: var(--text-color);
-            border-radius: 12px;
-            padding: 6px 12px;
-            font-size: 12px;
+            border-radius: 10px;
+            padding: 5px 10px;
+            font-size: 11.5px;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -1158,53 +1214,53 @@
         }
         
         .report-h3 {
-            font-size: 16px;
+            font-size: 15.5px;
             font-weight: 700;
             color: var(--text-color);
-            margin: 20px 0 10px 0;
-            padding-bottom: 6px;
+            margin: 18px 0 8px 0;
+            padding-bottom: 5px;
             border-bottom: 0.5px solid var(--separator);
             letter-spacing: -0.2px;
         }
         .report-h4 {
-            font-size: 14.5px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--button-color);
-            margin: 14px 0 6px 0;
+            margin: 12px 0 5px 0;
         }
         .report-quote {
-            margin: 12px 0;
-            padding: 10px 14px;
+            margin: 10px 0;
+            padding: 9px 12px;
             background: rgba(var(--button-color-rgb), 0.05);
             border-left: 3px solid var(--button-color);
-            border-radius: 0 12px 12px 0;
+            border-radius: 0 10px 10px 0;
             color: var(--text-color);
-            font-size: 14px;
+            font-size: 13.5px;
             line-height: 1.6;
         }
         .report-list {
-            margin: 8px 0 12px 20px;
+            margin: 6px 0 10px 18px;
             padding: 0;
         }
         .report-list li {
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             color: var(--text-color);
-            font-size: 14px;
+            font-size: 13.5px;
             line-height: 1.6;
         }
         .report-num-item {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
-            margin: 8px 0;
+            gap: 8px;
+            margin: 6px 0;
         }
         .report-num-badge {
             background: var(--button-color);
             color: #FFFFFF;
             font-size: 11px;
             font-weight: 700;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -1215,13 +1271,13 @@
         .report-num-content {
             flex: 1;
             color: var(--text-color);
-            font-size: 14px;
+            font-size: 13.5px;
             line-height: 1.6;
         }
         .report-p {
-            margin: 0 0 12px 0;
+            margin: 0 0 10px 0;
             color: var(--text-color);
-            font-size: 14px;
+            font-size: 13.5px;
             line-height: 1.65;
         }
 
@@ -1229,9 +1285,9 @@
         .archive-report-card {
             background: var(--input-bg);
             border: 0.5px solid var(--card-border);
-            border-radius: 18px;
-            padding: 16px 14px;
-            margin-bottom: 12px;
+            border-radius: 16px;
+            padding: 14px 12px;
+            margin-bottom: 10px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.02);
             transition: all 0.2s ease;
         }
@@ -1239,38 +1295,38 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
-            gap: 8px;
+            margin-bottom: 6px;
+            gap: 6px;
         }
         .archive-category-pill {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 700;
-            padding: 4px 9px;
-            border-radius: 9px;
+            padding: 3px 8px;
+            border-radius: 8px;
             background: rgba(var(--button-color-rgb), 0.1);
             color: var(--button-color);
         }
         .archive-date-badge {
-            font-size: 12px;
+            font-size: 11.5px;
             color: var(--hint-color);
             font-weight: 500;
             font-variant-numeric: tabular-nums;
         }
         .archive-teaser-text {
-            font-size: 13.5px;
+            font-size: 13px;
             line-height: 1.5;
             color: var(--text-color);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             background: rgba(120, 120, 128, 0.05);
-            border-radius: 12px;
-            padding: 10px 12px;
+            border-radius: 10px;
+            padding: 8px 10px;
         }
         .archive-card-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-direction: column;
         }
         @media (min-width: 360px) {
@@ -1280,9 +1336,9 @@
         }
         .archive-btn {
             flex: 1;
-            padding: 10px 12px;
-            border-radius: 12px;
-            font-size: 12.5px;
+            padding: 9px 10px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 600;
             border: none;
             cursor: pointer;
@@ -1290,7 +1346,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
             transition: all 0.2s ease;
         }
         .archive-btn-view {
@@ -1307,24 +1363,24 @@
         
         .archive-empty-state {
             text-align: center;
-            padding: 36px 16px;
+            padding: 32px 14px;
         }
         .archive-empty-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
+            font-size: 36px;
+            margin-bottom: 8px;
             opacity: 0.8;
         }
         .archive-empty-title {
-            font-size: 16px;
+            font-size: 15.5px;
             font-weight: 700;
             color: var(--text-color);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .archive-empty-desc {
-            font-size: 13.5px;
+            font-size: 13px;
             color: var(--hint-color);
             line-height: 1.45;
-            max-width: 280px;
+            max-width: 270px;
             margin: 0 auto;
         }
 
@@ -1332,9 +1388,9 @@
         .clarification-card {
             background: var(--input-bg);
             border: 0.5px solid var(--card-border);
-            border-radius: 18px;
-            padding: 16px 14px;
-            margin-bottom: 14px;
+            border-radius: 16px;
+            padding: 14px 12px;
+            margin-bottom: 12px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.02);
             animation: appleCardFadeIn 0.3s ease;
         }
@@ -1342,37 +1398,38 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .clarification-badge {
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--button-color);
             background: rgba(var(--button-color-rgb), 0.1);
-            padding: 3px 9px;
-            border-radius: 10px;
+            padding: 3px 8px;
+            border-radius: 8px;
         }
         .clarification-question {
-            font-size: 14.5px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--text-color);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             line-height: 1.45;
         }
         .clarification-textarea {
             width: 100%;
-            min-height: 72px;
+            min-height: 70px;
             background: var(--secondary-bg);
             border: 0.5px solid var(--card-border);
-            border-radius: 12px;
-            padding: 10px 12px;
-            font-size: 14px;
+            border-radius: 10px;
+            padding: 10px 10px;
+            font-size: 16px !important; /* CRITICAL: 16px kills auto-zoom */
             color: var(--text-color);
             resize: vertical;
             font-family: inherit;
             line-height: 1.45;
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
         }
         .clarification-textarea:focus {
             border-color: var(--button-color);
@@ -1381,11 +1438,11 @@
 
         /* Legal & Privacy Disclaimer */
         .legal-disclaimer {
-            font-size: 11.5px;
+            font-size: 11px;
             line-height: 1.45;
             color: var(--hint-color);
             text-align: center;
-            margin-top: 18px;
+            margin-top: 16px;
             padding: 0 4px;
             opacity: 0.85;
         }
@@ -1428,9 +1485,9 @@
     <div class="card active" id="step-0">
         <div id="profiles-loading" class="loader"></div>
         <div id="profiles-container" style="display: none;">
-            <div style="text-align: center; margin-bottom: 14px;">
-                <h2 style="margin:0; font-size: 19px; font-weight: 700; color: var(--text-color);">Оберіть профіль</h2>
-                <p style="margin:4px 0 0 0; color: var(--hint-color); font-size:13.5px;">або створіть новий для члена родини</p>
+            <div style="text-align: center; margin-bottom: 12px;">
+                <h2 style="margin:0; font-size: 18px; font-weight: 700; color: var(--text-color);">Оберіть профіль</h2>
+                <p style="margin:3px 0 0 0; color: var(--hint-color); font-size:13px;">або створіть новий для члена родини</p>
             </div>
             <div class="profiles-grid" id="profiles-grid">
                 <!-- Injected via JS -->
@@ -1438,35 +1495,45 @@
         </div>
     </div>
 
-    <!-- КРОК 1: Особисті дані (iOS Inset Grouped List) -->
+    <!-- КРОК 1: Особисті дані (iOS Inset Grouped List - Zero Overflow) -->
     <div class="card" id="step-1">
         <div class="ios-grouped-list">
             <div class="ios-list-row">
                 <label for="name">Ім'я</label>
-                <input type="text" id="name" placeholder="Як звертатися" autocomplete="off" required>
+                <div class="ios-row-input-wrap">
+                    <input type="text" id="name" placeholder="Як звертатися" autocomplete="off" required>
+                </div>
             </div>
             <div class="ios-list-row">
                 <label for="gender">Стать</label>
-                <select id="gender" required>
-                    <option value="" disabled selected>Оберіть</option>
-                    <option value="Чоловік">Чоловік</option>
-                    <option value="Жінка">Жінка</option>
-                </select>
+                <div class="ios-row-input-wrap">
+                    <select id="gender" required>
+                        <option value="" disabled selected>Оберіть</option>
+                        <option value="Чоловік">Чоловік</option>
+                        <option value="Жінка">Жінка</option>
+                    </select>
+                </div>
             </div>
             <div class="ios-list-row">
                 <label for="age">Вік</label>
-                <input type="number" id="age" placeholder="0" inputmode="numeric" required>
-                <span class="ios-unit">років</span>
+                <div class="ios-row-input-wrap">
+                    <input type="number" id="age" placeholder="0" inputmode="numeric" required>
+                    <span class="ios-unit">років</span>
+                </div>
             </div>
             <div class="ios-list-row">
                 <label for="height">Зріст</label>
-                <input type="number" id="height" placeholder="0" inputmode="numeric" required>
-                <span class="ios-unit">см</span>
+                <div class="ios-row-input-wrap">
+                    <input type="number" id="height" placeholder="0" inputmode="numeric" required>
+                    <span class="ios-unit">см</span>
+                </div>
             </div>
             <div class="ios-list-row">
                 <label for="weight">Вага</label>
-                <input type="number" id="weight" placeholder="0" inputmode="numeric" required>
-                <span class="ios-unit">кг</span>
+                <div class="ios-row-input-wrap">
+                    <input type="number" id="weight" placeholder="0" inputmode="numeric" required>
+                    <span class="ios-unit">кг</span>
+                </div>
             </div>
         </div>
 
@@ -1477,32 +1544,58 @@
 
         <div class="nav-buttons">
             <button class="btn btn-secondary" onclick="nextStep(0)">← Назад</button>
-            <!-- In-flow button with Dynamic Enablement protection -->
             <button class="btn btn-primary btn-disabled" id="btn-step-1-next" onclick="nextStep(2)">Далі →</button>
         </div>
     </div>
 
-    <!-- КРОК 2: Анамнез та симптоми -->
+    <!-- КРОК 2: Анамнез та симптоми (Витончений силует + Перемикач Спереду / Ззаду) -->
     <div class="card" id="step-2">
-        <div style="margin-bottom: 6px;">
-            <label style="font-size: 13.5px; font-weight: 600; color: var(--hint-color); margin-left: 2px;">Локалізація дискомфорту (Оберіть зони)</label>
+        <div style="margin-bottom: 6px; text-align: center;">
+            <label style="font-size: 13.5px; font-weight: 600; color: var(--hint-color); display: block; margin-bottom: 10px;">
+                Локалізація дискомфорту (Оберіть зони)
+            </label>
+            
+            <!-- iOS Segmented Switcher: Спереду / Ззаду -->
+            <div class="body-view-toggle">
+                <button type="button" class="body-view-btn active" id="btn-view-front" onclick="setBodyView('front')">🧍‍♂️ Спереду</button>
+                <button type="button" class="body-view-btn" id="btn-view-back" onclick="setBodyView('back')">🔄 Ззаду (Спина)</button>
+            </div>
+
             <div class="body-model-container">
-                <svg viewBox="0 0 240 400" class="body-svg" id="body-svg">
-                    <!-- Head -->
-                    <path d="M 120 22 C 106 22 95 34 95 50 C 95 66 106 78 120 78 C 134 78 145 66 145 50 C 145 34 134 22 120 22 Z" class="body-part" data-zone="Голова"/>
-                    <!-- Chest / Torso Upper -->
-                    <path d="M 90 85 C 80 88 78 96 75 106 L 73 148 C 73 150 78 152 82 152 L 158 152 C 162 152 167 150 167 148 L 165 106 C 162 96 160 88 150 85 C 140 82 130 83 120 83 C 110 83 100 82 90 85 Z" class="body-part" data-zone="Груди"/>
-                    <!-- Abdomen / Torso Lower -->
-                    <path d="M 82 156 L 79 198 C 78 206 83 212 90 215 L 115 220 L 125 220 L 150 215 C 157 212 162 206 161 198 L 158 156 Z" class="body-part" data-zone="Живіт"/>
+                <!-- Векторний силует СПЕРЕДУ (Атлетичні пропорції за золотим перетином) -->
+                <svg viewBox="0 0 220 360" class="body-svg" id="body-svg-front">
+                    <!-- Head / Обличчя -->
+                    <path d="M 110 14 C 98 14 90 24 90 36 C 90 48 98 58 110 58 C 122 58 130 48 130 36 C 130 24 122 14 110 14 Z" class="body-part" data-zone="Голова"/>
+                    <!-- Chest / Грудна клітка -->
+                    <path d="M 76 68 C 88 64 132 64 144 68 C 152 71 154 78 150 90 L 145 128 C 144 132 141 134 136 134 L 84 134 C 79 134 76 132 75 128 L 70 90 C 66 78 68 71 76 68 Z" class="body-part" data-zone="Груди"/>
+                    <!-- Abdomen / Живіт -->
+                    <path d="M 84 138 L 136 138 L 139 170 C 140 178 136 185 130 188 L 114 192 L 106 192 L 90 188 C 84 185 80 178 81 170 L 84 138 Z" class="body-part" data-zone="Живіт"/>
                     <!-- Left Arm (viewer's left) -->
-                    <path d="M 68 92 C 58 95 48 106 45 118 L 36 172 C 34 182 38 190 44 191 C 50 192 55 186 57 178 L 65 132 L 69 130 Z" class="body-part" data-zone="Ліва рука"/>
+                    <path d="M 64 74 C 57 78 51 88 49 98 L 43 154 C 41 163 45 170 51 170 C 56 170 59 164 61 156 L 66 112 L 67 96 Z" class="body-part" data-zone="Ліва рука"/>
                     <!-- Right Arm (viewer's right) -->
-                    <path d="M 172 92 C 182 95 192 106 195 118 L 204 172 C 206 182 202 190 196 191 C 190 192 185 186 183 178 L 175 132 L 171 130 Z" class="body-part" data-zone="Права рука"/>
+                    <path d="M 156 74 C 163 78 169 88 171 98 L 177 154 C 179 163 175 170 169 170 C 164 170 161 164 159 156 L 154 112 L 153 96 Z" class="body-part" data-zone="Права рука"/>
                     <!-- Left Leg -->
-                    <path d="M 88 224 C 82 226 78 234 78 244 L 79 320 C 79 332 82 358 83 370 C 84 376 90 380 96 380 C 102 380 106 374 105 367 L 103 322 L 107 238 C 107 230 102 224 96 224 Z" class="body-part" data-zone="Ліва нога"/>
+                    <path d="M 83 196 C 81 204 80 216 80 230 L 82 284 C 82 298 83 322 84 336 C 85 341 89 344 94 344 C 99 344 102 340 102 334 L 102 286 L 105 230 C 105 216 102 204 98 196 Z" class="body-part" data-zone="Ліва нога"/>
                     <!-- Right Leg -->
-                    <path d="M 152 224 C 158 226 162 234 162 244 L 161 320 C 161 332 158 358 157 370 C 156 376 150 380 144 380 C 138 380 134 374 135 367 L 137 322 L 133 238 C 133 230 138 224 144 224 Z" class="body-part" data-zone="Права нога"/>
+                    <path d="M 137 196 C 139 204 140 216 140 230 L 138 284 C 138 298 137 322 136 336 C 135 341 131 344 126 344 C 121 344 118 340 118 334 L 118 286 L 115 230 C 115 216 118 204 122 196 Z" class="body-part" data-zone="Права нога"/>
                 </svg>
+
+                <!-- Векторний силует ЗЗАДУ (Спина, Поперек, Лопатки) -->
+                <svg viewBox="0 0 220 360" class="body-svg" id="body-svg-back" style="display: none;">
+                    <!-- Neck & Back of Head -->
+                    <path d="M 110 14 C 98 14 90 24 90 36 C 90 48 98 58 110 58 C 122 58 130 48 130 36 C 130 24 122 14 110 14 Z" class="body-part" data-zone="Потилиця / Шия"/>
+                    <!-- Upper Back / Лопатки -->
+                    <path d="M 76 68 C 88 64 132 64 144 68 C 152 71 154 78 150 90 L 145 128 C 144 132 141 134 136 134 L 84 134 C 79 134 76 132 75 128 L 70 90 C 66 78 68 71 76 68 Z" class="body-part" data-zone="Верх спини (Лопатки)"/>
+                    <!-- Lower Back / Поперек (Спина) -->
+                    <path d="M 84 138 L 136 138 L 139 170 C 140 178 136 185 130 188 L 114 192 L 106 192 L 90 188 C 84 185 80 178 81 170 L 84 138 Z" class="body-part" data-zone="Поперек / Спина"/>
+                    <!-- Arms Back -->
+                    <path d="M 64 74 C 57 78 51 88 49 98 L 43 154 C 41 163 45 170 51 170 C 56 170 59 164 61 156 L 66 112 L 67 96 Z" class="body-part" data-zone="Ліва рука"/>
+                    <path d="M 156 74 C 163 78 169 88 171 98 L 177 154 C 179 163 175 170 169 170 C 164 170 161 164 159 156 L 154 112 L 153 96 Z" class="body-part" data-zone="Права рука"/>
+                    <!-- Legs Back -->
+                    <path d="M 83 196 C 81 204 80 216 80 230 L 82 284 C 82 298 83 322 84 336 C 85 341 89 344 94 344 C 99 344 102 340 102 334 L 102 286 L 105 230 C 105 216 102 204 98 196 Z" class="body-part" data-zone="Ліва нога"/>
+                    <path d="M 137 196 C 139 204 140 216 140 230 L 138 284 C 138 298 137 322 136 336 C 135 341 131 344 126 344 C 121 344 118 340 118 334 L 118 286 L 115 230 C 115 216 118 204 122 196 Z" class="body-part" data-zone="Права нога"/>
+                </svg>
+
                 <div style="font-size: 12px; color: var(--hint-color); margin-top: 10px;">Торкніться зони для вибору</div>
             </div>
         </div>
@@ -1522,7 +1615,7 @@
             </div>
         </div>
 
-        <div style="margin-bottom: 18px;">
+        <div style="margin-bottom: 16px;">
             <label style="font-size: 13.5px; font-weight: 600; color: var(--hint-color); margin-left: 2px;">Швидкі приводи для звернення</label>
             <div class="tags-wrapper" id="quick-symptoms">
                 <span class="symptom-tag" onclick="toggleSymptomTag(this, 'Розшифровка аналізів / чек-ап')">📋 Розшифровка аналізів</span>
@@ -1584,7 +1677,6 @@
 
     <!-- КРОК 4: Уточнення консиліуму (Apple Intelligence Aura) -->
     <div class="card" id="step-4">
-        <!-- Стан аналізу ШІ з аурою Apple Intelligence -->
         <div id="clarifications-loading" class="apple-ai-loading">
             <div class="apple-ai-orb">
                 <div class="apple-ai-glow"></div>
@@ -1598,30 +1690,28 @@
             </p>
         </div>
 
-        <!-- Контейнер карток із запитаннями -->
         <div id="clarifications-content" style="display: none;">
-            <div style="margin-bottom: 16px;">
-                <h3 style="margin: 0 0 4px 0; font-size: 17.5px; color: var(--text-color); font-weight: 700;">Уточнення від консиліуму</h3>
-                <p style="margin: 0; color: var(--hint-color); font-size: 13.5px; line-height: 1.45;">
+            <div style="margin-bottom: 14px;">
+                <h3 style="margin: 0 0 4px 0; font-size: 17px; color: var(--text-color); font-weight: 700;">Уточнення від консиліуму</h3>
+                <p style="margin: 0; color: var(--hint-color); font-size: 13px; line-height: 1.45;">
                     Будь ласка, дайте відповіді на запитання лікарів для максимально точного клінічного висновку.
                 </p>
             </div>
             <div id="clarifications-list"></div>
-            <div class="nav-buttons" style="margin-top: 20px;">
+            <div class="nav-buttons" style="margin-top: 18px;">
                 <button class="btn btn-primary" id="btn-submit-clarifications" onclick="submitClarifications()" style="width: 100%;">
                     Надіслати відповіді та продовжити →
                 </button>
             </div>
         </div>
 
-        <!-- Екран успішного завершення -->
-        <div id="clarifications-success" style="display: none; text-align: center; padding: 32px 12px;">
-            <div style="font-size: 54px; margin-bottom: 12px; line-height: 1;">✅</div>
-            <h3 style="margin: 0 0 6px 0; font-size: 20px; color: var(--text-color); font-weight: 700;">Дані успішно передано!</h3>
-            <p id="clarifications-success-text" style="color: var(--hint-color); font-size: 14px; line-height: 1.5; max-width: 320px; margin: 0 auto 24px auto;">
+        <div id="clarifications-success" style="display: none; text-align: center; padding: 28px 10px;">
+            <div style="font-size: 50px; margin-bottom: 10px; line-height: 1;">✅</div>
+            <h3 style="margin: 0 0 6px 0; font-size: 19px; color: var(--text-color); font-weight: 700;">Дані успішно передано!</h3>
+            <p id="clarifications-success-text" style="color: var(--hint-color); font-size: 13.5px; line-height: 1.5; max-width: 300px; margin: 0 auto 20px auto;">
                 Консиліум лікарів AIDOC UA переходить до формування клінічного звіту.
             </p>
-            <button class="btn btn-primary" onclick="tg.close()" style="width: 100%; max-width: 280px; margin: 0 auto;">
+            <button class="btn btn-primary" onclick="tg.close()" style="width: 100%; max-width: 270px; margin: 0 auto;">
                 Перейти до чату з ботом →
             </button>
         </div>
@@ -1645,7 +1735,7 @@
         </div>
     </div>
 
-    <!-- Report Text Viewer Modal (Safari Reader Mode - 100% збереження повного тексту звіту) -->
+    <!-- Report Text Viewer Modal (Safari Reader Mode - 100% збереження повного тексту) -->
     <div class="archive-drawer-overlay" id="report-modal-overlay" onclick="closeReportModal(event)" style="z-index: 1050;">
         <div class="archive-drawer" onclick="event.stopPropagation()" style="max-height: 92vh;">
             <div class="archive-handle"></div>
@@ -1662,7 +1752,6 @@
                     <button class="archive-close-btn" onclick="closeReportModal()">✕</button>
                 </div>
             </div>
-            <!-- Quick Jump TOC Navigation Bar (Плаваючий швидкий перехід по повному тексту) -->
             <div class="report-toc-bar" id="report-toc-bar" style="display: none;"></div>
             <div class="archive-body" id="report-modal-body"></div>
         </div>
@@ -1693,6 +1782,7 @@
         let currentArchiveProfile = null;
         let currentReportsCache = [];
         let aiStepInterval = null;
+        let currentBodyView = 'front';
 
         function formatReportsCount(count) {
             count = parseInt(count) || 0;
@@ -1940,7 +2030,6 @@
         function renderFormattedReport(rawText) {
             if (!rawText) return '<p class="report-p">Текст звіту відсутній.</p>';
             
-            // Медична аксіома: жодних скорочень тексту
             let text = rawText
                 .replace(/🔗\s*(?:<b>)?Ваш медичний ШІ-асистент:?(?:<\/b>)?\s*t\.me\/AidocUAbot[^\n]*/gi, '')
                 .replace(/📅\s*(?:<b>)?Дата(?:\s+генерації)?(?:\s+звіту)?:?(?:<\/b>)?[^\n]*/gi, '')
@@ -1963,10 +2052,8 @@
                     continue;
                 }
                 
-                // Bold markdown **text**
                 line = escapeHtml(line).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                 
-                // Headers: ### or ##
                 if (line.startsWith('### ')) {
                     if (inList) { html += '</ul>'; inList = false; }
                     sectionCount++;
@@ -2010,7 +2097,6 @@
                 html += '</ul>';
             }
 
-            // Quick Jump TOC Capsule Bar
             const tocContainer = document.getElementById('report-toc-bar');
             if (tocContainer) {
                 if (tocItems.length > 1) {
@@ -2144,7 +2230,6 @@
             title.innerText = catName;
             dateEl.innerText = report.date ? `Дата консультації: ${report.date}` : '';
             
-            // 100% повний автентичний текст
             const fullContent = report.report || report.teaser || 'Текст звіту відсутній.';
             activeModalReportText = fullContent;
             
@@ -2287,9 +2372,10 @@
                 applyGenderTheme('');
             }
             
-            document.querySelectorAll('.body-part').forEach(el => el.classList.remove('selected'));
-            document.querySelectorAll('.symptom-tag').forEach(tag => tag.classList.remove('active'));
             selectedZones.clear();
+            syncBodyPartSelectionUI();
+            setBodyView('front');
+            document.querySelectorAll('.symptom-tag').forEach(tag => tag.classList.remove('active'));
             document.getElementById('pain-slider').value = 0;
             if (typeof updatePainUI === 'function') updatePainUI(0);
             document.getElementById('complaints').value = '';
@@ -2331,7 +2417,7 @@
             checkStep1Validity();
         });
 
-        // Реактивна валідація на Кроці 1: унеможливлює випадкове натискання кнопки
+        // Реактивна валідація на Кроці 1
         function checkStep1Validity() {
             const name = (document.getElementById('name').value || '').trim();
             const gender = document.getElementById('gender').value || '';
@@ -2361,7 +2447,6 @@
             return isValid;
         }
 
-        // Слухачі для реактивної форми
         ['input', 'change', 'blur'].forEach(evt => {
             ['name', 'gender', 'age', 'height', 'weight'].forEach(id => {
                 const el = document.getElementById(id);
@@ -2414,8 +2499,6 @@
 
             currentStep = step;
 
-            // Безпека від випадкових натискань: приховуємо tg.MainButton
-            // Вся навігація здійснюється усвідомлено кнопками In-Flow
             if (tg && tg.MainButton) {
                 tg.MainButton.hide();
             }
@@ -2427,7 +2510,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Валідація кроків
         function validateStep(step) {
             if (step === 1) {
                 return checkStep1Validity();
@@ -2461,21 +2543,62 @@
             return true;
         }
 
-        // Логіка анатомічної моделі тіла
-        document.querySelectorAll('.body-part').forEach(part => {
-            part.addEventListener('click', function() {
-                this.classList.toggle('selected');
-                const zone = this.getAttribute('data-zone');
-                if (this.classList.contains('selected')) {
-                    selectedZones.add(zone);
+        // Перемикач проекцій тіла Спереду / Ззаду
+        function setBodyView(view) {
+            currentBodyView = view;
+            const frontBtn = document.getElementById('btn-view-front');
+            const backBtn = document.getElementById('btn-view-back');
+            const frontSvg = document.getElementById('body-svg-front');
+            const backSvg = document.getElementById('body-svg-back');
+            
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.selectionChanged();
+            }
+            
+            if (view === 'front') {
+                if (frontBtn) frontBtn.classList.add('active');
+                if (backBtn) backBtn.classList.remove('active');
+                if (frontSvg) frontSvg.style.display = 'block';
+                if (backSvg) backSvg.style.display = 'none';
+            } else {
+                if (frontBtn) frontBtn.classList.remove('active');
+                if (backBtn) backBtn.classList.add('active');
+                if (frontSvg) frontSvg.style.display = 'none';
+                if (backSvg) backSvg.style.display = 'block';
+            }
+            syncBodyPartSelectionUI();
+        }
+
+        // Синхронізація підсвічування зон анатомічної моделі
+        function syncBodyPartSelectionUI() {
+            document.querySelectorAll('.body-part').forEach(part => {
+                const zone = part.getAttribute('data-zone');
+                if (selectedZones.has(zone)) {
+                    part.classList.add('selected');
                 } else {
-                    selectedZones.delete(zone);
-                }
-                if (tg && tg.HapticFeedback) {
-                    tg.HapticFeedback.selectionChanged();
+                    part.classList.remove('selected');
                 }
             });
-        });
+        }
+
+        // Ініціалізація кліків по зонах тіла
+        function initBodyModel() {
+            document.querySelectorAll('.body-part').forEach(part => {
+                part.addEventListener('click', function() {
+                    const zone = this.getAttribute('data-zone');
+                    if (selectedZones.has(zone)) {
+                        selectedZones.delete(zone);
+                    } else {
+                        selectedZones.add(zone);
+                    }
+                    syncBodyPartSelectionUI();
+                    if (tg && tg.HapticFeedback) {
+                        tg.HapticFeedback.selectionChanged();
+                    }
+                });
+            });
+        }
+        initBodyModel();
 
         // Сенсорний слайдер болю
         const slider = document.getElementById('pain-slider');
@@ -2597,7 +2720,6 @@
 
         const generateSessionId = () => Math.random().toString(36).substring(2, 15);
         
-        // Відправка кейсу
         async function submitCase() {
             if (currentStep !== 3) return;
 
