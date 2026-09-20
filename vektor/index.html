@@ -1508,30 +1508,45 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .welcome-logo-glow {
             position: absolute;
-            width: 96px;
-            height: 96px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(var(--button-color-rgb), 0.35) 0%, transparent 70%);
-            filter: blur(20px);
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.65) 0%, rgba(0, 122, 255, 0.38) 45%, rgba(0, 122, 255, 0.12) 65%, transparent 78%);
+            filter: blur(18px);
             pointer-events: none;
             z-index: 0;
+            animation: welcomeGlowPulse 3.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes welcomeGlowPulse {
+            0% {
+                opacity: 0.65;
+                transform: translate(-50%, -50%) scale(0.92);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.06);
+            }
         }
 
         .welcome-app-icon {
             position: relative;
             z-index: 1;
-            width: 76px;
-            height: 76px;
-            border-radius: 20px;
+            width: 82px;
+            height: 82px;
+            border-radius: 50%;
             object-fit: cover;
-            border: 0.5px solid var(--card-border);
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
-            background: var(--input-bg);
+            border: none;
+            background: transparent;
+            filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.16)) drop-shadow(0 0 14px rgba(0, 210, 255, 0.5));
             transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
         }
 
@@ -1764,7 +1779,7 @@
         </div>
 
         <div class="welcome-content-card">
-            <h2 class="welcome-heading">Вітаємо в <b>V.E.K.T.O.R.</b>!</h2>
+            <h2 class="welcome-heading">Вітаємо в <b>V.E.K.T.O.R.</b></h2>
             <p class="welcome-subheading">Ваш персональний медичний ШІ-консиліум.</p>
 
             <div class="welcome-divider"></div>
