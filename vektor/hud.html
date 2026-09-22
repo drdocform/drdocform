@@ -7,16 +7,19 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg: #000000;
-      --card-bg: #0c0f17;
-      --border: #1e2638;
+      --bg: #030712;
+      --card-bg: #0c1222;
+      --card-inner: #141c2e;
+      --border: #1e293b;
+      --border-accent: #334155;
       --red: #ef4444;
       --red-bright: #ff3b30;
+      --red-glow: rgba(239, 68, 68, 0.25);
       --yellow: #facc15;
       --green: #22c55e;
+      --blue: #38bdf8;
       --text-main: #ffffff;
       --text-muted: #94a3b8;
-      --accent: #38bdf8;
     }
     * {
       box-sizing: border-box;
@@ -33,7 +36,7 @@
       line-height: 1.4;
     }
     body {
-      padding: 0.75rem 0.85rem calc(1rem + env(safe-area-inset-bottom, 1rem)) 0.85rem;
+      padding: 0.75rem 0.85rem calc(1.5rem + env(safe-area-inset-bottom, 1rem)) 0.85rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -51,7 +54,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #111522;
+      background: #0f172a;
       border: 1px solid var(--border);
       padding: 0.5rem 0.75rem;
       border-radius: 10px;
@@ -63,7 +66,7 @@
       padding: 4px 10px;
       border-radius: 999px;
       font-weight: 800;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       letter-spacing: 0.03em;
       text-transform: uppercase;
     }
@@ -97,10 +100,48 @@
       50% { opacity: 0.4; transform: scale(1.2); }
     }
 
-    /* Emergency Call Banner (High visibility, non-deceptive) */
+    /* Stopwatch Widget */
+    .timer-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+    }
+    .timer-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .timer-digits {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #f8fafc;
+      font-variant-numeric: tabular-nums;
+    }
+    .timer-reset-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .timer-reset-btn:active {
+      background: #334155;
+      color: #fff;
+    }
+
+    /* Emergency Call Banner */
     .emergency-call-banner {
       width: 100%;
-      background: #111522;
+      background: #0f172a;
       border: 2px solid var(--red);
       border-radius: 12px;
       padding: 0.85rem 1rem;
@@ -108,20 +149,22 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 6px;
+      box-shadow: 0 4px 16px var(--red-glow);
     }
     .emergency-call-banner.orange-mode {
       border-color: #f59e0b;
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
     }
     .call-banner-label {
-      font-size: 0.76rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-muted);
       font-weight: 700;
     }
     .call-banner-number {
-      font-size: 2.2rem;
+      font-size: 2.3rem;
       font-weight: 900;
       color: #ffffff;
       line-height: 1.1;
@@ -134,12 +177,51 @@
       color: #fca5a5;
     }
     .call-banner-hint {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #94a3b8;
     }
 
+    /* Quick Call Action Buttons */
+    .call-buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+      margin-top: 4px;
+    }
+    .call-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0.65rem 0.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+      color: #ffffff;
+      transition: filter 0.15s ease, transform 0.05s ease;
+      cursor: pointer;
+    }
+    .call-action-btn:active {
+      transform: scale(0.98);
+      filter: brightness(0.9);
+    }
+    .btn-call-112 {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      border: 1px solid #ef4444;
+      box-shadow: 0 2px 10px rgba(220, 38, 38, 0.4);
+    }
+    .btn-call-103 {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      border: 1px solid #38bdf8;
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+    }
+
+    /* Notice to caller */
     .notice-box {
-      background: #171c2b;
+      background: #111c33;
       border-left: 3px solid var(--yellow);
       padding: 0.6rem 0.75rem;
       border-radius: 6px;
@@ -179,19 +261,26 @@
       gap: 6px;
     }
     .card-title span.step-num {
-      background: #252e42;
-      color: #e2e8f0;
-      padding: 1px 6px;
+      background: #1e293b;
+      color: #f1f5f9;
+      padding: 1px 7px;
       border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 900;
+    }
+    .card-cue {
       font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 500;
+      font-style: italic;
     }
 
     /* Content styling inside cards */
     .script-phrase {
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 700;
       color: #ffffff;
-      line-height: 1.35;
+      line-height: 1.4;
     }
     .highlight-red {
       color: #f87171;
@@ -202,38 +291,25 @@
     .highlight-blue {
       color: #7dd3fc;
     }
+    .highlight-green {
+      color: #86efac;
+    }
 
     /* Address input */
     .address-input {
       width: 100%;
-      background: #151a26;
-      border: 1px solid #2d3748;
+      background: #111827;
+      border: 1px solid #334155;
       border-radius: 6px;
-      padding: 0.6rem 0.75rem;
+      padding: 0.65rem 0.75rem;
       font-size: 0.92rem;
       color: #f8fafc;
       font-family: inherit;
     }
     .address-input:focus {
       outline: none;
-      border-color: var(--accent);
-    }
-    .btn-action {
-      background: #252e42;
-      border: 1px solid #3b4760;
-      color: #ffffff;
-      border-radius: 6px;
-      padding: 0 0.65rem;
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      white-space: nowrap;
-    }
-    .btn-action:active {
-      background: #333f5a;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
     }
 
     /* Patient status badges */
@@ -251,19 +327,25 @@
       border-radius: 6px;
       font-size: 0.76rem;
       font-weight: 700;
+      letter-spacing: 0.01em;
     }
     .tag-danger {
       background: rgba(239, 68, 68, 0.2);
-      border: 1px solid rgba(239, 68, 68, 0.4);
+      border: 1px solid rgba(239, 68, 68, 0.5);
       color: #fca5a5;
+    }
+    .tag-warning {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid rgba(245, 158, 11, 0.5);
+      color: #fcd34d;
     }
     .tag-ok {
       background: rgba(34, 197, 94, 0.2);
-      border: 1px solid rgba(34, 197, 94, 0.4);
+      border: 1px solid rgba(34, 197, 94, 0.5);
       color: #86efac;
     }
     .tag-neutral {
-      background: #1e2638;
+      background: #1e293b;
       border: 1px solid #334155;
       color: #cbd5e1;
     }
@@ -273,29 +355,70 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
       margin-top: 2px;
     }
     .symptom-item {
       display: flex;
       align-items: flex-start;
-      gap: 6px;
+      gap: 7px;
       font-size: 0.9rem;
       font-weight: 600;
       color: #f1f5f9;
+      line-height: 1.35;
     }
-    .symptom-item::before {
-      content: "•";
+    .symptom-icon {
       color: var(--red);
-      font-size: 1.2rem;
-      line-height: 1;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    /* Copy Button */
+    .btn-copy-all {
+      width: 100%;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      padding: 0.65rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+    .btn-copy-all:active {
+      background: #334155;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #22c55e;
+      color: #052e16;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 8px 16px;
+      border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      transition: transform 0.25s ease-out;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
     }
 
     .footer-note {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: #64748b;
       text-align: center;
-      margin-top: 0.25rem;
+      margin-top: 0.2rem;
     }
   </style>
 </head>
@@ -306,29 +429,44 @@
   <!-- TOP BAR: URGENCY & WAKELOCK -->
   <div class="top-bar">
     <div class="urgency-badge urgency-red" id="urgencyBadge">
-      🚨 Рівень RED • 112
+      🚨 Рівень RED • 112 / 103
     </div>
     <div class="wakelock-indicator" id="wakeLockStatus">
       <span class="pulse-dot"></span> Екран активний
     </div>
   </div>
 
-  <!-- NOTICE TO USER -->
-  <div class="notice-box">
-    📢 <strong>Інструкція для очевидця:</strong> Увімкніть гучний зв'язок під час дзвінка та спокійно читайте інформацію нижче диспетчеру рядок за рядком.
+  <!-- LIVE INCIDENT TIMER -->
+  <div class="timer-card">
+    <div class="timer-info">
+      <span>⏱️ Час від виявлення:</span>
+      <span class="timer-digits" id="timerDisplay">00:00</span>
+    </div>
+    <button type="button" class="timer-reset-btn" id="timerResetBtn" onclick="resetTimer()">Скинути</button>
   </div>
 
   <!-- EMERGENCY CALL NUMBER (HIGH VISIBILITY) -->
   <div class="emergency-call-banner" id="callBanner">
     <div class="call-banner-label">Зателефонуйте на номер екстреної допомоги:</div>
-    <div class="call-banner-number" id="callNumText">112</div>
-    <div class="call-banner-hint">Увімкніть гучний зв'язок на смартфоні та читайте екран диспетчеру:</div>
+    <div class="call-banner-number" id="callNumText">112 / 103</div>
+    <div class="call-banner-hint">Єдина служба порятунку 112 або Швидка медична допомога 103</div>
+    
+    <div class="call-buttons-grid">
+      <a href="tel:112" class="call-action-btn btn-call-112" id="call112Btn">📞 Дзвінок 112</a>
+      <a href="tel:103" class="call-action-btn btn-call-103" id="call103Btn">🚑 Дзвінок 103</a>
+    </div>
   </div>
 
-  <!-- SBAR 1: WHO CALLS -->
+  <!-- NOTICE TO CALLER -->
+  <div class="notice-box">
+    📢 <strong>Інструкція для очевидця:</strong> Увімкніть гучний зв'язок під час дзвінка та чітко прочитайте інформацію нижче диспетчеру рядок за рядком.
+  </div>
+
+  <!-- SBAR 1: WHO CALLS & VITALS -->
   <div class="hud-card">
     <div class="card-header">
       <div class="card-title"><span class="step-num">1</span> Хто потребує допомоги</div>
+      <div class="card-cue">Прочитайте диспетчеру:</div>
     </div>
     <div class="script-phrase" id="whoScript">
       «Потрібна екстрена допомога: <span class="highlight-yellow" id="whoTargetText">постраждалій людині</span>!»
@@ -336,7 +474,8 @@
     <div class="tags-row" id="patientMetaRow">
       <span class="status-tag tag-neutral" id="ageGenderTag">👤 Постраждалий (вік уточнюється)</span>
       <span class="status-tag tag-neutral" id="consciousnessTag">🧠 Свідомість: уточнюється</span>
-      <span class="status-tag tag-neutral" id="breathingTag">🫁 Дихання: є</span>
+      <span class="status-tag tag-neutral" id="breathingTag">🫁 Дихання: уточнюється</span>
+      <span class="status-tag tag-neutral" id="bleedingTag">🩸 Кровотеча: немає</span>
     </div>
   </div>
 
@@ -344,6 +483,7 @@
   <div class="hud-card">
     <div class="card-header">
       <div class="card-title"><span class="step-num">2</span> Основна скарга та що сталося</div>
+      <div class="card-cue">Прочитайте диспетчеру:</div>
     </div>
     <div class="script-phrase highlight-red" id="chiefComplaintText">
       Гострий невідкладний стан
@@ -354,9 +494,10 @@
   <div class="hud-card">
     <div class="card-header">
       <div class="card-title"><span class="step-num">3</span> Виявлені небезпечні симптоми</div>
+      <div class="card-cue">Назвіть виявлені загрози:</div>
     </div>
     <ul class="symptom-list" id="symptomsList">
-      <li class="symptom-item">Ознаки, що загрожують життю пацієнта</li>
+      <li class="symptom-item"><span class="symptom-icon">⚠️</span> Ознаки, що загрожують життю пацієнта</li>
     </ul>
   </div>
 
@@ -364,6 +505,7 @@
   <div class="hud-card">
     <div class="card-header">
       <div class="card-title"><span class="step-num">4</span> Точна адреса та орієнтири</div>
+      <div class="card-cue">Назвіть диспетчеру:</div>
     </div>
     <div class="script-phrase">
       «Адреса події:»
@@ -375,17 +517,36 @@
   <div class="hud-card">
     <div class="card-header">
       <div class="card-title"><span class="step-num">5</span> Що вже зроблено на місці</div>
+      <div class="card-cue">Повідомте диспетчеру:</div>
     </div>
     <div class="script-phrase highlight-blue" id="actionsTakenText">
       Забезпечено спокій потерпілому. Очікуємо прибуття бригади.
     </div>
   </div>
 
+  <!-- SBAR 6: REQUEST TO DISPATCHER -->
+  <div class="hud-card">
+    <div class="card-header">
+      <div class="card-title"><span class="step-num">6</span> Запит до диспетчера (що потрібно)</div>
+      <div class="card-cue">Вкажіть потрібну бригаду:</div>
+    </div>
+    <div class="script-phrase highlight-yellow" id="requestNeededText">
+      🚑 Потрібна екстрена медична допомога (112 / 103)!
+    </div>
+  </div>
+
+  <!-- COPY ALL BUTTON -->
+  <button type="button" class="btn-copy-all" onclick="copyFullReport()">
+    📋 Скопіювати повний текст для диспетчера / SMS
+  </button>
+
   <div class="footer-note">
     ⚠️ <strong>Не кладіть слухавку</strong>, доки диспетчер не скаже: <em>«Виклик прийнято, бригада виїхала!»</em>
   </div>
 
 </div>
+
+<div class="toast" id="copyToast">✓ Текст скопійовано!</div>
 
 <script>
   // 1. Initialize Telegram WebApp
@@ -458,20 +619,20 @@
     "meningeal_signs": "Менінгеальні ознаки (ригідність потиличних м'язів, фотофобія)",
     "meningeal_fever": "Висока температура з ригідністю потиличних м'язів / висипом",
     "altered_mental_status": "Сплутаність свідомості / глибока загальмованість",
-    "unconscious_unresponsive": "Втрата свідомості / відсутність реакції на подразники",
+    "unconscious_unresponsive": "Непритомність / відсутність реакції",
 
     // Дихальна система & Асфіксія
     "airway_choking": "Повна обструкція дихальних шляхів стороннім тілом (удушення)",
     "airway_obstruction": "Непрохідність дихальних шляхів / асфіксія",
-    "choking_severe_airway_obstruction": "Повна обструкція дихальних шляхів стороннім тілом",
+    "choking_severe_airway_obstruction": "Повна обструкція дихальних шляхів стороннім тілом (удушення)",
     "choking_foreign_body": "Стороннє тіло в дихальних шляхах / асфіксія",
     "anaphylaxis": "Анафілаксія (набряк гортані, задуха, генералізований висип)",
     "anaphylaxis_allergy": "Гостра системна алергічна реакція / анафілактичний шок",
     "anaphylaxis_stridor": "Анафілаксія (набряк Квінке, стридор, свистяче дихання)",
     "severe_hypoxia": "Виражена гіпоксія / ціаноз (посиніння губ/обличчя)",
-    "severe_respiratory_distress": "Тяжка дихальна недостатність / виражена задуха",
-    "severe_asphyxia_dyspnea": "Гостра дихальна недостатність / тяжка задуха",
-    "tension_pneumothorax": "Напружений або відкритий пневмоторакс (поранення грудей)",
+    "severe_respiratory_distress": "Тяжка дихальна недостатність / задуха",
+    "severe_asphyxia_dyspnea": "Гостра дихальна недостатність / виражена задуха",
+    "tension_pneumothorax": "Напружений або відкритий пневмоторакс (рана грудної клітки)",
 
     // Травматологія & Кровотечі
     "arterial_bleeding": "Пульсуюча артеріальна кровотеча",
@@ -480,7 +641,7 @@
     "limb_amputation_massive_bleeding": "Травматична ампутація / критична крововтрата",
     "spine_polytrauma": "Підозра на ушкодження хребта / політравма",
     "spine_head_trauma": "Травма голови або шиї / ризик ушкодження хребта",
-    "fracture_dislocation": "Ймовірний перелом / патологічна деформація кінцівки",
+    "fracture_dislocation": "Ймовірний перелом / виражена деформація кінцівки",
     "acute_limb_fracture_deformity": "Виражена деформація кінцівки / перелом кісток",
     "urgent_fracture": "Закритий перелом / вивих суглоба (потрібна іммобілізація)",
     "urgent_wound": "Глибока рана (потрібна первинна хірургічна обробка)",
@@ -497,7 +658,7 @@
     "burn_blisters_deep": "Глибокий опік з утворенням пухирів / некрозу",
     "severe_shock_burn": "Великий опік шкіри / ризик опікового шоку",
     "burn_airway_inhalation": "Інгаляційна травма / опік дихальних шляхів",
-    "burn_critical_surface": "Опік понад 10% поверхні тіла",
+    "burn_critical_surface": "Опік понад 10% поверхні тіла або опік полум'ям",
     "burn_face_airway": "Опік обличчя або дихальних шляхів",
     "urgent_burn": "Термічний опік (потрібна спеціалізована допомога)",
 
@@ -517,7 +678,7 @@
     "urgent_poison": "Токсикологічне отруєння (потрібна детоксикація)",
 
     // Загальні критичні стани & Життєві функції
-    "severe_shock_hypotension": "Ознаки декомпенсованого шоку (блідість, холодний піт, гіпотонія)",
+    "severe_shock_hypotension": "Ознаки геморагічного/декомпенсованого шоку (холодний піт, мармурова шкіра)",
     "vital_shock_collapse": "Гемодинамічний колапс / виражені ознаки шоку",
     "vital_airway_breathing_failed": "Критичне порушення прохідності дихальних шляхів або дихання",
     "vital_consciousness_breathing": "Порушення свідомості та життєвих функцій",
@@ -527,50 +688,34 @@
     "urgent_incapacity": "Виражене обмеження життєдіяльності через гострий стан",
     "acute_life_threat": "Критичний стан із прямою загрозою життю",
     "safety_gate_intercepted": "Перехоплено Safety Gate: ознаки загрози життю",
-    "pain_scale": "Виражений больовий синдром",
-    "cardiac": "Гострий кардіальний стан / біль у серці",
-    "stroke": "Ознаки порушення мозкового кровообігу",
-    "trauma": "Травматичне ушкодження",
-    "respiratory": "Гостра дихальна недостатність",
-    "burns": "Опікова травма",
-    "poisoning": "Токсичне отруєння",
-    "seizure": "Судомний напад",
-    "choking": "Удушення стороннім тілом"
+    "pain_scale": "Виражений больовий синдром"
   };
 
-  // Helper function to translate any symptom or flag into high-quality Ukrainian
+  // Maps clinical flags to human-readable Ukrainian symptoms
   function formatSymptomUa(flag) {
-    if (!flag) return "Гострий біль або раптове погіршення самопочуття";
+    if (!flag) return "Ознаки гострого невідкладного стану";
     const cleaned = String(flag).trim();
-    if (!cleaned) return "Гострий біль або раптове погіршення самопочуття";
-
-    // 1. Точний збіг у клінічному словнику
-    if (CLINICAL_FLAGS_UA[cleaned]) {
-      return CLINICAL_FLAGS_UA[cleaned];
-    }
+    if (CLINICAL_FLAGS_UA[cleaned]) return CLINICAL_FLAGS_UA[cleaned];
     const lower = cleaned.toLowerCase();
-    if (CLINICAL_FLAGS_UA[lower]) {
-      return CLINICAL_FLAGS_UA[lower];
-    }
+    if (CLINICAL_FLAGS_UA[lower]) return CLINICAL_FLAGS_UA[lower];
 
-    // 2. Якщо рядок вже містить українську/кириличну назву — залишаємо як є
+    // Check if string already contains Cyrillic letters
     if (/[а-яіїєґ]/i.test(cleaned)) {
       return cleaned;
     }
 
-    // 3. Семантичний маппінг англійських складових слів для непередбачених ключів
     const tokenMap = [
-      ["cpr", "зупинка серця / потрібна СЛР"],
-      ["cardiac", "серцевий напад / біль у грудях"],
+      ["cpr", "зупинка серця та дихання (потрібна СЛР)"],
+      ["cardiac", "серцевий напад / біль у серці"],
       ["arrest", "зупинка кровообігу"],
       ["stroke", "ознаки гострого інсульту"],
       ["infarction", "підозра на інфаркт міокарда"],
       ["acs", "гострий коронарний синдром"],
-      ["bleeding", "кровотеча"],
+      ["bleeding", "артеріальна/масивна кровотеча"],
       ["bleed", "кровотеча"],
-      ["arterial", "артеріальна кровотеча"],
+      ["arterial", "пульсуюча артеріальна кровотеча"],
       ["amputation", "травматична ампутація"],
-      ["fracture", "ймовірний перелом кінцівки"],
+      ["fracture", "ймовірний перелом кісток"],
       ["dislocation", "вивих суглоба"],
       ["burn", "термічний або хімічний опік"],
       ["poison", "токсичне отруєння"],
@@ -578,13 +723,13 @@
       ["choking", "удушення стороннім тілом"],
       ["airway", "обструкція дихальних шляхів"],
       ["hypoxia", "кисневе голодування / задуха"],
-      ["dyspnea", "виражена задуха"],
+      ["dyspnea", "виражена задишка"],
       ["shock", "ознаки шоку / колапс"],
-      ["unconscious", "втрата свідомості"],
+      ["unconscious", "непритомність"],
       ["peritonitis", "перитоніт / гострий живіт"],
       ["abdomen", "гострий біль у животі"],
       ["eye", "травма або опік ока"],
-      ["headache", "гострий головний біль"],
+      ["headache", "раптовий нестерпний біль голови"],
       ["spine", "травма хребта"],
       ["electric", "ураження електричним струмом"],
       ["trauma", "травматичне ушкодження"]
@@ -596,26 +741,60 @@
       }
     }
 
-    // 4. Надійний медичний дефолт: НІКОЛИ не виводити англійські ідентифікатори
-    return "Гострий загрозливий симптом (потребує оцінки лікаря)";
+    return "Гострий невідкладний стан (потребує оцінки лікаря)";
   }
 
+  // Canonical protocol names
+  const PROTOCOL_NAMES_UA = {
+    "CARDIAC_ARREST_CPR": "Раптова зупинка серця та дихання (клінічна смерть)",
+    "STROKE": "Підозра на гострий мозковий інсульт (порушення мови / слабкість кінцівок)",
+    "TRAUMA": "Травма з масивною кровотечею або ушкодженням кінцівок",
+    "CARDIAC": "Гострий коронарний синдром / підозра на інфаркт міокарда",
+    "CHOKING": "Удушення стороннім тілом (повна обструкція дихальних шляхів)",
+    "RESPIRATORY": "Гостра дихальна недостатність / напад задухи",
+    "ANAPHYLAXIS": "Гостра алергічна реакція / анафілактичний шок",
+    "SEIZURE": "Судомний напад / генералізовані судоми",
+    "BURNS": "Термічний або хімічний опік значної площі",
+    "POISONING": "Гостре токсичне отруєння",
+    "GENERAL_ABCDE": "Гострий невідкладний стан із загрозою життю"
+  };
+
   // Helper to remove technical placeholders like "голосове повідомлення"
-  function cleanComplaintText(raw) {
-    if (!raw) return "Гострий невідкладний стан";
-    let text = String(raw).trim();
+  function cleanComplaintText(raw, proto, isCpr, flags) {
     const placeholders = [
       "голосовий опис стану", "голосовий опис", "голосове повідомлення", 
       "голосовое сообщение", "voice message", "симптом", "екстрена допомога", 
-      "гострий невідкладний стан", "аудіо", "audio"
+      "гострий невідкладний стан", "стан", "допомога", "аудіо", "audio",
+      "voice", "none", "null", "undefined"
     ];
+    let text = raw ? String(raw).trim() : "";
     const lower = text.toLowerCase();
-    for (const ph of placeholders) {
-      if (lower === ph || lower.startsWith(ph + ":") || lower.startsWith(ph + " -")) {
-        return "Гострий невідкладний стан (деталізовано зі слів потерпілого)";
-      }
+    
+    const isPh = !text || placeholders.some(ph => lower === ph || lower.startsWith(ph + ":") || lower.startsWith(ph + " -"));
+    if (!isPh) {
+      return text;
     }
-    return text;
+
+    // Dynamic resolution based on protocol or flags
+    if (isCpr || proto === 'CARDIAC_ARREST_CPR') {
+      return "Раптова зупинка серця та дихання (клінічна смерть)";
+    }
+    if (proto && PROTOCOL_NAMES_UA[proto]) {
+      return PROTOCOL_NAMES_UA[proto];
+    }
+    if (flags && (flags.includes('stroke') || flags.includes('fast'))) {
+      return "Підозра на гострий мозковий інсульт";
+    }
+    if (flags && (flags.includes('bleed') || flags.includes('amputation'))) {
+      return "Масивна артеріальна кровотеча / важка травма";
+    }
+    if (flags && flags.includes('choking')) {
+      return "Удушення стороннім тілом";
+    }
+    if (flags && (flags.includes('cardiac') || flags.includes('infarction') || flags.includes('chest_pain'))) {
+      return "Гострий серцевий напад / біль у грудях";
+    }
+    return "Гострий невідкладний стан із загрозою життю";
   }
 
   // 4. Parse incoming URL parameters or Telegram WebApp start_param
@@ -624,7 +803,9 @@
     
     // Urgency level & Emergency number
     const status = (params.get('status') || 'RED').toUpperCase();
-    const emergencyNum = status === 'ORANGE' ? '103' : '112';
+    const proto = params.get('proto') || '';
+    const flagsParam = params.get('flags') || '';
+    const isCprFlag = params.get('cpr') === '1' || proto === 'CARDIAC_ARREST_CPR' || flagsParam.includes('cardiac_arrest_cpr') || flagsParam.includes('cpr_unresponsive');
     
     const badge = document.getElementById('urgencyBadge');
     const callBanner = document.getElementById('callBanner');
@@ -632,25 +813,21 @@
     
     if (status === 'ORANGE') {
       badge.className = 'urgency-badge urgency-orange';
-      badge.textContent = '⚠️ Рівень ORANGE • 103';
+      badge.textContent = '⚠️ Рівень ORANGE • 112 / 103';
       if (callBanner) callBanner.className = 'emergency-call-banner orange-mode';
-      if (callNumText) callNumText.textContent = '103';
+      if (callNumText) callNumText.textContent = '103 / 112';
     } else {
       badge.className = 'urgency-badge urgency-red';
-      badge.textContent = '🚨 Рівень RED • 112';
+      badge.textContent = '🚨 Рівень RED • 112 / 103';
       if (callBanner) callBanner.className = 'emergency-call-banner';
-      if (callNumText) callNumText.textContent = '112';
+      if (callNumText) callNumText.textContent = '112 / 103';
     }
 
     // Target (Self / Other / Default to постраждалій людині)
     const target = params.get('target');
-    const proto = params.get('proto') || '';
-    const isCpr = params.get('cpr') === '1' || proto === 'CARDIAC_ARREST_CPR';
     const whoTargetText = document.getElementById('whoTargetText');
     if (whoTargetText) {
-      if (isCpr) {
-        whoTargetText.textContent = 'постраждалій людині (без свідомості/дихання)';
-      } else if (target === 'self') {
+      if (target === 'self') {
         whoTargetText.textContent = 'мені особисто';
       } else if (target === 'other') {
         whoTargetText.textContent = 'людині поруч';
@@ -671,62 +848,208 @@
       ageGenderTag.textContent = desc.trim();
     }
 
+    // Consciousness & Breathing & Bleeding Vitals
+    const consciousnessParam = params.get('conscious') || '';
+    const breathingParam = params.get('breath') || '';
+    const bleedingParam = params.get('bleed') || '';
+
+    const consciousnessTag = document.getElementById('consciousnessTag');
+    const breathingTag = document.getElementById('breathingTag');
+    const bleedingTag = document.getElementById('bleedingTag');
+
+    // Breathing resolution
+    if (breathingTag) {
+      const bLower = (breathingParam || '').toLowerCase();
+      if (isCprFlag || bLower.includes('відсутн') || bLower.includes('не диха') || bLower.includes('зупинк')) {
+        breathingTag.className = 'status-tag tag-danger';
+        breathingTag.textContent = '🫁 Дихання: ВІДСУТНЄ';
+      } else if (bLower.includes('удушенн') || bLower.includes('задух') || bLower.includes('критич') || bLower.includes('ціаноз') || proto === 'CHOKING' || proto === 'RESPIRATORY') {
+        breathingTag.className = 'status-tag tag-danger';
+        breathingTag.textContent = '🫁 Дихання: КРИТИЧНЕ (задуха)';
+      } else if (bLower.includes('утруднен') || bLower.includes('задишк') || proto === 'ASTHMA') {
+        breathingTag.className = 'status-tag tag-warning';
+        breathingTag.textContent = '🫁 Дихання: УТРУДНЕНЕ';
+      } else {
+        breathingTag.className = 'status-tag tag-ok';
+        breathingTag.textContent = '🫁 Дихання: ЗБЕРЕЖЕНЕ';
+      }
+    }
+
+    // Consciousness resolution
+    if (consciousnessTag) {
+      const cLower = (consciousnessParam || '').toLowerCase();
+      if (isCprFlag || cLower.includes('відсутн') || cLower.includes('непритомн') || cLower.includes('кома')) {
+        consciousnessTag.className = 'status-tag tag-danger';
+        consciousnessTag.textContent = '🧠 Свідомість: ВІДСУТНЯ (непритомний)';
+      } else if (cLower.includes('втрачен') || cLower.includes('судом') || proto === 'SEIZURE') {
+        consciousnessTag.className = 'status-tag tag-danger';
+        consciousnessTag.textContent = '🧠 Свідомість: СУДОМИ';
+      } else if (cLower.includes('сплутан') || cLower.includes('дезорієнт') || proto === 'STROKE') {
+        consciousnessTag.className = 'status-tag tag-warning';
+        consciousnessTag.textContent = '🧠 Свідомість: СПЛУТАНА / порушена';
+      } else {
+        consciousnessTag.className = 'status-tag tag-ok';
+        consciousnessTag.textContent = '🧠 Свідомість: ЯСНА';
+      }
+    }
+
+    // Bleeding resolution
+    if (bleedingTag) {
+      const blLower = (bleedingParam || '').toLowerCase();
+      if (blLower.includes('критич') || blLower.includes('масивн') || flagsParam.includes('arterial_bleeding') || flagsParam.includes('limb_amputation')) {
+        bleedingTag.className = 'status-tag tag-danger';
+        bleedingTag.textContent = '🩸 Кровотеча: МАСИВНА';
+      } else if (blLower.includes('травм') || flagsParam.includes('fracture') || proto === 'TRAUMA') {
+        bleedingTag.className = 'status-tag tag-warning';
+        bleedingTag.textContent = '🩸 Травма кінцівок';
+      } else {
+        bleedingTag.className = 'status-tag tag-ok';
+        bleedingTag.textContent = '🩸 Кровотеча: немає';
+      }
+    }
+
     // Chief complaint
     const rawChief = params.get('chief') || '';
     const chiefComplaintText = document.getElementById('chiefComplaintText');
     if (chiefComplaintText) {
-      chiefComplaintText.textContent = `«${cleanComplaintText(rawChief)}»`;
+      chiefComplaintText.textContent = `«${cleanComplaintText(rawChief, proto, isCprFlag, flagsParam)}»`;
     }
 
     // Verified flags / Symptoms
-    const flagsParam = params.get('flags') || '';
     const symptomsList = document.getElementById('symptomsList');
     if (symptomsList) {
       symptomsList.innerHTML = '';
-      if (flagsParam) {
-        const rawList = flagsParam.split(',').map(s => s.trim()).filter(Boolean);
-        if (rawList.length > 0) {
-          rawList.forEach(flag => {
-            const li = document.createElement('li');
-            li.className = 'symptom-item';
-            li.textContent = formatSymptomUa(flag);
-            symptomsList.appendChild(li);
-          });
-        } else {
-          symptomsList.innerHTML = '<li class="symptom-item">Гострий біль або раптове погіршення самопочуття</li>';
-        }
+      const rawList = flagsParam ? flagsParam.split(',').map(s => s.trim()).filter(Boolean) : [];
+      
+      if (rawList.length > 0) {
+        rawList.forEach(flag => {
+          const li = document.createElement('li');
+          li.className = 'symptom-item';
+          li.innerHTML = `<span class="symptom-icon">🚨</span> ${formatSymptomUa(flag)}`;
+          symptomsList.appendChild(li);
+        });
       } else {
-        symptomsList.innerHTML = '<li class="symptom-item">Гострий біль або раптове погіршення самопочуття</li>';
+        // Dynamic protocol-based symptoms when flags are empty
+        let fallbackSymptoms = [];
+        if (isCprFlag || proto === 'CARDIAC_ARREST_CPR') {
+          fallbackSymptoms = [
+            "Відсутність самостійного дихання",
+            "Повна втрата свідомості (не реагує на голос та дотик)",
+            "Зупинка кровообігу (потрібна негайна СЛР)"
+          ];
+        } else if (proto === 'STROKE') {
+          fallbackSymptoms = [
+            "Асиметрія обличчя (опущений куточок рота)",
+            "Слабкість або оніміння в руці / нозі з одного боку",
+            "Порушення або сплутаність мови (афазія)"
+          ];
+        } else if (proto === 'CHOKING') {
+          fallbackSymptoms = [
+            "Повна обструкція дихальних шляхів стороннім тілом",
+            "Неможливість говорити, дихати чи кашляти",
+            "Ціаноз (посиніння губ та обличчя)"
+          ];
+        } else if (proto === 'CARDIAC') {
+          fallbackSymptoms = [
+            "Гострий тиснучий або пекучий біль за грудиною",
+            "Біль іррадіює в ліву руку, лопатку або нижню щелепу",
+            "Холодний липкий піт, виражена слабкість, страх смерті"
+          ];
+        } else if (proto === 'TRAUMA') {
+          fallbackSymptoms = [
+            "Виражений больовий синдром внаслідок травми",
+            "Деформація або порушення рухомості кінцівки",
+            "Ризик внутрішньої чи зовнішньої крововтрати"
+          ];
+        } else if (proto === 'ANAPHYLAXIS') {
+          fallbackSymptoms = [
+            "Швидко прогресуючий набряк гортані, язика, губ (стридор)",
+            "Генералізований сверблячий висип / кропив'янка",
+            "Різке падіння артеріального тиску / колапс"
+          ];
+        } else if (proto === 'SEIZURE') {
+          fallbackSymptoms = [
+            "Генералізовані судоми всього тіла",
+            "Втрата свідомості під час судомного нападу",
+            "Загроза прикушування язика та травмування голови"
+          ];
+        } else if (proto === 'BURNS') {
+          fallbackSymptoms = [
+            "Термічне або хімічне ушкодження значної площі шкіри",
+            "Інтенсивний біль, утворення пухирів",
+            "Ризик опікового шоку та плазмовтрати"
+          ];
+        } else if (proto === 'POISONING') {
+          fallbackSymptoms = [
+            "Токсична дія отруйної або хімічної речовини",
+            "Порушення свідомості, нудота, блювота, звуження/розширення зіниць",
+            "Загроза токсичного колапсу"
+          ];
+        } else {
+          fallbackSymptoms = [
+            "Гострий біль або раптове важке погіршення самопочуття",
+            "Потребує невідкладної диференційної діагностики медиками"
+          ];
+        }
+
+        fallbackSymptoms.forEach(sym => {
+          const li = document.createElement('li');
+          li.className = 'symptom-item';
+          li.innerHTML = `<span class="symptom-icon">🚨</span> ${sym}`;
+          symptomsList.appendChild(li);
+        });
       }
     }
 
     // Actions already taken
-    const isCpr = params.get('cpr') === '1' || flagsParam.includes('cardiac_arrest_cpr');
-    
-    // Consciousness & Breathing dynamic tags
-    const consciousnessTag = document.getElementById('consciousnessTag');
-    const breathingTag = document.getElementById('breathingTag');
-    if (isCpr) {
-      if (consciousnessTag) {
-        consciousnessTag.className = 'status-tag tag-critical';
-        consciousnessTag.textContent = '🧠 Свідомість: ВІДСУТНЯ';
-      }
-      if (breathingTag) {
-        breathingTag.className = 'status-tag tag-critical';
-        breathingTag.textContent = '🫁 Дихання: ВІДСУТНЄ';
+    const actionsParam = params.get('actions') || '';
+    const actionsTakenText = document.getElementById('actionsTakenText');
+    if (actionsTakenText) {
+      if (actionsParam) {
+        actionsTakenText.innerHTML = actionsParam;
+      } else if (isCprFlag || proto === 'CARDIAC_ARREST_CPR') {
+        actionsTakenText.innerHTML = '🫀 <strong>Проводяться компресії грудної клітки (СЛР) у темпі 100–120/хв на твердій підлозі. Непрямий масаж серця триває!</strong>';
+      } else if (proto === 'CHOKING' || flagsParam.includes('airway_choking')) {
+        actionsTakenText.innerHTML = 'Звільнення дихальних шляхів: 5 ударів між лопаток та прийом Геймліха (піддіафрагмальні поштовхи).';
+      } else if (proto === 'STROKE' || flagsParam.includes('stroke_fast')) {
+        actionsTakenText.innerHTML = 'Постраждалий укладений з піднятим на 30° узголів\'ям, розстебнуто комір, відчинено вікна. Воду, їжу та таблетки НЕ давали!';
+      } else if (flagsParam.includes('arterial_bleeding') || flagsParam.includes('limb_amputation')) {
+        actionsTakenText.innerHTML = 'Накладено прямий тиск на рану та кровоспинний джгут (турнікет) вище рани, зафіксовано точний час накладання.';
+      } else if (proto === 'CARDIAC') {
+        actionsTakenText.innerHTML = 'Повний фізичний та емоційний спокій у положенні напівсидячи з опущеними ногами, розстебнуто тісний одяг, доступ свіжого повітря.';
+      } else if (proto === 'ANAPHYLAXIS') {
+        actionsTakenText.innerHTML = 'Припинено контакт з алергеном, розстебнуто одяг, постраждалий під наглядом з вільним доступом повітря.';
+      } else if (proto === 'SEIZURE') {
+        actionsTakenText.innerHTML = 'Голова захищена від ударів, прибрано небезпечні предмети. До рота нічого не вставляли! По закінченню судом — на бік.';
+      } else if (proto === 'BURNS') {
+        actionsTakenText.innerHTML = 'Джерело опіку усунуто, уражену ділянку охолоджують чистою водою, накладено суху чисту тканину.';
+      } else if (proto === 'TRAUMA') {
+        actionsTakenText.innerHTML = 'Повна іммобілізація (знерухомлення) кінцівки та хребта, потерпілого не пересувають, прикладено сухий холод.';
+      } else {
+        actionsTakenText.innerHTML = 'Забезпечено повний фізичний та емоційний спокій, доступ свіжого повітря, постійний контроль дихання та свідомості.';
       }
     }
 
-    const actionsTakenText = document.getElementById('actionsTakenText');
-    if (actionsTakenText) {
-      if (isCpr) {
-        actionsTakenText.innerHTML = '🫀 <strong>Проводиться серцево-легенева реанімація (непрямий масаж серця)!</strong> Потерпілий на твердій підлозі.';
-      } else if (flagsParam.includes('stroke_fast')) {
-        actionsTakenText.innerHTML = 'Забезпечено спокій, узголів\'я піднято на 30°, розстебнуто комір. Воду та таблетки НЕ давали!';
-      } else if (flagsParam.includes('massive_bleeding') || flagsParam.includes('limb_amputation')) {
-        actionsTakenText.innerHTML = 'Накладено джгут/турнікет вище рани, кровотечу зупинено, кінцівку знерухомлено.';
+    // Request to dispatcher
+    const reqParam = params.get('req') || '';
+    const requestNeededText = document.getElementById('requestNeededText');
+    if (requestNeededText) {
+      if (reqParam) {
+        requestNeededText.textContent = reqParam;
+      } else if (isCprFlag || proto === 'CARDIAC_ARREST_CPR') {
+        requestNeededText.textContent = '🚨 Потрібна реанімаційна бригада ЕМД з дефібрилятором!';
+      } else if (proto === 'STROKE') {
+        requestNeededText.textContent = '🧠 Потрібна спеціалізована інсультна бригада (терапевтичне вікно 4.5 год)!';
+      } else if (proto === 'CHOKING') {
+        requestNeededText.textContent = '🚨 Потрібна екстрена реанімаційна бригада (асфіксія / стороннє тіло)!';
+      } else if (proto === 'TRAUMA' || flagsParam.includes('bleeding')) {
+        requestNeededText.textContent = '🚑 Потрібна травматологічна бригада з ношами та шинами!';
+      } else if (proto === 'CARDIAC') {
+        requestNeededText.textContent = '🫀 Потрібна кардіологічна або реанімаційна бригада ЕМД!';
+      } else if (proto === 'ANAPHYLAXIS') {
+        requestNeededText.textContent = '💉 Потрібна термінова бригада ЕМД (анафілаксія / набряк гортані)!';
       } else {
-        actionsTakenText.innerHTML = 'Потерпілому забезпечено повний фізичний та емоційний спокій, доступ свіжого повітря.';
+        requestNeededText.textContent = '🚑 Потрібна екстрена медична допомога (112 / 103)!';
       }
     }
 
@@ -743,8 +1066,70 @@
     localStorage.setItem('vektor_saved_address', val);
   }
 
+  // 5. Live Stopwatch Timer
+  let timerSeconds = 0;
+  let timerInterval = null;
+  function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+      const secs = String(timerSeconds % 60).padStart(2, '0');
+      const el = document.getElementById('timerDisplay');
+      if (el) el.textContent = `${mins}:${secs}`;
+    }, 1000);
+  }
+  function resetTimer() {
+    timerSeconds = 0;
+    const el = document.getElementById('timerDisplay');
+    if (el) el.textContent = '00:00';
+  }
+
+  // 6. Copy Full Report
+  function copyFullReport() {
+    const who = document.getElementById('whoTargetText')?.textContent || 'постраждалій людині';
+    const chief = document.getElementById('chiefComplaintText')?.textContent || '';
+    const ageGender = document.getElementById('ageGenderTag')?.textContent || '';
+    const breath = document.getElementById('breathingTag')?.textContent || '';
+    const conscious = document.getElementById('consciousnessTag')?.textContent || '';
+    const bleed = document.getElementById('bleedingTag')?.textContent || '';
+    const addr = document.getElementById('addressInput')?.value || '[Адреса не вказана]';
+    const actions = document.getElementById('actionsTakenText')?.innerText || '';
+    const req = document.getElementById('requestNeededText')?.textContent || '';
+    
+    const symptomItems = Array.from(document.querySelectorAll('#symptomsList li')).map(li => li.innerText.trim()).join('; ');
+
+    const reportText = `ВИКЛИК 112 / 103 (V.E.K.T.O.R.):
+1. Кому: ${who} (${ageGender})
+2. Стан: ${breath} | ${conscious} | ${bleed}
+3. Скарга: ${chief}
+4. Симптоми: ${symptomItems}
+5. Адреса: ${addr}
+6. Дії на місці: ${actions}
+7. Запит: ${req}`;
+
+    navigator.clipboard.writeText(reportText).then(() => {
+      showToast('✓ Текст виклику скопійовано!');
+    }).catch(() => {
+      showToast('Скопійовано');
+    });
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('copyToast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2200);
+  }
+
   // Load everything on start
-  window.addEventListener('DOMContentLoaded', loadDataFromParams);
+  window.addEventListener('DOMContentLoaded', () => {
+    loadDataFromParams();
+    startTimer();
+  });
 </script>
 </body>
 </html>
