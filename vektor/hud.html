@@ -644,10 +644,16 @@
 
     // Target (Self / Other / Default to постраждалій людині)
     const target = params.get('target');
+    const proto = params.get('proto') || '';
+    const isCpr = params.get('cpr') === '1' || proto === 'CARDIAC_ARREST_CPR';
     const whoTargetText = document.getElementById('whoTargetText');
     if (whoTargetText) {
-      if (target === 'self') {
+      if (isCpr) {
+        whoTargetText.textContent = 'постраждалій людині (без свідомості/дихання)';
+      } else if (target === 'self') {
         whoTargetText.textContent = 'мені особисто';
+      } else if (target === 'other') {
+        whoTargetText.textContent = 'людині поруч';
       } else {
         whoTargetText.textContent = 'постраждалій людині';
       }
