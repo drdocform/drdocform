@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>HUD Диспетчера 112 / 103 | V.E.K.T.O.R.</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: #000000;
+      --card-bg: #0c0f17;
+      --border: #1e2638;
+      --red: #ef4444;
+      --red-bright: #ff3b30;
+      --yellow: #facc15;
+      --green: #22c55e;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+    body {
+      padding: 0.75rem 0.85rem calc(1rem + env(safe-area-inset-bottom, 1rem)) 0.85rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hud-container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    /* Top Banner */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111522;
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      border-radius: 10px;
+    }
+    .urgency-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .urgency-red {
+      background: rgba(239, 68, 68, 0.25);
+      border: 1px solid var(--red);
+      color: #fca5a5;
+    }
+    .urgency-orange {
+      background: rgba(245, 158, 11, 0.25);
+      border: 1px solid #f59e0b;
+      color: #fcd34d;
+    }
+    .wakelock-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      color: #86efac;
+      font-weight: 600;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.2); }
+    }
+
+    /* Emergency Call Banner (High visibility, non-deceptive) */
+    .emergency-call-banner {
+      width: 100%;
+      background: #111522;
+      border: 2px solid var(--red);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .emergency-call-banner.orange-mode {
+      border-color: #f59e0b;
+    }
+    .call-banner-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .call-banner-number {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.1;
+      letter-spacing: 0.05em;
+    }
+    .emergency-call-banner.orange-mode .call-banner-number {
+      color: #fcd34d;
+    }
+    .emergency-call-banner:not(.orange-mode) .call-banner-number {
+      color: #fca5a5;
+    }
+    .call-banner-hint {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .notice-box {
+      background: #171c2b;
+      border-left: 3px solid var(--yellow);
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+    }
+    .notice-box strong {
+      color: var(--yellow);
+    }
+
+    /* SBAR Card */
+    .hud-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.35rem;
+      margin-bottom: 0.15rem;
+    }
+    .card-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-title span.step-num {
+      background: #252e42;
+      color: #e2e8f0;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+    }
+
+    /* Content styling inside cards */
+    .script-phrase {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.35;
+    }
+    .highlight-red {
+      color: #f87171;
+    }
+    .highlight-yellow {
+      color: #fde047;
+    }
+    .highlight-blue {
+      color: #7dd3fc;
+    }
+
+    /* Address input */
+    .address-input {
+      width: 100%;
+      background: #151a26;
+      border: 1px solid #2d3748;
+      border-radius: 6px;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.92rem;
+      color: #f8fafc;
+      font-family: inherit;
+    }
+    .address-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .btn-action {
+      background: #252e42;
+      border: 1px solid #3b4760;
+      color: #ffffff;
+      border-radius: 6px;
+      padding: 0 0.65rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .btn-action:active {
+      background: #333f5a;
+    }
+
+    /* Patient status badges */
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .tag-danger {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+    .tag-ok {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #86efac;
+    }
+    .tag-neutral {
+      background: #1e2638;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+    }
+
+    /* Danger symptoms list */
+    .symptom-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 2px;
+    }
+    .symptom-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .symptom-item::before {
+      content: "•";
+      color: var(--red);
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .footer-note {
+      font-size: 0.75rem;
+      color: #64748b;
+      text-align: center;
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="hud-container">
+
+  <!-- TOP BAR: URGENCY & WAKELOCK -->
+  <div class="top-bar">
+    <div class="urgency-badge urgency-red" id="urgencyBadge">
+      🚨 Рівень RED • 112
+    </div>
+    <div class="wakelock-indicator" id="wakeLockStatus">
+      <span class="pulse-dot"></span> Екран активний
+    </div>
+  </div>
+
+  <!-- NOTICE TO USER -->
+  <div class="notice-box">
+    📢 <strong>Інструкція для очевидця:</strong> Увімкніть гучний зв'язок під час дзвінка та спокійно читайте інформацію нижче диспетчеру рядок за рядком.
+  </div>
+
+  <!-- EMERGENCY CALL NUMBER (HIGH VISIBILITY) -->
+  <div class="emergency-call-banner" id="callBanner">
+    <div class="call-banner-label">Зателефонуйте на номер екстреної допомоги:</div>
+    <div class="call-banner-number" id="callNumText">112</div>
+    <div class="call-banner-hint">Увімкніть гучний зв'язок на смартфоні та читайте екран диспетчеру:</div>
+  </div>
+
+  <!-- SBAR 1: WHO CALLS -->
+  <div class="hud-card">
+    <div class="card-header">
+      <div class="card-title"><span class="step-num">1</span> Хто потребує допомоги</div>
+    </div>
+    <div class="script-phrase" id="whoScript">
+      «Потрібна екстрена допомога: <span class="highlight-yellow" id="whoTargetText">для людини поруч</span>!»
+    </div>
+    <div class="tags-row" id="patientMetaRow">
+      <span class="status-tag tag-neutral" id="ageGenderTag">👤 Дорослий (вік ~не вказано)</span>
+      <span class="status-tag tag-neutral" id="consciousnessTag">🧠 Свідомість: уточнюється</span>
+      <span class="status-tag tag-neutral" id="breathingTag">🫁 Дихання: є</span>
+    </div>
+  </div>
+
+  <!-- SBAR 2: CHIEF COMPLAINT (CLEAN, NO PLACEHOLDERS) -->
+  <div class="hud-card">
+    <div class="card-header">
+      <div class="card-title"><span class="step-num">2</span> Основна скарга та що сталося</div>
+    </div>
+    <div class="script-phrase highlight-red" id="chiefComplaintText">
+      Гострий невідкладний стан
+    </div>
+  </div>
+
+  <!-- SBAR 3: VERIFIED CRITICAL THREATS -->
+  <div class="hud-card">
+    <div class="card-header">
+      <div class="card-title"><span class="step-num">3</span> Виявлені небезпечні симптоми</div>
+    </div>
+    <ul class="symptom-list" id="symptomsList">
+      <li class="symptom-item">Ознаки, що загрожують життю пацієнта</li>
+    </ul>
+  </div>
+
+  <!-- SBAR 4: LOCATION / ADDRESS (MANUAL ENTRY, PRIVACY-FIRST) -->
+  <div class="hud-card">
+    <div class="card-header">
+      <div class="card-title"><span class="step-num">4</span> Точна адреса та орієнтири</div>
+    </div>
+    <div class="script-phrase">
+      «Адреса події:»
+    </div>
+    <input type="text" class="address-input" id="addressInput" placeholder="Вулиця, номер будинку, під'їзд, поверх, код домофона" oninput="saveAddressLocally()">
+  </div>
+
+  <!-- SBAR 5: ACTIONS ALREADY TAKEN -->
+  <div class="hud-card">
+    <div class="card-header">
+      <div class="card-title"><span class="step-num">5</span> Що вже зроблено на місці</div>
+    </div>
+    <div class="script-phrase highlight-blue" id="actionsTakenText">
+      Забезпечено спокій потерпілому. Очікуємо прибуття бригади.
+    </div>
+  </div>
+
+  <div class="footer-note">
+    ⚠️ <strong>Не кладіть слухавку</strong>, доки диспетчер не скаже: <em>«Виклик прийнято, бригада виїхала!»</em>
+  </div>
+
+</div>
+
+<script>
+  // 1. Initialize Telegram WebApp
+  const tg = window.Telegram ? window.Telegram.WebApp : null;
+  if (tg) {
+    try {
+      tg.expand();
+      tg.ready();
+    } catch(e) {}
+  }
+
+  // 2. Screen WakeLock API (Prevents screen from sleeping during emergency)
+  let wakeLock = null;
+  async function requestWakeLock() {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLock = await navigator.wakeLock.request('screen');
+        const statusEl = document.getElementById('wakeLockStatus');
+        if (statusEl) statusEl.style.display = 'flex';
+      }
+    } catch (err) {
+      console.warn('WakeLock failed:', err);
+    }
+  }
+  requestWakeLock();
+  document.addEventListener('visibilitychange', async () => {
+    if (wakeLock !== null && document.visibilityState === 'visible') {
+      await requestWakeLock();
+    }
+  });
+
+  // 3. Clinical Dictionary for mapping raw flags to professional Ukrainian descriptions
+  const CLINICAL_FLAGS_UA = {
+    "cardiac_arrest_cpr": "Зупинка дихання та серцебиття (проводиться СЛР)",
+    "electric_cardiac_arrest": "Зупинка серця внаслідок ураження струмом",
+    "stroke_fast": "Ознаки гострого інсульту (тест FAST: порушення мови, асиметрія обличчя, слабкість руки)",
+    "fast_positive": "Позитивний тест FAST (підозра на гострий інсульт)",
+    "acute_stroke_suspicion": "Гострий неврологічний дефіцит / підозра на інсульт",
+    "acute_life_threat": "Критичний стан із прямою загрозою життю",
+    "limb_amputation_massive_bleeding": "Масивна артеріальна кровотеча / травматична ампутація кінцівки",
+    "massive_arterial_bleeding": "Пульсуюча фонтануюча артеріальна кровотеча",
+    "acute_limb_fracture_deformity": "Виражена деформація кінцівки / перелом кісток",
+    "acute_coronary_chest_pain": "Гострий пекучий/стискаючий біль за грудиною (підозра на інфаркт)",
+    "chest_pain_radiating": "Біль у грудях з іррадіацією в ліву руку або щелепу",
+    "severe_asphyxia_dyspnea": "Гостра дихальна недостатність / виражена задуха",
+    "choking_foreign_body": "Стороннє тіло в дихальних шляхах / асфіксія",
+    "severe_shock_burn": "Великий опік шкіри / ризик опікового шоку",
+    "burn_face_airway": "Опік обличчя або дихальних шляхів",
+    "status_epilepticus": "Судомний напад тривалістю понад 3 хвилини",
+    "acute_penetrating_eye_trauma": "Проникаюча травма або хімічний опік ока",
+    "acute_peritoneal_abdomen": "Симптоми гострого живота (біль, напруження м'язів)",
+    "toxic_poisoning_critical": "Гостре токсичне отруєння небезпечними речовинами"
+  };
+
+  // Helper to remove technical placeholders like "голосове повідомлення"
+  function cleanComplaintText(raw) {
+    if (!raw) return "Гострий невідкладний стан";
+    let text = String(raw).trim();
+    const placeholders = [
+      "голосовий опис стану", "голосовий опис", "голосове повідомлення", 
+      "голосовое сообщение", "voice message", "симптом", "екстрена допомога", 
+      "гострий невідкладний стан", "аудіо", "audio"
+    ];
+    const lower = text.toLowerCase();
+    for (const ph of placeholders) {
+      if (lower === ph || lower.startsWith(ph + ":") || lower.startsWith(ph + " -")) {
+        return "Гострий невідкладний стан (деталізовано зі слів потерпілого)";
+      }
+    }
+    return text;
+  }
+
+  // 4. Parse incoming URL parameters or Telegram WebApp start_param
+  function loadDataFromParams() {
+    const params = new URLSearchParams(window.location.search);
+    
+    // Urgency level & Emergency number
+    const status = (params.get('status') || 'RED').toUpperCase();
+    const emergencyNum = status === 'ORANGE' ? '103' : '112';
+    
+    const badge = document.getElementById('urgencyBadge');
+    const callBanner = document.getElementById('callBanner');
+    const callNumText = document.getElementById('callNumText');
+    
+    if (status === 'ORANGE') {
+      badge.className = 'urgency-badge urgency-orange';
+      badge.textContent = '⚠️ Рівень ORANGE • 103';
+      if (callBanner) callBanner.className = 'emergency-call-banner orange-mode';
+      if (callNumText) callNumText.textContent = '103';
+    } else {
+      badge.className = 'urgency-badge urgency-red';
+      badge.textContent = '🚨 Рівень RED • 112';
+      if (callBanner) callBanner.className = 'emergency-call-banner';
+      if (callNumText) callNumText.textContent = '112';
+    }
+
+    // Target (Self / Other)
+    const target = params.get('target') || 'self';
+    const whoTargetText = document.getElementById('whoTargetText');
+    if (whoTargetText) {
+      whoTargetText.textContent = target === 'self' ? 'для мене особисто' : 'для людини поруч зі мною';
+    }
+
+    // Patient demographics
+    const age = params.get('age') || '';
+    const gender = params.get('gender') || '';
+    const ageGenderTag = document.getElementById('ageGenderTag');
+    if (ageGenderTag) {
+      let desc = '👤 ';
+      if (age) desc += `Вік: ~${age} р. `;
+      if (gender) desc += `Стать: ${gender}`;
+      if (!age && !gender) desc += 'Дорослий (уточнюється)';
+      ageGenderTag.textContent = desc;
+    }
+
+    // Chief complaint
+    const rawChief = params.get('chief') || '';
+    const chiefComplaintText = document.getElementById('chiefComplaintText');
+    if (chiefComplaintText) {
+      chiefComplaintText.textContent = `«${cleanComplaintText(rawChief)}»`;
+    }
+
+    // Verified flags / Symptoms
+    const flagsParam = params.get('flags') || '';
+    const symptomsList = document.getElementById('symptomsList');
+    if (symptomsList) {
+      symptomsList.innerHTML = '';
+      if (flagsParam) {
+        const rawList = flagsParam.split(',').map(s => s.trim()).filter(Boolean);
+        if (rawList.length > 0) {
+          rawList.forEach(flag => {
+            const li = document.createElement('li');
+            li.className = 'symptom-item';
+            li.textContent = CLINICAL_FLAGS_UA[flag] || flag.replace(/_/g, ' ');
+            symptomsList.appendChild(li);
+          });
+        } else {
+          symptomsList.innerHTML = '<li class="symptom-item">Гострий біль або раптове погіршення самопочуття</li>';
+        }
+      } else {
+        symptomsList.innerHTML = '<li class="symptom-item">Гострий біль або раптове погіршення самопочуття</li>';
+      }
+    }
+
+    // Actions already taken
+    const isCpr = params.get('cpr') === '1' || flagsParam.includes('cardiac_arrest_cpr');
+    const actionsTakenText = document.getElementById('actionsTakenText');
+    if (actionsTakenText) {
+      if (isCpr) {
+        actionsTakenText.innerHTML = '🫀 <strong>Проводиться серцево-легенева реанімація (непрямий масаж серця)!</strong> Потерпілий на твердій підлозі.';
+      } else if (flagsParam.includes('stroke_fast')) {
+        actionsTakenText.innerHTML = 'Забезпечено спокій, узголів\'я піднято на 30°, розстебнуто комір. Воду та таблетки НЕ давали!';
+      } else if (flagsParam.includes('massive_bleeding') || flagsParam.includes('limb_amputation')) {
+        actionsTakenText.innerHTML = 'Накладено джгут/турнікет вище рани, кровотечу зупинено, кінцівку знерухомлено.';
+      } else {
+        actionsTakenText.innerHTML = 'Потерпілому забезпечено повний фізичний та емоційний спокій, доступ свіжого повітря.';
+      }
+    }
+
+    // Restore saved address
+    const savedAddr = localStorage.getItem('vektor_saved_address');
+    if (savedAddr) {
+      const addrInput = document.getElementById('addressInput');
+      if (addrInput && !addrInput.value) addrInput.value = savedAddr;
+    }
+  }
+
+  function saveAddressLocally() {
+    const val = document.getElementById('addressInput').value;
+    localStorage.setItem('vektor_saved_address', val);
+  }
+
+  // Load everything on start
+  window.addEventListener('DOMContentLoaded', loadDataFromParams);
+</script>
+</body>
+</html>
