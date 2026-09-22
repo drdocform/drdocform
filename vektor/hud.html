@@ -331,10 +331,10 @@
       <div class="card-title"><span class="step-num">1</span> Хто потребує допомоги</div>
     </div>
     <div class="script-phrase" id="whoScript">
-      «Потрібна екстрена допомога: <span class="highlight-yellow" id="whoTargetText">для людини поруч</span>!»
+      «Потрібна екстрена допомога: <span class="highlight-yellow" id="whoTargetText">постраждалій людині</span>!»
     </div>
     <div class="tags-row" id="patientMetaRow">
-      <span class="status-tag tag-neutral" id="ageGenderTag">👤 Дорослий (вік ~не вказано)</span>
+      <span class="status-tag tag-neutral" id="ageGenderTag">👤 Постраждалий (вік уточнюється)</span>
       <span class="status-tag tag-neutral" id="consciousnessTag">🧠 Свідомість: уточнюється</span>
       <span class="status-tag tag-neutral" id="breathingTag">🫁 Дихання: є</span>
     </div>
@@ -419,26 +419,186 @@
 
   // 3. Clinical Dictionary for mapping raw flags to professional Ukrainian descriptions
   const CLINICAL_FLAGS_UA = {
-    "cardiac_arrest_cpr": "Зупинка дихання та серцебиття (проводиться СЛР)",
+    // Кардіологія & СЛР
+    "cardiac_arrest_cpr": "Зупинка кровообігу та дихання (потрібна СЛР)",
+    "cpr_unresponsive_breathing": "Непритомний, відсутнє дихання (потрібна СЛР)",
     "electric_cardiac_arrest": "Зупинка серця внаслідок ураження струмом",
-    "stroke_fast": "Ознаки гострого інсульту (тест FAST: порушення мови, асиметрія обличчя, слабкість руки)",
+    "electric_arrhythmia": "Порушення серцевого ритму після удару струмом",
+    "electric_cardiac_burns": "Електротравма з опіками або аритмією",
+    "electric_consciousness_breathing": "Втрата свідомості / зупинка дихання від струму",
+    "electric_scene_safety": "Ураження електрострумом (небезпечна зона)",
+    "live_electric_current": "Дія електричного струму / небезпека ураження",
+    "urgent_electric": "Електротравма (потрібне ЕКГ та огляд лікаря)",
+    "acs_infarction": "Гострий коронарний синдром / підозра на інфаркт міокарда",
+    "acute_coronary_chest_pain": "Гострий пекучий або стискаючий біль за грудиною",
+    "chest_pain_radiating": "Біль у грудях з іррадіацією в руку, лопатку чи щелепу",
+    "aortic_dissection_syncope": "Роздираючий біль за грудиною / синкопе (підозра на розшарування аорти)",
+    "aortic_tear_syncope": "Гострий кинджальний біль у грудях / синкопе",
+
+    // Неврологія & Інсульт & Судоми
+    "stroke_fast": "Ознаки гострого інсульту (асиметрія обличчя, слабкість руки, мова)",
+    "stroke_fast_signs": "Ознаки гострого інсульту (тест FAST / МОЗОК)",
     "fast_positive": "Позитивний тест FAST (підозра на гострий інсульт)",
     "acute_stroke_suspicion": "Гострий неврологічний дефіцит / підозра на інсульт",
-    "acute_life_threat": "Критичний стан із прямою загрозою життю",
-    "limb_amputation_massive_bleeding": "Масивна артеріальна кровотеча / травматична ампутація кінцівки",
-    "massive_arterial_bleeding": "Пульсуюча фонтануюча артеріальна кровотеча",
-    "acute_limb_fracture_deformity": "Виражена деформація кінцівки / перелом кісток",
-    "acute_coronary_chest_pain": "Гострий пекучий/стискаючий біль за грудиною (підозра на інфаркт)",
-    "chest_pain_radiating": "Біль у грудях з іррадіацією в ліву руку або щелепу",
-    "severe_asphyxia_dyspnea": "Гостра дихальна недостатність / виражена задуха",
+    "stroke_ataxia": "Раптове порушення координації, ходи або рівноваги",
+    "stroke_ataxia_vision": "Раптова втрата рівноваги, двоїння в очах, порушення ходи",
+    "stroke_consciousness": "Сплутаність свідомості / дезорієнтація при інсульті",
+    "stroke_facial_droop": "Асиметрія обличчя (опущений куточок рота)",
+    "stroke_arm_weakness": "Однобічна слабкість кінцівок (не може підняти руку)",
+    "stroke_speech_difficulty": "Порушення або втрата мови (афазія)",
+    "stroke_time_window_critical": "Критичне терапевтичне вікно інсульту (< 4.5 год)",
+    "status_epilepticus": "Судомний напад тривалістю понад 3 хвилини / статус",
+    "seizure_active": "Активні генералізовані судоми в теперішній час",
+    "seizure_active_status": "Активні генералізовані судоми / епілептичний статус",
+    "new_onset_seizure": "Судомний напад, що виник вперше в житті",
+    "seizure_first_trauma": "Судоми після травми голови або вперше в житті",
+    "urgent_seizure": "Судомний пароксизм (потрібна госпіталізація)",
+    "thunderclap_headache": "Раптовий нестерпний головний біль («удар блискавки»)",
+    "trauma_thunderclap": "Раптовий ударний біль голови або травма черепа",
+    "meningeal_signs": "Менінгеальні ознаки (ригідність потиличних м'язів, фотофобія)",
+    "meningeal_fever": "Висока температура з ригідністю потиличних м'язів / висипом",
+    "altered_mental_status": "Сплутаність свідомості / глибока загальмованість",
+    "unconscious_unresponsive": "Втрата свідомості / відсутність реакції на подразники",
+
+    // Дихальна система & Асфіксія
+    "airway_choking": "Повна обструкція дихальних шляхів стороннім тілом (удушення)",
+    "airway_obstruction": "Непрохідність дихальних шляхів / асфіксія",
+    "choking_severe_airway_obstruction": "Повна обструкція дихальних шляхів стороннім тілом",
     "choking_foreign_body": "Стороннє тіло в дихальних шляхах / асфіксія",
-    "severe_shock_burn": "Великий опік шкіри / ризик опікового шоку",
-    "burn_face_airway": "Опік обличчя або дихальних шляхів",
-    "status_epilepticus": "Судомний напад тривалістю понад 3 хвилини",
+    "anaphylaxis": "Анафілаксія (набряк гортані, задуха, генералізований висип)",
+    "anaphylaxis_allergy": "Гостра системна алергічна реакція / анафілактичний шок",
+    "anaphylaxis_stridor": "Анафілаксія (набряк Квінке, стридор, свистяче дихання)",
+    "severe_hypoxia": "Виражена гіпоксія / ціаноз (посиніння губ/обличчя)",
+    "severe_respiratory_distress": "Тяжка дихальна недостатність / виражена задуха",
+    "severe_asphyxia_dyspnea": "Гостра дихальна недостатність / тяжка задуха",
+    "tension_pneumothorax": "Напружений або відкритий пневмоторакс (поранення грудей)",
+
+    // Травматологія & Кровотечі
+    "arterial_bleeding": "Пульсуюча артеріальна кровотеча",
+    "massive_arterial_bleeding": "Масивна артеріальна кровотеча (пульсуючий струмінь)",
+    "massive_bleed": "Масивна загрозлива кровотеча",
+    "limb_amputation_massive_bleeding": "Травматична ампутація / критична крововтрата",
+    "spine_polytrauma": "Підозра на ушкодження хребта / політравма",
+    "spine_head_trauma": "Травма голови або шиї / ризик ушкодження хребта",
+    "fracture_dislocation": "Ймовірний перелом / патологічна деформація кінцівки",
+    "acute_limb_fracture_deformity": "Виражена деформація кінцівки / перелом кісток",
+    "urgent_fracture": "Закритий перелом / вивих суглоба (потрібна іммобілізація)",
+    "urgent_wound": "Глибока рана (потрібна первинна хірургічна обробка)",
+    "deep_wound_infection": "Глибока рана з кровотечею або ризиком інфікування",
+    "deep_wound_bite": "Укушена або рвана інфікована рана",
+    "critical_eye_injury": "Проникаюче поранення або важкий хімічний опік ока",
+    "eye_chemical_penetrating": "Хімічний опік або проникаюче поранення очного яблука",
     "acute_penetrating_eye_trauma": "Проникаюча травма або хімічний опік ока",
+
+    // Опіки
+    "severe_burn_inhalation": "Опік полум'ям / термоінгаляційне ураження дихальних шляхів",
+    "burn_critical_airway_large": "Опік дихальних шляхів або критична площа опіку",
+    "second_third_degree_burn": "Термічний опік II-III ступеня значної площі",
+    "burn_blisters_deep": "Глибокий опік з утворенням пухирів / некрозу",
+    "severe_shock_burn": "Великий опік шкіри / ризик опікового шоку",
+    "burn_airway_inhalation": "Інгаляційна травма / опік дихальних шляхів",
+    "burn_critical_surface": "Опік понад 10% поверхні тіла",
+    "burn_face_airway": "Опік обличчя або дихальних шляхів",
+    "urgent_burn": "Термічний опік (потрібна спеціалізована допомога)",
+
+    // Гострий живіт & Отруєння
+    "acute_peritonitis_bleeding": "Ознаки перитоніту або внутрішньої кровотечі (дошкоподібний живіт)",
+    "acute_abdomen_peritonitis": "Симптоми перитоніту / напруження м'язів черевної стінки",
     "acute_peritoneal_abdomen": "Симптоми гострого живота (біль, напруження м'язів)",
-    "toxic_poisoning_critical": "Гостре токсичне отруєння небезпечними речовинами"
+    "appendicitis_renal_colic": "Гострий виражений біль у животі / підозра на хірургічну патологію",
+    "appendicitis_colic": "Гострий некупований біль у животі (хірургічна патологія)",
+    "urgent_abdomen": "Виражений абдомінальний біль (потрібна госпіталізація)",
+    "corrosive_inhalation_poisoning": "Отруєння припікаючими речовинами або токсичними газами",
+    "poison_corrosive_gas_unconscious": "Інгаляція токсичного газу / отруєння хімікатами",
+    "medication_mushroom_toxicity": "Гостре медикаментозне або токсичне отруєння",
+    "poison_meds_mushrooms": "Підозра на отруєння ліками або грибами",
+    "poisoning_toxidrome": "Гостре токсичне отруєння невідомою речовиною",
+    "toxic_poisoning_critical": "Гостре токсичне отруєння небезпечними речовинами",
+    "urgent_poison": "Токсикологічне отруєння (потрібна детоксикація)",
+
+    // Загальні критичні стани & Життєві функції
+    "severe_shock_hypotension": "Ознаки декомпенсованого шоку (блідість, холодний піт, гіпотонія)",
+    "vital_shock_collapse": "Гемодинамічний колапс / виражені ознаки шоку",
+    "vital_airway_breathing_failed": "Критичне порушення прохідності дихальних шляхів або дихання",
+    "vital_consciousness_breathing": "Порушення свідомості та життєвих функцій",
+    "vital_fast_neurology": "Гострий неврологічний дефіцит",
+    "vital_acute_pain_immobility": "Нестерпний больовий синдром з іммобілізацією",
+    "acute_incapacity": "Раптова втрата дієздатності / критичне знесилення",
+    "urgent_incapacity": "Виражене обмеження життєдіяльності через гострий стан",
+    "acute_life_threat": "Критичний стан із прямою загрозою життю",
+    "safety_gate_intercepted": "Перехоплено Safety Gate: ознаки загрози життю",
+    "pain_scale": "Виражений больовий синдром",
+    "cardiac": "Гострий кардіальний стан / біль у серці",
+    "stroke": "Ознаки порушення мозкового кровообігу",
+    "trauma": "Травматичне ушкодження",
+    "respiratory": "Гостра дихальна недостатність",
+    "burns": "Опікова травма",
+    "poisoning": "Токсичне отруєння",
+    "seizure": "Судомний напад",
+    "choking": "Удушення стороннім тілом"
   };
+
+  // Helper function to translate any symptom or flag into high-quality Ukrainian
+  function formatSymptomUa(flag) {
+    if (!flag) return "Гострий біль або раптове погіршення самопочуття";
+    const cleaned = String(flag).trim();
+    if (!cleaned) return "Гострий біль або раптове погіршення самопочуття";
+
+    // 1. Точний збіг у клінічному словнику
+    if (CLINICAL_FLAGS_UA[cleaned]) {
+      return CLINICAL_FLAGS_UA[cleaned];
+    }
+    const lower = cleaned.toLowerCase();
+    if (CLINICAL_FLAGS_UA[lower]) {
+      return CLINICAL_FLAGS_UA[lower];
+    }
+
+    // 2. Якщо рядок вже містить українську/кириличну назву — залишаємо як є
+    if (/[а-яіїєґ]/i.test(cleaned)) {
+      return cleaned;
+    }
+
+    // 3. Семантичний маппінг англійських складових слів для непередбачених ключів
+    const tokenMap = [
+      ["cpr", "зупинка серця / потрібна СЛР"],
+      ["cardiac", "серцевий напад / біль у грудях"],
+      ["arrest", "зупинка кровообігу"],
+      ["stroke", "ознаки гострого інсульту"],
+      ["infarction", "підозра на інфаркт міокарда"],
+      ["acs", "гострий коронарний синдром"],
+      ["bleeding", "кровотеча"],
+      ["bleed", "кровотеча"],
+      ["arterial", "артеріальна кровотеча"],
+      ["amputation", "травматична ампутація"],
+      ["fracture", "ймовірний перелом кінцівки"],
+      ["dislocation", "вивих суглоба"],
+      ["burn", "термічний або хімічний опік"],
+      ["poison", "токсичне отруєння"],
+      ["seizure", "судомний напад"],
+      ["choking", "удушення стороннім тілом"],
+      ["airway", "обструкція дихальних шляхів"],
+      ["hypoxia", "кисневе голодування / задуха"],
+      ["dyspnea", "виражена задуха"],
+      ["shock", "ознаки шоку / колапс"],
+      ["unconscious", "втрата свідомості"],
+      ["peritonitis", "перитоніт / гострий живіт"],
+      ["abdomen", "гострий біль у животі"],
+      ["eye", "травма або опік ока"],
+      ["headache", "гострий головний біль"],
+      ["spine", "травма хребта"],
+      ["electric", "ураження електричним струмом"],
+      ["trauma", "травматичне ушкодження"]
+    ];
+
+    for (const [key, uaTrans] of tokenMap) {
+      if (lower.includes(key)) {
+        return `Ознаки: ${uaTrans} (потребує невідкладної оцінки)`;
+      }
+    }
+
+    // 4. Надійний медичний дефолт: НІКОЛИ не виводити англійські ідентифікатори
+    return "Гострий загрозливий симптом (потребує оцінки лікаря)";
+  }
 
   // Helper to remove technical placeholders like "голосове повідомлення"
   function cleanComplaintText(raw) {
@@ -482,11 +642,15 @@
       if (callNumText) callNumText.textContent = '112';
     }
 
-    // Target (Self / Other)
-    const target = params.get('target') || 'self';
+    // Target (Self / Other / Default to постраждалій людині)
+    const target = params.get('target');
     const whoTargetText = document.getElementById('whoTargetText');
     if (whoTargetText) {
-      whoTargetText.textContent = target === 'self' ? 'для мене особисто' : 'для людини поруч зі мною';
+      if (target === 'self') {
+        whoTargetText.textContent = 'мені особисто';
+      } else {
+        whoTargetText.textContent = 'постраждалій людині';
+      }
     }
 
     // Patient demographics
@@ -495,10 +659,10 @@
     const ageGenderTag = document.getElementById('ageGenderTag');
     if (ageGenderTag) {
       let desc = '👤 ';
-      if (age) desc += `Вік: ~${age} р. `;
-      if (gender) desc += `Стать: ${gender}`;
-      if (!age && !gender) desc += 'Дорослий (уточнюється)';
-      ageGenderTag.textContent = desc;
+      if (gender && gender !== 'не вказано') desc += `${gender}, `;
+      if (age && age !== 'дорослий') desc += `~${age} р.`;
+      if (!age && !gender) desc += 'Постраждалий (вік уточнюється)';
+      ageGenderTag.textContent = desc.trim();
     }
 
     // Chief complaint
@@ -519,7 +683,7 @@
           rawList.forEach(flag => {
             const li = document.createElement('li');
             li.className = 'symptom-item';
-            li.textContent = CLINICAL_FLAGS_UA[flag] || flag.replace(/_/g, ' ');
+            li.textContent = formatSymptomUa(flag);
             symptomsList.appendChild(li);
           });
         } else {
@@ -532,6 +696,21 @@
 
     // Actions already taken
     const isCpr = params.get('cpr') === '1' || flagsParam.includes('cardiac_arrest_cpr');
+    
+    // Consciousness & Breathing dynamic tags
+    const consciousnessTag = document.getElementById('consciousnessTag');
+    const breathingTag = document.getElementById('breathingTag');
+    if (isCpr) {
+      if (consciousnessTag) {
+        consciousnessTag.className = 'status-tag tag-critical';
+        consciousnessTag.textContent = '🧠 Свідомість: ВІДСУТНЯ';
+      }
+      if (breathingTag) {
+        breathingTag.className = 'status-tag tag-critical';
+        breathingTag.textContent = '🫁 Дихання: ВІДСУТНЄ';
+      }
+    }
+
     const actionsTakenText = document.getElementById('actionsTakenText');
     if (actionsTakenText) {
       if (isCpr) {
