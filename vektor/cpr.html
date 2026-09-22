@@ -570,6 +570,37 @@
       } catch (e) {}
     }
 
+    // Аудіо-команда спокійним чітким голосом
+    function speakVoiceCommand(text) {
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'uk-UA';
+          utterance.rate = 1.0;
+          utterance.pitch = 1.0;
+          utterance.volume = 1.0;
+
+          const voices = window.speechSynthesis.getVoices();
+          if (voices && voices.length > 0) {
+            const ukVoice = voices.find(v => v.lang && (v.lang.startsWith('uk') || v.lang.includes('UA')));
+            if (ukVoice) {
+              utterance.voice = ukVoice;
+            }
+          }
+          window.speechSynthesis.speak(utterance);
+        } catch (e) {
+          console.warn("SpeechSynthesis error:", e);
+        }
+      }
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        try { window.speechSynthesis.getVoices(); } catch (e) {}
+      };
+    }
+
     // Handle tapping directly on the center circle
     function handleStageClick() {
       if (isBreathingPause) {
@@ -618,6 +649,9 @@
     // Stop / Pause Compressions
     function stopMetronome() {
       isRunning = false;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
       if (timerId) {
         clearInterval(timerId);
         timerId = null;
@@ -688,7 +722,7 @@
 
       // Update Banner UI
       statusBanner.className = "status-banner breath-alert";
-      statusBanner.innerHTML = `💨 <b>2 ВДИХИ (залишилось ${breathSecondsLeft}с)</b> • Затисніть ніс або торкніться для масажу!`;
+      statusBanner.innerHTML = `💨 <b>2 ВДИХИ — І ПРОДОВЖУЙТЕ КОМПРЕСІЇ</b> (залишилось ${breathSecondsLeft}с) • Торкніться для масажу!`;
 
       // Update Button UI
       toggleBtn.className = "btn-main btn-skip-breath";
@@ -697,12 +731,15 @@
       // Sound cue for breath 1
       playBreathTone(523.25); // C5
 
+      // Аудіо-команда кожні 30 натискань: чітке спокійне повідомлення голосом
+      speakVoiceCommand("2 вдихи — і продовжуйте компресії");
+
       // Start 5-second countdown timer
       breathCountdownTimer = setInterval(() => {
         breathSecondsLeft--;
         if (breathSecondsLeft > 0) {
           breathTimerDisplay.innerText = `${breathSecondsLeft}с`;
-          statusBanner.innerHTML = `💨 <b>2 ВДИХИ (залишилось ${breathSecondsLeft}с)</b> • Затисніть ніс або торкніться для масажу!`;
+          statusBanner.innerHTML = `💨 <b>2 ВДИХИ — І ПРОДОВЖУЙТЕ КОМПРЕСІЇ</b> (залишилось ${breathSecondsLeft}с) • Торкніться для масажу!`;
           if (breathSecondsLeft === 3) {
             playBreathTone(659.25); // E5 for breath 2
           }
@@ -715,6 +752,9 @@
 
     // End Breathing Pause and Resume Compressions
     function endBreathingPause() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
       if (breathCountdownTimer) {
         clearInterval(breathCountdownTimer);
         breathCountdownTimer = null;
@@ -730,6 +770,9 @@
     // Close WebApp
     function closeMetronome() {
       stopMetronome();
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
       if (tg) {
         tg.close();
       } else {

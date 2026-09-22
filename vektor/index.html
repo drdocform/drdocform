@@ -1662,9 +1662,9 @@
         }
 
         .welcome-btn-icon-box {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1673,7 +1673,32 @@
         }
 
         .icon-box-blue {
-            background: rgba(255, 255, 255, 0.22);
+            background: linear-gradient(135deg, #0A84FF 0%, #0062CC 100%);
+            box-shadow: 0 3px 10px rgba(10, 132, 255, 0.32);
+        }
+
+        .icon-box-blue svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: #FFFFFF;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            display: block;
+        }
+
+        .welcome-btn-text-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .welcome-btn-sub {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--hint-color);
+            margin-top: 1px;
         }
 
         .icon-box-red {
@@ -1695,14 +1720,16 @@
         }
 
         .btn-consultation {
-            background: var(--button-color);
-            color: #FFFFFF;
-            box-shadow: 0 4px 16px rgba(var(--button-color-rgb), 0.3);
-            border: none;
+            background: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            padding: 12px 16px;
         }
 
         .btn-consultation:active {
-            transform: scale(0.98);
+            transform: scale(0.985);
+            background: var(--secondary-bg);
         }
 
         .btn-emergency {
@@ -1787,7 +1814,15 @@
             <p class="welcome-prompt">Будь ласка, оберіть формат вашого звернення:</p>
 
             <div class="welcome-feature-item">
-                <div class="welcome-feature-badge badge-blue">🩺</div>
+                <div class="welcome-feature-badge badge-blue" style="display: flex; align-items: center; justify-content: center; background: rgba(10, 132, 255, 0.12);">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#007AFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4.5 3v5a4.5 4.5 0 0 0 9 0V3"/>
+                        <path d="M9 12.5v3.5a4 4 0 0 0 4 4h1a4 4 0 0 0 4-4v-1"/>
+                        <circle cx="18" cy="12" r="2.5" fill="#007AFF"/>
+                        <line x1="3" y1="3" x2="6" y2="3"/>
+                        <line x1="12" y1="3" x2="15" y2="3"/>
+                    </svg>
+                </div>
                 <div class="welcome-feature-desc">
                     <b>Консультація</b> — аналіз симптомів, документів, висновків та аналізів.
                 </div>
@@ -1802,10 +1837,21 @@
         </div>
 
         <div class="welcome-actions">
-            <button class="btn btn-welcome btn-consultation" onclick="goToProfiles()">
+            <button class="btn btn-welcome btn-consultation" onclick="goToProfiles()" id="btn-welcome-consultation">
                 <div class="welcome-btn-left">
-                    <div class="welcome-btn-icon-box icon-box-blue">🩺</div>
-                    <span class="welcome-btn-title">Консультація</span>
+                    <div class="welcome-btn-icon-box icon-box-blue" aria-label="Консультація">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4.5 3v5a4.5 4.5 0 0 0 9 0V3"/>
+                            <path d="M9 12.5v3.5a4 4 0 0 0 4 4h1a4 4 0 0 0 4-4v-1"/>
+                            <circle cx="18" cy="12" r="2.5" fill="#FFFFFF"/>
+                            <line x1="3" y1="3" x2="6" y2="3"/>
+                            <line x1="12" y1="3" x2="15" y2="3"/>
+                        </svg>
+                    </div>
+                    <div class="welcome-btn-text-group">
+                        <span class="welcome-btn-title">Консультація</span>
+                        <span class="welcome-btn-sub">Симптоми, скарги, аналізи та висновки</span>
+                    </div>
                 </div>
                 <span class="welcome-btn-arrow">›</span>
             </button>
